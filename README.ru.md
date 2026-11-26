@@ -10,11 +10,12 @@ PoE2 Runbook — программа для Windows: прохождение Path 
 **Официальный сайт и скачивание: <https://poe2.labutin.gg>**
 
 © 2026 Sergei Labutin · [English](README.md)
-<!-- ai-disclosure: одна строка об использовании ИИ при разработке — формулировка за автором -->
+
+Замысел и все решения — автора; большую часть кода написал ИИ-помощник (Claude, Anthropic) под его руководством.
 
 ## Официальные сборки — только с сайта и из выпусков
 
-Официальные установщики PoE2 Runbook публикуются только в двух местах: на <https://poe2.labutin.gg> и в
+Официальные сборки PoE2 Runbook публикуются только на <https://poe2.labutin.gg>; сами файлы установщиков хранятся в
 [выпусках этого репозитория](https://github.com/LABUTIN-OU/poe2-runbook/releases). Файл из любого другого места — не официальная сборка, даже если у него
 то же название и тот же значок. Версии, которые другие собирают из этого исходного кода, обязаны носить своё название
 и свой значок (см. `NOTICE.md`). Если встретите сборку, которую выдают за официальную, сообщите об этом в
@@ -115,3 +116,4 @@ This product isn't affiliated with or endorsed by Grinding Gear Games in any way
 Правки принимаются на условиях короткого соглашения участника — [CONTRIBUTING.md](CONTRIBUTING.md). Ошибка —
 откройте [Issue](https://github.com/LABUTIN-OU/poe2-runbook/issues/new/choose) по форме «Сообщение об ошибке». Уязвимость —
 [сообщите закрыто](https://github.com/LABUTIN-OU/poe2-runbook/security/advisories/new), см. [SECURITY.md](SECURITY.md).
+Почта для связи: <games@labutin.gg>.

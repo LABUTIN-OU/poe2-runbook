@@ -5,6 +5,7 @@
 Please do not report a vulnerability in a public issue. Report it privately on GitHub:
 [Report a vulnerability](https://github.com/LABUTIN-OU/poe2-runbook/security/advisories/new) — the **Security** tab of this repository. The report is not
 public.
+You can also write to <games@labutin.gg>.
 
 Please say which version of the program you used (the program shows it as "program … · game …"), what an attacker
 can do, and the steps to reproduce it.
@@ -23,6 +24,7 @@ older versions are not updated.
 Об уязвимости не пишите в открытом Issue. Сообщите о ней закрыто на GitHub:
 [Report a vulnerability](https://github.com/LABUTIN-OU/poe2-runbook/security/advisories/new) — вкладка **Security** этого репозитория. Сообщение не
 публикуется.
+Можно также написать на <games@labutin.gg>.
 
 Назовите версию программы (программа показывает её строкой «программа … · игра …»), что может сделать нападающий и
 как это повторить. Исправления получает только последняя версия программы: с новой версией игры выходит новая версия

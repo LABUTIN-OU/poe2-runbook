@@ -2,7 +2,8 @@
 
 Copyright © 2026 Sergei Labutin — <https://labutin.gg>
 
-Official site: <https://poe2.labutin.gg>. Official builds of PoE2 Runbook are published only there.
+Official site: <https://poe2.labutin.gg>. Official builds of PoE2 Runbook are published only there; the files themselves
+are stored in the releases of <https://github.com/LABUTIN-OU/poe2-runbook>.
 
 SPDX-License-Identifier: GPL-3.0-only
 

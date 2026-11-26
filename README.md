@@ -10,13 +10,14 @@ for a review after the run. Plans are made and edited in the program itself. The
 **Official site and downloads: <https://poe2.labutin.gg>**
 
 © 2026 Sergei Labutin · [Русская версия](README.ru.md)
-<!-- ai-disclosure: one line about the use of AI in the development — the wording is the author's decision -->
+
+Designed and directed by the author; most of the code was written with an AI coding assistant (Claude by Anthropic).
 
 ## Official builds — only from the site and the releases
 
-Official installers of PoE2 Runbook are published only in two places: at <https://poe2.labutin.gg> and in the
-[releases of this repository](https://github.com/LABUTIN-OU/poe2-runbook/releases). A file from anywhere else is not an official build, even if it carries
-the same name and icon. Versions that others build from this source must carry a name and an icon of their own (see
+Official builds of PoE2 Runbook are published only at <https://poe2.labutin.gg>; the installer files themselves are
+stored in the [releases of this repository](https://github.com/LABUTIN-OU/poe2-runbook/releases). A file from anywhere else is not an official build, even
+if it carries the same name and icon. Versions that others build from this source must carry a name and an icon of their own (see
 `NOTICE.md`). If you meet a build passed off as the official one, please report it in the
 [issues of this repository](https://github.com/LABUTIN-OU/poe2-runbook/issues).
 
@@ -116,3 +117,4 @@ not cover them.
 Contributions are welcome under the short contributor agreement in [CONTRIBUTING.md](CONTRIBUTING.md). A bug: open an
 [issue](https://github.com/LABUTIN-OU/poe2-runbook/issues/new/choose) with the bug report form. A vulnerability:
 [report it privately](https://github.com/LABUTIN-OU/poe2-runbook/security/advisories/new), see [SECURITY.md](SECURITY.md).
+Contact: <games@labutin.gg>.

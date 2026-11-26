@@ -16,16 +16,21 @@
 
   // --- настройки (config.js) ---------------------------------------------------------------------------------
   var https = function (s) { return typeof s === 'string' && /^https:\/\/[^\s<>"']+$/.test(s); };
+  var bare = function (url) { return url.replace(/^https:\/\//, '').replace(/\/$/, ''); };      // адрес, как его пишут в тексте
   if (https(cfg.repo)) {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-repo]'), function (a) { a.href = cfg.repo; });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-repo]'), function (a) {
+      a.href = cfg.repo;
+      if (a.hasAttribute('data-repo-text')) a.textContent = bare(cfg.repo);      // в тексте назван сам адрес репозитория
+    });
     Array.prototype.forEach.call(document.querySelectorAll('[data-repo-row]'), function (el) { show(el, true); });
   }
   if (typeof cfg.contact === 'string' && cfg.contact.trim()) {
     var to = cfg.contact.trim(), link = $('contact-link');
-    var mail = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(to);
+    var mail = /^[^\s@<>"'?&]+@[^\s@<>"'?&]+\.[^\s@<>"'?&]+$/.test(to);
+    var subject = typeof cfg.contactSubject === 'string' ? cfg.contactSubject.trim() : '';
     if (link && (mail || https(to))) {
-      link.href = mail ? 'mailto:' + to : to;
-      link.textContent = mail ? to : to.replace(/^https:\/\//, '').replace(/\/$/, '');
+      link.href = mail ? 'mailto:' + to + (subject ? '?subject=' + encodeURIComponent(subject) : '') : to;
+      link.textContent = mail ? to : bare(to);
       show($('contact'), true);
     }
   }
