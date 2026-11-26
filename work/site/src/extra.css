@@ -1,0 +1,137 @@
+
+/* ================= дальше — чего в образце нет =================
+   Всё выше этой черты — work/site/mock/mock.css слово в слово (его подставляет сборка). Здесь: мелочи, которых образец
+   не решает, внутренние страницы в том же виде, состояния «Скачать», меню языка, готовые планы. */
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+/* свечения шире своих блоков: без этого страница в узком окне сдвигалась бы вбок */
+.hero,.split,.feat{overflow-x:clip}
+/* заголовок, не вошедший в строку, делится поровну, а не оставляет одно слово; ссылка в мелкой строке не рвётся
+   посередине. На ширинах образца это ничего не меняет. */
+h1,h2{text-wrap:balance}
+/* корейский браузер по умолчанию рвёт посреди слова (между слогами): строка переносится только по пробелам. Японский
+   заголовок переносится по фразам, где браузер это умеет (иначе — как обычно, по знакам) */
+:lang(ko){word-break:keep-all}
+:lang(ja) h1,:lang(ja) h2,:lang(ja) h3,:lang(ja) summary{word-break:auto-phrase}
+/* у тайского над и под буквой стоят знаки: при тесных строках образца они соседних строк касаются */
+:lang(th) h1,:lang(th) h2,:lang(th) h3{line-height:1.3}
+.fine a,.release-do a{white-space:nowrap}
+code,kbd,pre{font-family:Consolas,"Cascadia Mono","SFMono-Regular",Menlo,"Liberation Mono",monospace}
+code{font-size:.88em;overflow-wrap:anywhere}
+.nb{white-space:nowrap}      /* имя папки с пробелом не рвётся: путь переносится по обратным чертам */
+kbd{display:inline-block;min-width:24px;padding:0 6px;border:1px solid rgba(255,255,255,.22);border-radius:5px;
+  font-size:.76em;font-weight:600;line-height:1.5;text-align:center;color:var(--muted);vertical-align:1px;white-space:nowrap}
+
+/* язык в шапке: название текущего со стрелкой, под ним — список всех языков сайта; текущий в нём отмечен и не ссылка */
+.brand{flex:none}
+.bar-nav{min-width:0}
+.langs,.langs:last-of-type{position:relative;border:0}
+.langs summary{padding:0;font-size:14px;font-weight:400;line-height:inherit;color:var(--muted);white-space:nowrap}
+.langs summary:hover,.langs[open] summary{color:var(--ink)}
+.langs summary::after{content:none}
+/* в узком окне название языка может не поместиться рядом с именем программы и кнопкой: тогда вместо него код языка
+   (site.js меряет шапку и ставит ей .tight) */
+.lang .lc{display:none}
+.bar.tight .lang .ln{display:none}
+.bar.tight .lang .lc{display:inline}
+.langs-menu{position:absolute;z-index:11;top:calc(100% + 12px);right:-10px;min-width:180px;padding:6px;border-radius:12px;background:#101216;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 20px 60px rgba(0,0,0,.7)}
+.langs-menu a,.langs-menu .here{display:block;padding:7px 12px;border-radius:8px;color:var(--ink);font-size:14px;white-space:nowrap}
+.langs-menu a:hover{background:rgba(255,255,255,.07);text-decoration:none}
+.langs-menu .here{position:relative;color:var(--faint)}
+.langs-menu .here::after{content:"";position:absolute;right:14px;top:50%;width:5px;height:9px;margin-top:-7px;border-right:2px solid var(--faint);
+  border-bottom:2px solid var(--faint);transform:rotate(45deg)}
+
+/* готовые планы: строки, как «Вопросы» */
+.rows{border-bottom:1px solid var(--line)}
+.plan{padding:20px 0;border-top:1px solid var(--line);overflow-wrap:anywhere}
+.plan .pn{display:block;font-size:19px;font-weight:600}
+.plan .pm{display:block;margin-top:2px;color:var(--faint);font-size:14px}
+.plan .ps{display:block;margin-top:8px;max-width:620px;color:var(--muted)}
+
+/* внутренние страницы: заголовок, фраза сути, строки с тонкими линиями */
+.page{padding-top:72px}
+/* место, на которое привела ссылка, не прячется под шапкой: она стоит поверх страницы */
+.page [id]{scroll-margin-top:68px}
+.page h1{max-width:880px;font-size:clamp(36px,5vw,54px);line-height:1.07;letter-spacing:-.025em}
+.page .lead{margin:20px 0 0;font-size:21px;line-height:1.4;letter-spacing:0}
+.page h2{font-size:28px;line-height:1.2;letter-spacing:-.018em}
+.blk{padding-top:72px}
+.page p{margin:14px 0 0;max-width:720px}
+.page .sub{margin:12px 0 0;max-width:720px;font-size:17px;line-height:1.47}
+.quiet{color:var(--muted);font-size:15px}
+.page ul.plain,.page ol.plain{margin:14px 0 0;padding-left:22px;max-width:720px}
+.page ul.plain li,.page ol.plain li{margin:6px 0}
+.addr{font-family:Consolas,"Cascadia Mono","SFMono-Regular",Menlo,"Liberation Mono",monospace;font-size:21px;font-weight:600;overflow-wrap:anywhere}
+.tocrow{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;margin:28px 0 0}
+.tocrow p{margin:0}
+.toc{display:flex;flex-wrap:wrap;gap:6px 22px;margin:14px 0 0;padding:0;list-style:none;font-size:15px}
+.toc a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.toc a:hover{color:var(--ink)}
+.mini{padding:4px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:none;color:var(--muted);font:inherit;font-size:13px;
+  line-height:1.5;cursor:pointer;white-space:nowrap}
+.mini:hover{color:var(--ink);border-color:rgba(255,255,255,.4)}
+.mini.done{color:#5cbd88;border-color:#5cbd88}
+
+/* факт — строка: что слева, зачем одной строкой справа; длинное пояснение раскрывается в самой строке */
+.facts{margin:18px 0 0;padding:0;list-style:none;border-bottom:1px solid var(--line)}
+.facts > li,.facts > .row{border-top:1px solid var(--line)}
+.facts details,.facts details:last-of-type{border:0}
+.facts .row,.facts summary{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,9fr);align-items:baseline;gap:2px 28px;
+  padding:16px 40px 16px 0;font-size:17px;font-weight:400}
+.facts summary::after{top:22px}
+.facts details[open] summary::after{top:27px}
+.facts .k{margin:0;font-weight:600;overflow-wrap:anywhere}
+.facts .k code{font-weight:400}
+.facts .v{margin:0;color:var(--muted);overflow-wrap:break-word}
+.w{padding:0 40px 20px 0;max-width:760px;color:var(--muted)}
+.w p,.page .w p{margin:0;max-width:none}
+.w p + p,.w pre + p,.w p + pre,.page .w p + p{margin-top:10px}
+.w b{color:var(--ink);font-weight:600}
+ul.files{margin:0;padding:0;list-style:none}
+ul.files li{display:grid;grid-template-columns:minmax(0,160px) minmax(0,1fr);gap:0 16px;padding:5px 0}
+ul.files code{color:var(--ink)}
+pre{margin:10px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--ink);font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* правило GGG слева, программа справа — каждое под своей подписью */
+.rules{margin:18px 0 0;border-bottom:1px solid var(--line)}
+.rule{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 40px;padding:18px 0;border-top:1px solid var(--line)}
+.rule dt,.rule dd{margin:0}
+.rule dd{color:var(--muted)}
+.ttl{display:block;margin-bottom:4px;color:var(--faint);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+blockquote{margin:22px 0 0;padding:0 0 0 18px;border-left:2px solid rgba(255,255,255,.22)}
+blockquote p,.page blockquote p{margin:0}
+.page blockquote p + p{margin-top:4px}
+
+/* «Скачать» на странице установки: кнопка и строки */
+.dl{margin-top:44px}
+.dl .cta{margin:0}
+.dl-wait{display:none;color:var(--muted)}
+.js .dl-wait{display:block}
+.dl .facts{margin-top:28px}
+.sha{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px}
+.sha code{color:var(--ink);word-break:break-all}
+.after{color:var(--muted)}
+.soon b{font-weight:600}
+.page .soon p + p,.page .dl noscript p + p{margin-top:6px}
+
+/* «Установка»: беды первого запуска — строки с раскрытием, как «Вопросы» главной */
+.troubles{margin-top:18px}
+.troubles .w{padding-top:0}
+
+@media (max-width:860px){
+  .page{padding-top:48px}
+  .blk{padding-top:56px}
+  .page .lead{font-size:19px}
+  .page h2{font-size:24px}
+  .facts .row,.facts summary{grid-template-columns:minmax(0,1fr)}
+  .rule{grid-template-columns:minmax(0,1fr);gap:14px}
+  ul.files li{grid-template-columns:minmax(0,1fr)}
+  .w{padding-right:0}
+}
+/* самые узкие телефоны (360 px): имя программы, язык и кнопка в шапке не должны сойтись вплотную ни на одном языке */
+@media (max-width:380px){
+  .bar-nav{gap:12px}
+  .btn-s{padding:7px 12px}
+}
+@media print{.bar{position:static}}

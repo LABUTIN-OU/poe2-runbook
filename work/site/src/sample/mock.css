@@ -1,0 +1,144 @@
+/* PoE2 Runbook — образец главной страницы. Одна мысль на экран, продукт крупно, никаких рамок-плиток. */
+:root{
+  color-scheme:dark;
+  --bg:#08090b;--ink:#f5f5f7;--muted:#a1a1a6;--faint:#6e6e73;--line:rgba(255,255,255,.1);
+  --accent:#7fb2ff;--on-accent:#06101f;
+  --wrap:1040px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--ink);
+  font:17px/1.47 "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3{font-family:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-weight:600;margin:0}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+img{display:block;max-width:100%;height:auto}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+.narrow{max-width:720px}
+
+/* верхняя строка: имя, язык, кнопка */
+.bar{position:sticky;top:0;z-index:10;background:rgba(8,9,11,.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.bar-in{display:flex;align-items:center;justify-content:space-between;height:52px}
+.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);font-weight:600;font-size:17px;letter-spacing:-.01em}
+.brand:hover{text-decoration:none}
+.brand img{width:28px;height:28px}
+.bar-nav{display:flex;align-items:center;gap:22px}
+.lang{color:var(--muted);font-size:14px}
+.lang:hover{color:var(--ink);text-decoration:none}
+
+.btn{display:inline-block;padding:14px 30px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:18px;font-weight:600;line-height:1.2}
+.btn:hover{text-decoration:none;filter:brightness(1.08)}
+.btn-s{padding:7px 16px;font-size:14px}
+
+/* первый экран */
+.hero{position:relative;padding:52px 0 70px;text-align:center}
+.hero::before{content:"";position:absolute;left:50%;bottom:-40px;width:min(1180px,150vw);height:480px;transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(closest-side,rgba(92,150,255,.34),rgba(92,150,255,.1) 55%,transparent 78%)}
+h1{font-size:clamp(40px,6.4vw,92px);line-height:1.04;letter-spacing:-.03em}
+.lead{margin:20px auto 0;max-width:940px;color:var(--muted);font-size:24px;line-height:1.32;letter-spacing:-.005em}
+.lead span{display:block}
+.cta{margin:28px 0 0;display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:wrap}
+.cta-2{color:var(--ink);font-size:17px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.35)}
+.fine{margin:14px 0 0;color:var(--faint);font-size:14px}
+.fine a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.product{position:relative;max-width:880px;margin:48px auto 0;padding:0 24px}
+.product img{border-radius:10px;box-shadow:0 0 0 1px rgba(127,178,255,.6),0 30px 90px rgba(0,0,0,.85)}
+
+.eyebrow{margin:0 0 18px;color:var(--accent);font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+
+/* возможность: заголовок, одна мысль, продукт крупно */
+.feat{padding:140px 0 0;text-align:center}
+h2{font-size:54px;line-height:1.07;letter-spacing:-.025em}
+.sub{margin:18px auto 0;max-width:620px;color:var(--muted);font-size:21px;line-height:1.4}
+.shot{margin:56px auto 0;padding:0 24px}
+.shot img{margin:0 auto}
+.shot-window{max-width:1088px}
+.shot-close{max-width:1040px}
+.shot-close img{width:100%;border-radius:12px;box-shadow:0 0 0 1px rgba(240,96,79,.45),0 40px 110px rgba(0,0,0,.8),0 0 140px rgba(240,96,79,.16)}
+.shot-window img{border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 40px 120px rgba(0,0,0,.7);
+  -webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
+
+/* текст слева, продукт справа */
+.split{padding:110px 0 0}
+.split-in{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:center;gap:56px}
+.split .sub{margin-left:0;font-size:21px}
+.split-pic{position:relative}
+.split-pic::before{content:"";position:absolute;inset:-12% -10%;background:radial-gradient(closest-side,rgba(92,189,136,.2),transparent 72%);pointer-events:none}
+.split-pic img{position:relative;border-radius:12px;box-shadow:0 30px 90px rgba(0,0,0,.8)}
+
+/* узкая полоса-картинка и разбор */
+.shot-strip{max-width:1088px}
+.shot-strip img{border-radius:14px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 30px 90px rgba(0,0,0,.7)}
+.shot-review{max-width:924px}
+.shot-review img{width:100%;border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 40px 110px rgba(0,0,0,.7)}
+.tags{margin:18px auto 0;max-width:760px;color:var(--faint);font-size:16px;line-height:1.5}
+.feat .eyebrow{margin-bottom:16px}
+.split-rev .split-in{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
+.split-pic.plain::before{display:none}
+.split-pic.plain img{border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 30px 90px rgba(0,0,0,.7)}
+.split-rev{padding-top:150px}
+
+/* авторам билдов: другая аудитория — другая полоса */
+.authors{margin-top:170px;padding:110px 0 116px;text-align:center;background:#0e1014;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.authors h2{max-width:980px;margin:0 auto;font-size:46px}
+.authors h2 span{display:block}
+.authors .sub{max-width:700px}
+.authors-do{margin:28px 0 0;font-size:18px}
+.authors-do a{text-decoration:underline;text-underline-offset:4px}
+
+/* выпуск: строка сведений, не реклама */
+.release{padding:120px 0 0}
+.release-in{display:flex;align-items:center;justify-content:space-between;gap:20px 32px;flex-wrap:wrap;padding:26px 30px;border-radius:18px;
+  background:#101216;box-shadow:0 0 0 1px rgba(255,255,255,.1)}
+.release p{margin:0}
+.release-name{font-size:24px;font-weight:600;letter-spacing:-.015em}
+.release-meta{margin-top:4px!important;color:var(--muted);font-size:16px}
+.release-do{display:flex;align-items:center;gap:22px;font-size:16px}
+.release-do a:not(.btn){color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.btn-m{padding:11px 26px;font-size:17px}
+
+/* вопросы */
+.faq{padding:120px 0 0}
+.faq h2{font-size:40px;margin-bottom:18px}
+details{border-top:1px solid var(--line)}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{position:relative;padding:20px 40px 20px 0;font-size:19px;font-weight:600;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";position:absolute;right:6px;top:26px;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .15s}
+details[open] summary::after{transform:rotate(-135deg);top:31px}
+details p{margin:0 0 22px;max-width:620px;color:var(--muted)}
+
+.foot{margin-top:130px;padding:26px 0 44px;border-top:1px solid rgba(255,255,255,.06);color:var(--faint);font-size:13px}
+.foot-in{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px 28px}
+.foot p{margin:0}
+.foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}
+.foot a{color:var(--muted)}
+.ggg{flex-basis:100%}
+
+@media (max-width:860px){
+  .lead{font-size:20px}
+  .hero{padding-top:56px}
+  .product{margin-top:40px}
+  h2{font-size:34px}
+  .sub{font-size:18px}
+  .feat,.faq{padding-top:96px}
+  .split-rev{padding-top:96px}
+  .split-rev .split-in{grid-template-columns:minmax(0,1fr)}
+  .split-rev .split-text{order:-1}
+  .shot-strip{padding:0 0 0 24px;overflow:hidden}
+  .shot-strip img{width:230%;max-width:none;border-radius:12px 0 0 12px}
+  .split{padding-top:80px}
+  .split-in{grid-template-columns:minmax(0,1fr);gap:36px;text-align:center}
+  .split .sub{margin-left:auto}
+
+  .authors{margin-top:104px;padding:72px 0 76px}
+  .authors h2{font-size:30px}
+  .release{padding-top:72px}
+  .release-in{padding:22px 20px}
+  .btn{padding:13px 26px;font-size:17px}
+  .btn-s{padding:7px 14px;font-size:14px}
+  .shot-window{padding:0 0 0 24px;overflow:hidden}
+  .shot-window img{width:210%;max-width:none;border-radius:14px 0 0 14px}
+}

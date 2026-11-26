@@ -79,8 +79,12 @@ class Game:
         return next((b for b in self.cat['bases'].values() if b['name'] == name), None)
 
     def name(self, en):
-        """Название предмета из игры на языке страницы: «Сфера царей (Regal Orb)»."""
-        return i18n.game_name((self.pack.get('bases') or {}).get(en), en, self.lang)
+        """Название предмета из игры на языке страницы: «Сфера царей (Regal Orb)». Базы снаряжения знает слой языка
+        каталога, валюту (сферы, сущности, кости) на любом языке — таблицы игры этого языка (names-<язык>)."""
+        local = (self.pack.get('bases') or {}).get(en)
+        if not local and self.lang != 'en':
+            local = ((gamedata.names_pack(self.cat, self.lang) or {}).get('names') or {}).get(en)
+        return i18n.game_name(local, en, self.lang)
 
     def stat_name(self, sid):
         return (herostats._names(self.cat, self.lang).get(sid) or [sid])[0]

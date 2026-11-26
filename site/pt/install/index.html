@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="pt-BR" data-locale="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>Instalação — PoE2 Runbook</title>
+<meta name="description" content="Baixe o PoE2 Runbook para Windows: versão, tamanho e SHA-256 do instalador, a primeira execução passo a passo, do que o programa precisa e como desinstalá-lo.">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://poe2.labutin.gg/pt/install/">
+<link rel="alternate" hreflang="en" href="https://poe2.labutin.gg/install/">
+<link rel="alternate" hreflang="ru" href="https://poe2.labutin.gg/ru/install/">
+<link rel="alternate" hreflang="de" href="https://poe2.labutin.gg/de/install/">
+<link rel="alternate" hreflang="es" href="https://poe2.labutin.gg/es/install/">
+<link rel="alternate" hreflang="fr" href="https://poe2.labutin.gg/fr/install/">
+<link rel="alternate" hreflang="ja" href="https://poe2.labutin.gg/ja/install/">
+<link rel="alternate" hreflang="ko" href="https://poe2.labutin.gg/ko/install/">
+<link rel="alternate" hreflang="pt-BR" href="https://poe2.labutin.gg/pt/install/">
+<link rel="alternate" hreflang="th" href="https://poe2.labutin.gg/th/install/">
+<link rel="alternate" hreflang="x-default" href="https://poe2.labutin.gg/install/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PoE2 Runbook">
+<meta property="og:title" content="PoE2 Runbook: baixar e instalar">
+<meta property="og:description" content="Baixe o PoE2 Runbook para Windows: versão, tamanho e SHA-256 do instalador, a primeira execução passo a passo, do que o programa precisa e como desinstalá-lo.">
+<meta property="og:url" content="https://poe2.labutin.gg/pt/install/">
+<meta property="og:image" content="https://poe2.labutin.gg/assets/og-pt.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A lista da área “Campos de Caça”: duas habilidades, um chefe com recompensa de dois pontos, dois Pontos de Rota; 1:26 de 7:00 gastos na área.">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:locale:alternate" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../assets/site.css">
+<script src="../../assets/lang.js"></script>
+<script src="../../assets/config.js" defer></script>
+<script src="../../assets/site.js" defer></script>
+</head>
+<body class="p-install">
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="../"><img src="../../assets/icon.png" width="28" height="28" alt="">PoE2 Runbook</a>
+    <nav class="bar-nav" aria-label="Idioma e download">
+      <details class="langs">
+        <summary class="lang"><span class="ln">Português</span><span class="lc">PT</span><span aria-hidden="true"> ▾</span></summary>
+        <div class="langs-menu"><a href="../../install/?lang=en" lang="en" hreflang="en" data-lang="en">English</a><a href="../../ru/install/" lang="ru" hreflang="ru" data-lang="ru">Русский</a><a href="../../de/install/" lang="de" hreflang="de" data-lang="de">Deutsch</a><a href="../../es/install/" lang="es" hreflang="es" data-lang="es">Español</a><a href="../../fr/install/" lang="fr" hreflang="fr" data-lang="fr">Français</a><a href="../../ja/install/" lang="ja" hreflang="ja" data-lang="ja">日本語</a><a href="../../ko/install/" lang="ko" hreflang="ko" data-lang="ko">한국어</a><span class="here" lang="pt-BR" aria-current="true">Português (Brasil)</span><a href="../../th/install/" lang="th" hreflang="th" data-lang="th">ไทย</a></div>
+      </details>
+      <a class="btn btn-s" href="#download" data-dl-link>Baixar</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap page">
+  <div class="page-h">
+    <h1>Instalação</h1>
+    <p class="lead">Um só instalador para Windows 10 e 11. Não pede direitos de administrador.</p>
+  </div>
+
+  <div class="dl" id="download" data-dl-panel data-t-button="Baixar PoE2 Runbook {version}" data-t-mb="{n} MB" data-t-bytes="{n} bytes">
+    <p class="dl-wait" id="dl-wait">Buscando a versão atual…</p>
+    <div id="dl-ready" hidden>
+      <p class="cta"><a class="btn" id="dl-link" href="#download">Baixar para Windows</a></p>
+      <dl class="facts">
+        <div class="row"><dt class="k">Arquivo</dt><dd class="v" id="dl-file"></dd></div>
+        <div class="row"><dt class="k">Versão do programa</dt><dd class="v" id="dl-version"></dd></div>
+        <div class="row"><dt class="k">Versão do jogo</dt><dd class="v" id="dl-game"></dd></div>
+        <div class="row"><dt class="k">Tamanho</dt><dd class="v"><span id="dl-size"></span> · <span id="dl-bytes"></span></dd></div>
+        <div class="row"><dt class="k">Data de lançamento</dt><dd class="v" id="dl-date"></dd></div>
+        <div class="row"><dt class="k">SHA-256</dt><dd class="v sha"><code id="dl-sha"></code><button class="mini" type="button" data-copy="dl-sha" data-done="Copiado" hidden>Copiar</button></dd></div>
+        <div class="row" id="dl-notes" hidden><dt class="k">Novidades</dt><dd class="v" id="dl-notes-text"></dd></div>
+      </dl>
+      <p class="after"><a href="#first-start">Como conferir o arquivo e o que o Windows vai perguntar</a></p>
+    </div>
+    <div class="soon" id="dl-soon" hidden>
+      <p><b>A primeira versão pública ainda não foi publicada.</b></p>
+      <p class="quiet">Ela vai aparecer aqui: o programa só é baixado deste site.</p>
+    </div>
+    <noscript>
+      <p>O JavaScript está desativado, por isso a página não mostra a versão atual. O número da versão, o endereço do instalador e o SHA-256 dele estão num arquivo de texto comum: <a href="../../update/latest.json">update/latest.json</a>.</p>
+      <p class="quiet">O arquivo vai aparecer junto com a primeira versão pública.</p>
+    </noscript>
+  </div>
+
+  <section class="blk" id="first-start">
+    <h2>Primeira execução</h2>
+    <p class="sub">O instalador ainda não está assinado, por isso o Windows não conhece o fornecedor dele. No lugar da assinatura há o SHA-256 ao lado do botão “Baixar”: ele mostra que o seu arquivo é o mesmo que está publicado nesta página.</p>
+    <div class="troubles">
+      <details id="verify">
+        <summary>Não tenho certeza de que o arquivo é o verdadeiro</summary>
+        <div class="w">
+          <p>O arquivo verdadeiro se reconhece pelo SHA-256. Abra a pasta com o arquivo baixado, clique na barra de endereços do Explorador de Arquivos, digite <code>powershell</code> e pressione Enter. Na janela que abrir, execute:</p>
+          <pre><code id="cmd-hash">Get-FileHash "<span data-file>PoE2Runbook-Setup-*.exe</span>"</code></pre>
+          <p>Compare o valor abaixo da palavra <b>Hash</b> com o SHA-256 ao lado do botão “Baixar”. Todos os 64 caracteres precisam coincidir; maiúsculas ou minúsculas, tanto faz. Se não coincidir, não execute o arquivo: baixe-o de novo nesta página.</p>
+        </div>
+      </details>
+      <details>
+        <summary>O Windows não deixa executar o instalador</summary>
+        <div class="w">
+          <p>O instalador ainda não está assinado, e o Windows não conhece o fornecedor dele. Vai aparecer a janela “O Windows protegeu o computador”. Clique em <b>“Mais informações”</b> e depois em <b>“Executar assim mesmo”</b>.</p>
+          <p>O navegador pode avisar ainda antes: um arquivo assim é baixado raramente. Mantenha o arquivo mesmo assim.</p>
+          <p>No Windows 11 com o “Controle Inteligente de Aplicativos” ativado, o botão “Executar assim mesmo” não existe: essa proteção bloqueia o instalador de vez.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Não tenho direitos de administrador</summary>
+        <div class="w">
+          <p>Eles não são necessários. O instalador instala o programa só para você&nbsp;— na pasta <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>O programa não encontrou o jogo</summary>
+        <div class="w">
+          <p>O programa procura o jogo sozinho: Steam ou o cliente do site do jogo, em qualquer disco. Se não encontrar, ele avisa e deixa você indicar a pasta do jogo.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="blk" id="needs">
+    <h2>O que é preciso</h2>
+    <ul class="plain">
+      <li>Windows 10 ou Windows 11, de 64 bits.</li>
+      <li>Microsoft Edge WebView2&nbsp;— no Windows 11 ele já vem; no Windows 10, quem o instala é o Windows Update. Se ele faltar, o programa avisa e oferece a página de download da Microsoft.</li>
+      <li>Path of Exile 2. Cada versão do programa é feita para uma única versão do jogo&nbsp;— ela é indicada ao lado do botão “Baixar”.</li>
+      <li>O jogo no modo “Janela” ou “Tela Cheia em Janela”&nbsp;— para as janelas sobre o jogo.</li>
+    </ul>
+  </section>
+
+  <section class="blk" id="update">
+    <h2>Atualização</h2>
+    <p>O próprio programa avisa quando há uma versão nova e a instala pelo botão “Atualizar”. A versão nova é instalada por cima da anterior: os seus planos e heróis ficam.</p>
+  </section>
+
+  <section class="blk" id="langs">
+    <h2>Idiomas do programa</h2>
+    <p class="langs"><span lang="en">English</span>, <span lang="ru">Русский</span>, <span lang="de">Deutsch</span>, <span lang="es">Español</span>, <span lang="fr">Français</span>, <span lang="ja">日本語</span>, <span lang="ko">한국어</span>, <span lang="pt-BR">Português (Brasil)</span>, <span lang="th">ไทย</span>.</p>
+    <p class="quiet">O programa lê o log do jogo em qualquer um desses idiomas do cliente.</p>
+  </section>
+
+  <section class="blk" id="remove">
+    <h2>Desinstalação</h2>
+    <p>Nas Configurações do Windows: “Aplicativos” → PoE2 Runbook → “Desinstalar”.</p>
+    <p class="quiet">A pasta com os seus planos e heróis&nbsp;— <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code>&nbsp;— fica no lugar. Se não precisar dela, apague-a você mesmo.</p>
+  </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>© 2026 Sergei Labutin</p>
+    <nav aria-label="Páginas">
+      <a href="./">Instalação</a>
+      <a href="../safety/">O que o programa lê</a>
+      <a href="../about/#licence" data-repo rel="noopener noreferrer">Código-fonte</a>
+      <a href="../about/#licence">Licença</a>
+      <a href="../about/#contact" data-contact-row hidden>Contato</a>
+    </nav>
+    <p class="ggg" lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+  </div>
+</footer>
+
+</body>
+</html>

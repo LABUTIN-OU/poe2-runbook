@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="pt-BR" data-locale="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>O que o programa lê — PoE2 Runbook</title>
+<meta name="description" content="A lista exata, tirada do código do programa: quais arquivos do jogo ele lê, quando abre a área de transferência, quais teclas escuta e o que envia ao jogo, o que grava no disco e o que pede pela rede.">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://poe2.labutin.gg/pt/safety/">
+<link rel="alternate" hreflang="en" href="https://poe2.labutin.gg/safety/">
+<link rel="alternate" hreflang="ru" href="https://poe2.labutin.gg/ru/safety/">
+<link rel="alternate" hreflang="de" href="https://poe2.labutin.gg/de/safety/">
+<link rel="alternate" hreflang="es" href="https://poe2.labutin.gg/es/safety/">
+<link rel="alternate" hreflang="fr" href="https://poe2.labutin.gg/fr/safety/">
+<link rel="alternate" hreflang="ja" href="https://poe2.labutin.gg/ja/safety/">
+<link rel="alternate" hreflang="ko" href="https://poe2.labutin.gg/ko/safety/">
+<link rel="alternate" hreflang="pt-BR" href="https://poe2.labutin.gg/pt/safety/">
+<link rel="alternate" hreflang="th" href="https://poe2.labutin.gg/th/safety/">
+<link rel="alternate" hreflang="x-default" href="https://poe2.labutin.gg/safety/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PoE2 Runbook">
+<meta property="og:title" content="PoE2 Runbook: o que o programa lê, escuta e pressiona">
+<meta property="og:description" content="A lista exata, tirada do código do programa: quais arquivos do jogo ele lê, quando abre a área de transferência, quais teclas escuta e o que envia ao jogo, o que grava no disco e o que pede pela rede.">
+<meta property="og:url" content="https://poe2.labutin.gg/pt/safety/">
+<meta property="og:image" content="https://poe2.labutin.gg/assets/og-pt.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A lista da área “Campos de Caça”: duas habilidades, um chefe com recompensa de dois pontos, dois Pontos de Rota; 1:26 de 7:00 gastos na área.">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:locale:alternate" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../assets/site.css">
+<script src="../../assets/lang.js"></script>
+<script src="../../assets/config.js" defer></script>
+<script src="../../assets/site.js" defer></script>
+</head>
+<body class="p-safety">
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="../"><img src="../../assets/icon.png" width="28" height="28" alt="">PoE2 Runbook</a>
+    <nav class="bar-nav" aria-label="Idioma e download">
+      <details class="langs">
+        <summary class="lang"><span class="ln">Português</span><span class="lc">PT</span><span aria-hidden="true"> ▾</span></summary>
+        <div class="langs-menu"><a href="../../safety/?lang=en" lang="en" hreflang="en" data-lang="en">English</a><a href="../../ru/safety/" lang="ru" hreflang="ru" data-lang="ru">Русский</a><a href="../../de/safety/" lang="de" hreflang="de" data-lang="de">Deutsch</a><a href="../../es/safety/" lang="es" hreflang="es" data-lang="es">Español</a><a href="../../fr/safety/" lang="fr" hreflang="fr" data-lang="fr">Français</a><a href="../../ja/safety/" lang="ja" hreflang="ja" data-lang="ja">日本語</a><a href="../../ko/safety/" lang="ko" hreflang="ko" data-lang="ko">한국어</a><span class="here" lang="pt-BR" aria-current="true">Português (Brasil)</span><a href="../../th/safety/" lang="th" hreflang="th" data-lang="th">ไทย</a></div>
+      </details>
+      <a class="btn btn-s" href="../install/#download" data-dl-link>Baixar</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap page">
+  <div class="page-h">
+    <h1>O que o programa lê, escuta e pressiona</h1>
+    <p class="lead">Uma janela separada ao lado do jogo: lê o log e as configurações do jogo, escuta três teclas e envia ao jogo uma cópia de item para cada <kbd>F2</kbd> que você pressiona. No jogo em si não muda nada&nbsp;— nem os arquivos, nem a memória.</p>
+    <div class="tocrow">
+      <p class="quiet">Cada linha abaixo foi tirada do código do programa. As linhas com seta se expandem.</p>
+      <button class="mini" type="button" data-open-all data-on="Recolher tudo" hidden>Expandir tudo</button>
+    </div>
+    <ul class="toc" aria-label="Seções da lista">
+      <li><a href="#files">Arquivos do jogo</a></li>
+      <li><a href="#windows">Windows</a></li>
+      <li><a href="#clipboard">Área de transferência</a></li>
+      <li><a href="#keys">Teclas</a></li>
+      <li><a href="#sends">O que envia ao jogo</a></li>
+      <li><a href="#overlay">Janelas sobre o jogo</a></li>
+      <li><a href="#disk">Disco</a></li>
+      <li><a href="#network">Rede</a></li>
+      <li><a href="#rules">Regras da GGG</a></li>
+    </ul>
+  </div>
+
+  <section class="blk" id="files">
+    <h2>Lê: arquivos do jogo</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>logs\Client.txt</code></span><span class="v">O log do jogo. Somente leitura: área, nível do herói, recompensas.</span></summary>
+        <div class="w">Fica na pasta do jogo. Ao iniciar, o programa lê o log inteiro; depois, as linhas novas duas vezes por segundo. O que ele tira dali: a abertura e o fechamento do jogo; a área em que você entrou; o nível do herói&nbsp;— por essas linhas se sabem o nome e a classe do herói; as recompensas de missões; a morte do herói; qual filtro de itens o jogo carregou; os seus cliques na árvore de habilidades passivas; a versão do jogo. De tudo o que é dito no bate-papo, só são notadas as falas de NPCs que o seu plano espera; o resto não é guardado.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>poe2_production_Config.ini</code></span><span class="v">As configurações do jogo. Somente leitura: filtro, idioma, teclas do jogo.</span></summary>
+        <div class="w">Fica em <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>; é lido de novo quando o arquivo muda. O que o programa tira dali: qual filtro de itens está selecionado, o idioma do cliente e as teclas configuradas no jogo&nbsp;— para que as teclas do programa não ocupem uma tecla que o jogo usa.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>OnlineFilters\</code></span><span class="v">Filtros de itens da sua conta. Somente leitura.</span></summary>
+        <div class="w">Uma pasta em <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>: os filtros que o jogo baixou da sua conta. De cada um são lidos o nome e as regras&nbsp;— para chamar o filtro pelo nome e avisar quando o filtro selecionado esconde um item que o plano procura. Uma cópia de cada versão do filtro que o jogo carregou fica na pasta do próprio programa.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Arquivos do Steam e o Registro do Windows</span><span class="v">Somente leitura&nbsp;— para achar onde o jogo está instalado.</span></summary>
+        <div class="w"><code>libraryfolders.vdf</code>, <code>appmanifest_2694490.acf</code>; no Registro&nbsp;— a pasta do Steam e a entrada “Path of Exile 2” entre os programas instalados. Se o jogo não for encontrado, você mesmo indica a pasta.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="windows">
+    <h2>Pergunta ao Windows</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">A janela ativa</span><span class="v">Qual janela está na frente e de quem ela é. A memória do jogo não é lida.</span></summary>
+        <div class="w">Qual janela está na frente agora e a qual programa ela pertence&nbsp;— para saber que é o jogo.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">A janela do jogo, o cursor, <kbd>Alt</kbd></span><span class="v">Onde estão agora. Nada é lido da tela.</span></summary>
+        <div class="w">Onde está a janela do jogo, onde está o cursor do mouse e se <kbd>Alt</kbd> está pressionado&nbsp;— para pôr as janelas do programa sobre o jogo e deixar você clicar nelas.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="clipboard">
+    <h2>Área de transferência</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">O que monitora</span><span class="v">Só o contador de alterações da área de transferência. O conteúdo não é lido.</span></summary>
+        <div class="w">O contador é um número mantido pelo Windows: ele muda a cada cópia.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Quando lê o conteúdo</span><span class="v">Uma vez&nbsp;— depois que você copia um item no jogo.</span></summary>
+        <div class="w">Quando o contador muda com a janela do jogo ativa: é o seu <kbd>Ctrl</kbd>+<kbd>C</kbd> ou <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd> sobre um item. Em qualquer outra janela, a área de transferência nem é aberta. O que estava nela antes de o programa iniciar não é lido.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">O que fica</span><span class="v">Só o texto do item, e só na memória do programa.</span></summary>
+        <div class="w">Só texto, no máximo 200.000 bytes. Um texto que não começa com a linha do jogo “Classe do Item” é descartado na hora: não é guardado nem gravado em lugar nenhum. O texto do item vive só na memória; quando você pressiona “Equipar”, o item é gravado no arquivo do herói como equipado.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Cópia com <kbd>F2</kbd></span><span class="v">O conteúdo anterior da área de transferência volta ao lugar.</span></summary>
+        <div class="w">O programa guarda a área de transferência inteira (até 32 MB), pressiona no jogo as teclas de cópia, lê o item uma vez e devolve à área de transferência o que estava nela. Ele não olha o que guardou.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="keys">
+    <h2>Teclas que escuta</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>F2</kbd> Comparar / Equipar</span><span class="v">Compara o item sob o cursor com o equipado.</span></summary>
+        <div class="w">Pressionada de novo sobre o mesmo item&nbsp;— registra o item como equipado. Funciona também com <kbd>Alt</kbd> pressionado.</div>
+      </details></li>
+      <li><div class="row"><span class="k"><kbd>F3</kbd> Fechar</span><span class="v">Fecha a janela de cima do programa sobre o jogo.</span></div></li>
+      <li><div class="row"><span class="k"><kbd>F7</kbd> Programa ↔ jogo</span><span class="v">Traz a janela do programa para a frente e volta para o jogo.</span></div></li>
+      <li><details>
+        <summary><span class="k">Quando escuta</span><span class="v">Só enquanto a janela do jogo está ativa.</span></summary>
+        <div class="w"><kbd>F7</kbd>&nbsp;— também na janela do próprio programa. Assim que outra janela fica ativa, as teclas são liberadas: em outros programas elas funcionam normalmente. Se o próprio jogo usa uma delas, o programa pega a próxima livre entre F2, F3, F7, F6, F9, F10, F11. F4 nunca é usada.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">As outras teclas</span><span class="v">Não há interceptador de teclado: o programa não as vê.</span></summary>
+        <div class="w">O que mais você pressiona, o programa não vê. Só há uma exceção&nbsp;— <kbd>Alt</kbd>: enquanto as janelas sobre o jogo estão ligadas, o programa pergunta ao Windows se ele está pressionado.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="sends">
+    <h2>O que envia ao jogo</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd></span><span class="v">Uma vez para cada <kbd>F2</kbd> que você pressiona.</span></summary>
+        <div class="w">Só enquanto a janela do jogo está ativa. São as teclas do próprio jogo&nbsp;— “copiar o item com as descrições avançadas”. Se no jogo as descrições avançadas estão em outra tecla que não Alt, é essa tecla que é pressionada no lugar de Alt.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Mais nada</span><span class="v">Nem bate-papo, nem comandos, nem mouse, nada por temporizador.</span></summary>
+        <div class="w">Nem mensagens ou comandos no bate-papo, nem cliques do mouse, nada por temporizador, nada em resposta ao log ou à tela. “Equipar” e as suas marcações mudam só os registros do próprio programa.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="overlay">
+    <h2>Janelas sobre o jogo</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">Três janelas pequenas</span><span class="v">A lista do passo, a resposta à cópia de um item, a dica da árvore.</span></summary>
+        <div class="w">Elas ficam sobre a janela do jogo. Nunca tiram o foco, e o mouse passa por elas direto para o jogo&nbsp;— exceto quando <kbd>Alt</kbd> está pressionado e o cursor está sobre a janela, e exceto nos botões da resposta.</div>
+      </details></li>
+      <li><div class="row"><span class="k">Do que precisam</span><span class="v">O jogo no modo “Janela” ou “Tela Cheia em Janela”.</span></div></li>
+      <li><div class="row"><span class="k">Como desligar</span><span class="v">Com um único interruptor nas “Configurações”.</span></div></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="disk">
+    <h2>O que grava no disco</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">Tudo o que o programa grava enquanto funciona.</span></summary>
+        <div class="w">
+          <ul class="files">
+            <li><code>plans\</code><span>os seus planos e os planos instalados do catálogo; o plano que vem com o programa é colocado aqui na primeira execução</span></li>
+            <li><code>runs\</code><span>um arquivo por herói: eventos do log, as suas marcações, os itens que você registrou como equipados</span></li>
+            <li><code>filters\</code><span>cópias das versões do filtro que o jogo carregou</span></li>
+            <li><code>backup\</code><span>versões anteriores do plano&nbsp;— antes de cada edição; planos removidos</span></li>
+            <li><code>export\</code><span>arquivos de planos que você salvou para compartilhar</span></li>
+            <li><code>update\</code><span>o instalador da nova versão&nbsp;— depois de “Atualizar”; é removido após a instalação</span></li>
+            <li><code>settings.json</code><span>a pasta do jogo, o tamanho e a posição da janela, as suas escolhas nas “Configurações”</span></li>
+            <li><code>program.log</code><span>o que o programa fez nesta execução; as cinco execuções anteriores também ficam guardadas</span></li>
+            <li><code>webview\</code><span>o armazenamento do motor da janela: as configurações próprias das páginas e o cache</span></li>
+          </ul>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">O programa em si. Só o instalador grava aqui.</span></summary>
+        <div class="w">Para isso, não são pedidos direitos de administrador.</div>
+      </details></li>
+      <li><div class="row"><span class="k">A pasta “Downloads”</span><span class="v">O arquivo do plano&nbsp;— quando você clica em “Baixar arquivo do plano”.</span></div></li>
+      <li><details>
+        <summary><span class="k">As pastas do jogo</span><span class="v">Nelas não se grava nada.</span></summary>
+        <div class="w">Nem na pasta do jogo, nem em <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Depois de desinstalar</span><span class="v">Os seus planos e heróis ficam.</span></summary>
+        <div class="w">A desinstalação do programa deixa <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> no lugar&nbsp;— ali estão os seus planos e heróis. Se não precisar deles, apague a pasta você mesmo.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="network">
+    <h2>Rede</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">Sobre você</span><span class="v">O programa não envia nada sobre você nem sobre o seu jogo para lugar nenhum.</span></summary>
+        <div class="w">Ele não tem conta, nem estatísticas, nem relatórios de erro.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Atualizações e catálogo de planos</span><span class="v">Ao iniciar e a cada 6 horas&nbsp;— quatro arquivos deste site.</span></summary>
+        <div class="w">
+          <p>Os arquivos são pequenos: o arquivo de atualização <code>update/latest.json</code> e o catálogo de planos <code>plans/index.json</code>, cada um com a sua assinatura (<code>.sig</code>). Se o site não respondeu, ou se o jogo já é mais novo que o programa e a versão nova ainda não saiu, o programa pergunta de novo em meia hora. Dá para desligar nas “Configurações”: “Verificar atualizações”.</p>
+          <p>O programa também pede o catálogo de planos quando você abre a lista de planos no “Editor”&nbsp;— no máximo uma vez por minuto. Se “Verificar atualizações” está desligado, o programa não acessa este site por conta própria: o catálogo só é pedido pelo botão “Pedir o catálogo”.</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">O que vai no pedido</span><span class="v">A versão do programa e mais nada.</span></summary>
+        <div class="w">Em cada pedido desses vai a versão do programa (<code>User-Agent: PoE2Runbook/&lt;versão&gt;</code>): nem cookies, nem nome, nada sobre o seu jogo. A hospedagem, como em qualquer pedido, vê o seu endereço IP.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Assinaturas</span><span class="v">O próprio programa verifica os dois arquivos&nbsp;— e só depois os lê.</span></summary>
+        <div class="w">Ele verifica com uma chave embutida nele. Uma atualização só é aceita se a versão dela for mais nova que a do programa.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Download</span><span class="v">Só depois que você clica em “Atualizar” ou “Instalar”.</span></summary>
+        <div class="w">
+          <p>Enquanto você não clica em “Atualizar” ou “Instalar”, nada é baixado nem instalado.</p>
+          <p>“Atualizar” no cabeçalho: o programa baixa o instalador do endereço indicado no arquivo assinado, confere o tamanho e o SHA-256 dele, executa o instalador e se fecha; o instalador instala a nova versão e a abre.</p>
+          <p>“Instalar” ou “Atualizar” no catálogo: o programa baixa o arquivo do plano do endereço indicado no catálogo assinado, confere o tamanho e o SHA-256 dele e coloca o plano na biblioteca do programa.</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">As páginas da janela</span><span class="v">São servidas pelo seu próprio computador e respondem só a ele.</span></summary>
+        <div class="w">O endereço é 127.0.0.1: o programa serve as páginas da própria janela para si mesmo.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">O motor da janela</span><span class="v">Microsoft Edge WebView2&nbsp;— um componente do Windows.</span></summary>
+        <div class="w">É ele que desenha a janela. Ele pertence à Microsoft e pode acessar por conta própria os servidores dela, como faz o navegador Edge.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">O navegador</span><span class="v">Só é aberto por um clique seu.</span></summary>
+        <div class="w">Este site&nbsp;— pela janela “Sobre”; a página do autor do plano&nbsp;— pelo catálogo; a página do filtro de itens em pathofexile2.com; a página de download do WebView2 na Microsoft, se esse componente não existir.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="rules">
+    <h2>As regras da Grinding Gear Games que ele segue</h2>
+    <dl class="rules">
+      <div class="rule">
+        <dt><span class="ttl">Regra da GGG</span>Um programa que funciona separado do jogo é permitido; um que altera o jogo ou os arquivos dele, não.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>O PoE2 Runbook é um programa separado: lê o log e os próprios arquivos, e no jogo não altera nada.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">Regra da GGG</span>A tecla que age no jogo é você quem pressiona; ela faz uma coisa definida e uma única ação no jogo.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span><kbd>F2</kbd> faz uma cópia a cada vez que é pressionada. Nada é disparado por temporizador, pelo log ou pela tela.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">Regra da GGG</span>O log, a área de transferência e a tela podem ser lidos quando você sabe o que é feito com eles; a área de transferência e a tela&nbsp;— uma vez para cada tecla que você pressiona.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>Esta página é justamente essa lista. A área de transferência é lida uma vez por cópia; a tela não é lida.</dd>
+      </div>
+    </dl>
+    <p class="quiet">As regras estão resumidas com as nossas palavras. A fonte é a <a href="https://www.pathofexile.com/developer/docs/index" rel="noopener noreferrer">documentação do Path of Exile para desenvolvedores</a> (em inglês). A GGG não aprova programas um por um; as regras são dela, e ela pode mudá-las.</p>
+    <blockquote>
+      <p lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+      <p class="quiet">Em português: o programa não tem ligação com a Grinding Gear Games nem é aprovado por ela.</p>
+    </blockquote>
+  </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>© 2026 Sergei Labutin</p>
+    <nav aria-label="Páginas">
+      <a href="../install/">Instalação</a>
+      <a href="./">O que o programa lê</a>
+      <a href="../about/#licence" data-repo rel="noopener noreferrer">Código-fonte</a>
+      <a href="../about/#licence">Licença</a>
+      <a href="../about/#contact" data-contact-row hidden>Contato</a>
+    </nav>
+    <p class="ggg" lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+  </div>
+</footer>
+
+</body>
+</html>

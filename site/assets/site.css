@@ -1,168 +1,284 @@
-/* PoE2 Runbook — the program's site. Colours, type and shapes are the program's own (planner/static/index.html):
-   the same column, the same header rows, panels, tiles and key caps. The dark theme is the program's palette;
-   the light one is its counterpart. Which is shown — the system's setting decides. No file from other sites. */
+/* PoE2 Runbook — сайт программы. Этот файл собран (work/site/tools/build_site.py): первая часть — стили образца
+   главной слово в слово (work/site/src/sample/mock.css), вторая — своё (work/site/src/extra.css). Правится там, не здесь.
+   Тема одна — тёмная. Ни одного файла с других сайтов. */
+/* PoE2 Runbook — образец главной страницы. Одна мысль на экран, продукт крупно, никаких рамок-плиток. */
 :root{
-  color-scheme:dark light;
-  --bg:#111316;--card:#1a1d22;--tile:#20242a;--line:#2d323a;
-  --text:#eceae6;--muted:#98a0aa;--accent:#7fb2ff;--on-accent:#111316;--sel:#1c2a40;
-  --over:#f0604f;--ok:#5cbd88;--key:#4a525e;
-  --col:900px;
-  --mono:Consolas,"Cascadia Mono","SFMono-Regular",Menlo,"Liberation Mono",monospace;
-}
-@media (prefers-color-scheme:light){
-  :root{
-    --bg:#f4f2ee;--card:#ffffff;--tile:#f3f1ec;--line:#d9d5cc;
-    --text:#1b1d21;--muted:#5b636e;--accent:#1d5fc4;--on-accent:#ffffff;--sel:#dde8fb;
-    --over:#c23b2a;--ok:#1f7a4b;--key:#b5b0a5;
-  }
+  color-scheme:dark;
+  --bg:#08090b;--ink:#f5f5f7;--muted:#a1a1a6;--faint:#6e6e73;--line:rgba(255,255,255,.1);
+  --accent:#7fb2ff;--on-accent:#06101f;
+  --wrap:1040px;
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;overflow-x:hidden;background:var(--bg);color:var(--ink);
+  font:17px/1.47 "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3{font-family:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-weight:600;margin:0}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+img{display:block;max-width:100%;height:auto}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+.narrow{max-width:720px}
+
+/* верхняя строка: имя, язык, кнопка */
+.bar{position:sticky;top:0;z-index:10;background:rgba(8,9,11,.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.bar-in{display:flex;align-items:center;justify-content:space-between;height:52px}
+.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);font-weight:600;font-size:17px;letter-spacing:-.01em}
+.brand:hover{text-decoration:none}
+.brand img{width:28px;height:28px}
+.bar-nav{display:flex;align-items:center;gap:22px}
+.lang{color:var(--muted);font-size:14px}
+.lang:hover{color:var(--ink);text-decoration:none}
+
+.btn{display:inline-block;padding:14px 30px;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:18px;font-weight:600;line-height:1.2}
+.btn:hover{text-decoration:none;filter:brightness(1.08)}
+.btn-s{padding:7px 16px;font-size:14px}
+
+/* первый экран */
+.hero{position:relative;padding:52px 0 70px;text-align:center}
+.hero::before{content:"";position:absolute;left:50%;bottom:-40px;width:min(1180px,150vw);height:480px;transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(closest-side,rgba(92,150,255,.34),rgba(92,150,255,.1) 55%,transparent 78%)}
+h1{font-size:clamp(40px,6.4vw,92px);line-height:1.04;letter-spacing:-.03em}
+.lead{margin:20px auto 0;max-width:940px;color:var(--muted);font-size:24px;line-height:1.32;letter-spacing:-.005em}
+.lead span{display:block}
+.cta{margin:28px 0 0;display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:wrap}
+.cta-2{color:var(--ink);font-size:17px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.35)}
+.fine{margin:14px 0 0;color:var(--faint);font-size:14px}
+.fine a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.product{position:relative;max-width:880px;margin:48px auto 0;padding:0 24px}
+.product img{border-radius:10px;box-shadow:0 0 0 1px rgba(127,178,255,.6),0 30px 90px rgba(0,0,0,.85)}
+
+.eyebrow{margin:0 0 18px;color:var(--accent);font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+
+/* возможность: заголовок, одна мысль, продукт крупно */
+.feat{padding:140px 0 0;text-align:center}
+h2{font-size:54px;line-height:1.07;letter-spacing:-.025em}
+.sub{margin:18px auto 0;max-width:620px;color:var(--muted);font-size:21px;line-height:1.4}
+.shot{margin:56px auto 0;padding:0 24px}
+.shot img{margin:0 auto}
+.shot-window{max-width:1088px}
+.shot-close{max-width:1040px}
+.shot-close img{width:100%;border-radius:12px;box-shadow:0 0 0 1px rgba(240,96,79,.45),0 40px 110px rgba(0,0,0,.8),0 0 140px rgba(240,96,79,.16)}
+.shot-window img{border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 40px 120px rgba(0,0,0,.7);
+  -webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
+
+/* текст слева, продукт справа */
+.split{padding:110px 0 0}
+.split-in{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:center;gap:56px}
+.split .sub{margin-left:0;font-size:21px}
+.split-pic{position:relative}
+.split-pic::before{content:"";position:absolute;inset:-12% -10%;background:radial-gradient(closest-side,rgba(92,189,136,.2),transparent 72%);pointer-events:none}
+.split-pic img{position:relative;border-radius:12px;box-shadow:0 30px 90px rgba(0,0,0,.8)}
+
+/* узкая полоса-картинка и разбор */
+.shot-strip{max-width:1088px}
+.shot-strip img{border-radius:14px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 30px 90px rgba(0,0,0,.7)}
+.shot-review{max-width:924px}
+.shot-review img{width:100%;border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 40px 110px rgba(0,0,0,.7)}
+.tags{margin:18px auto 0;max-width:760px;color:var(--faint);font-size:16px;line-height:1.5}
+.feat .eyebrow{margin-bottom:16px}
+.split-rev .split-in{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
+.split-pic.plain::before{display:none}
+.split-pic.plain img{border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 30px 90px rgba(0,0,0,.7)}
+.split-rev{padding-top:150px}
+
+/* авторам билдов: другая аудитория — другая полоса */
+.authors{margin-top:170px;padding:110px 0 116px;text-align:center;background:#0e1014;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.authors h2{max-width:980px;margin:0 auto;font-size:46px}
+.authors h2 span{display:block}
+.authors .sub{max-width:700px}
+.authors-do{margin:28px 0 0;font-size:18px}
+.authors-do a{text-decoration:underline;text-underline-offset:4px}
+
+/* выпуск: строка сведений, не реклама */
+.release{padding:120px 0 0}
+.release-in{display:flex;align-items:center;justify-content:space-between;gap:20px 32px;flex-wrap:wrap;padding:26px 30px;border-radius:18px;
+  background:#101216;box-shadow:0 0 0 1px rgba(255,255,255,.1)}
+.release p{margin:0}
+.release-name{font-size:24px;font-weight:600;letter-spacing:-.015em}
+.release-meta{margin-top:4px!important;color:var(--muted);font-size:16px}
+.release-do{display:flex;align-items:center;gap:22px;font-size:16px}
+.release-do a:not(.btn){color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.btn-m{padding:11px 26px;font-size:17px}
+
+/* вопросы */
+.faq{padding:120px 0 0}
+.faq h2{font-size:40px;margin-bottom:18px}
+details{border-top:1px solid var(--line)}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{position:relative;padding:20px 40px 20px 0;font-size:19px;font-weight:600;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";position:absolute;right:6px;top:26px;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .15s}
+details[open] summary::after{transform:rotate(-135deg);top:31px}
+details p{margin:0 0 22px;max-width:620px;color:var(--muted)}
+
+.foot{margin-top:130px;padding:26px 0 44px;border-top:1px solid rgba(255,255,255,.06);color:var(--faint);font-size:13px}
+.foot-in{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px 28px}
+.foot p{margin:0}
+.foot nav{display:flex;flex-wrap:wrap;gap:6px 22px}
+.foot a{color:var(--muted)}
+.ggg{flex-basis:100%}
+
+@media (max-width:860px){
+  .lead{font-size:20px}
+  .hero{padding-top:56px}
+  .product{margin-top:40px}
+  h2{font-size:34px}
+  .sub{font-size:18px}
+  .feat,.faq{padding-top:96px}
+  .split-rev{padding-top:96px}
+  .split-rev .split-in{grid-template-columns:minmax(0,1fr)}
+  .split-rev .split-text{order:-1}
+  .shot-strip{padding:0 0 0 24px;overflow:hidden}
+  .shot-strip img{width:230%;max-width:none;border-radius:12px 0 0 12px}
+  .split{padding-top:80px}
+  .split-in{grid-template-columns:minmax(0,1fr);gap:36px;text-align:center}
+  .split .sub{margin-left:auto}
+
+  .authors{margin-top:104px;padding:72px 0 76px}
+  .authors h2{font-size:30px}
+  .release{padding-top:72px}
+  .release-in{padding:22px 20px}
+  .btn{padding:13px 26px;font-size:17px}
+  .btn-s{padding:7px 14px;font-size:14px}
+  .shot-window{padding:0 0 0 24px;overflow:hidden}
+  .shot-window img{width:210%;max-width:none;border-radius:14px 0 0 14px}
+}
+
+/* ================= дальше — чего в образце нет =================
+   Всё выше этой черты — work/site/mock/mock.css слово в слово (его подставляет сборка). Здесь: мелочи, которых образец
+   не решает, внутренние страницы в том же виде, состояния «Скачать», меню языка, готовые планы. */
 [hidden]{display:none!important}
-html{scrollbar-gutter:stable;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 "Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
-a{color:var(--accent)}
-a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
-.in{max-width:var(--col);margin:0 auto;padding:0 16px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+/* свечения шире своих блоков: без этого страница в узком окне сдвигалась бы вбок */
+.hero,.split,.feat{overflow-x:clip}
+/* заголовок, не вошедший в строку, делится поровну, а не оставляет одно слово; ссылка в мелкой строке не рвётся
+   посередине. На ширинах образца это ничего не меняет. */
+h1,h2{text-wrap:balance}
+/* корейский браузер по умолчанию рвёт посреди слова (между слогами): строка переносится только по пробелам. Японский
+   заголовок переносится по фразам, где браузер это умеет (иначе — как обычно, по знакам) */
+:lang(ko){word-break:keep-all}
+:lang(ja) h1,:lang(ja) h2,:lang(ja) h3,:lang(ja) summary{word-break:auto-phrase}
+/* у тайского над и под буквой стоят знаки: при тесных строках образца они соседних строк касаются */
+:lang(th) h1,:lang(th) h2,:lang(th) h3{line-height:1.3}
+.fine a,.release-do a{white-space:nowrap}
+code,kbd,pre{font-family:Consolas,"Cascadia Mono","SFMono-Regular",Menlo,"Liberation Mono",monospace}
+code{font-size:.88em;overflow-wrap:anywhere}
+.nb{white-space:nowrap}      /* имя папки с пробелом не рвётся: путь переносится по обратным чертам */
+kbd{display:inline-block;min-width:24px;padding:0 6px;border:1px solid rgba(255,255,255,.22);border-radius:5px;
+  font-size:.76em;font-weight:600;line-height:1.5;text-align:center;color:var(--muted);vertical-align:1px;white-space:nowrap}
 
-/* Header — the program's two rows: name and language on the first, the page's sections on the second. */
-.hbar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
-.abar{display:flex;align-items:center;justify-content:space-between;gap:12px;height:44px}
-.brand{display:inline-flex;align-items:center;gap:9px;min-width:0;color:var(--text);font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap}
-.brand img{display:block;width:24px;height:24px}
-.mode{display:inline-flex;flex:none;border:1px solid var(--line);border-radius:7px;overflow:hidden}
-.mode a{padding:3px 12px;font-size:13px;line-height:20px;color:var(--muted);text-decoration:none}
-.mode a + a{border-left:1px solid var(--line)}
-.mode a[href]:hover{color:var(--text);background:var(--tile)}
-.mode a.on{color:var(--text);background:var(--sel);cursor:default}
-.tabs{display:flex;flex-wrap:nowrap;gap:6px;min-height:42px;padding:0 0 8px;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tabs a{flex:none;padding:6px 11px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--text);
-  font-size:14px;line-height:20px;white-space:nowrap;text-decoration:none}
-.tabs a:hover{border-color:var(--accent)}
+/* язык в шапке: название текущего со стрелкой, под ним — список всех языков сайта; текущий в нём отмечен и не ссылка */
+.brand{flex:none}
+.bar-nav{min-width:0}
+.langs,.langs:last-of-type{position:relative;border:0}
+.langs summary{padding:0;font-size:14px;font-weight:400;line-height:inherit;color:var(--muted);white-space:nowrap}
+.langs summary:hover,.langs[open] summary{color:var(--ink)}
+.langs summary::after{content:none}
+/* в узком окне название языка может не поместиться рядом с именем программы и кнопкой: тогда вместо него код языка
+   (site.js меряет шапку и ставит ей .tight) */
+.lang .lc{display:none}
+.bar.tight .lang .ln{display:none}
+.bar.tight .lang .lc{display:inline}
+.langs-menu{position:absolute;z-index:11;top:calc(100% + 12px);right:-10px;min-width:180px;padding:6px;border-radius:12px;background:#101216;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 20px 60px rgba(0,0,0,.7)}
+.langs-menu a,.langs-menu .here{display:block;padding:7px 12px;border-radius:8px;color:var(--ink);font-size:14px;white-space:nowrap}
+.langs-menu a:hover{background:rgba(255,255,255,.07);text-decoration:none}
+.langs-menu .here{position:relative;color:var(--faint)}
+.langs-menu .here::after{content:"";position:absolute;right:14px;top:50%;width:5px;height:9px;margin-top:-7px;border-right:2px solid var(--faint);
+  border-bottom:2px solid var(--faint);transform:rotate(45deg)}
 
-/* Top: the name, one sentence, the download panel, pictures of the program. */
-.top{padding:22px 0 4px}
-h1{margin:0;font-size:30px;font-weight:600;line-height:1.1}
-.lead{margin:8px 0 0;max-width:44em;color:var(--muted);font-size:17px;line-height:1.45}
-.panel{margin:18px 0 0;padding:12px 16px 14px;border:1px solid var(--accent);border-radius:12px;background:var(--card);scroll-margin-top:104px}
-.ptitle{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;font-size:12px;font-weight:600;
-  letter-spacing:.04em;color:var(--accent)}
-.ptitle span:last-child{min-width:0;font-weight:400;letter-spacing:0;color:var(--muted);text-align:right;overflow-wrap:anywhere}
-.panel p{margin:0 0 6px}
-.panel p:last-child{margin-bottom:0}
-.cpb{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);
-  color:var(--on-accent);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
-.cpb:hover{filter:brightness(1.1)}
-.cpb:focus-visible{outline:2px solid var(--text);outline-offset:2px;border-radius:8px}
-.ttime{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0 8px}
-.tt{min-width:0;margin:0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--tile)}
-.ttl{margin:0;font-size:10.5px;line-height:15px;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
-.ttv{margin:0;font-size:19px;font-weight:600;line-height:26px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.tts{display:block;font-size:12px;font-weight:400;line-height:16px;color:var(--muted)}
-.sha{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:4px 10px;padding:8px 10px;border-radius:8px;
-  border:1px solid var(--line);background:var(--tile)}
-.sha .ttl{line-height:20px}
-.sha code{font:13px/20px var(--mono);overflow-wrap:anywhere;word-break:break-all}
-.mini{padding:2px 9px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--muted);font:inherit;font-size:12px;
-  line-height:18px;cursor:pointer}
-.mini:hover{color:var(--text);border-color:var(--muted)}
-.mini.done{color:var(--ok);border-color:var(--ok)}
-.dl-notes{margin:10px 0 0;color:var(--muted);font-size:14px}
-.dl-how{margin:10px 0 0;font-size:14px}
+/* готовые планы: строки, как «Вопросы» */
+.rows{border-bottom:1px solid var(--line)}
+.plan{padding:20px 0;border-top:1px solid var(--line);overflow-wrap:anywhere}
+.plan .pn{display:block;font-size:19px;font-weight:600}
+.plan .pm{display:block;margin-top:2px;color:var(--faint);font-size:14px}
+.plan .ps{display:block;margin-top:8px;max-width:620px;color:var(--muted)}
+
+/* внутренние страницы: заголовок, фраза сути, строки с тонкими линиями */
+.page{padding-top:72px}
+/* место, на которое привела ссылка, не прячется под шапкой: она стоит поверх страницы */
+.page [id]{scroll-margin-top:68px}
+.page h1{max-width:880px;font-size:clamp(36px,5vw,54px);line-height:1.07;letter-spacing:-.025em}
+.page .lead{margin:20px 0 0;font-size:21px;line-height:1.4;letter-spacing:0}
+.page h2{font-size:28px;line-height:1.2;letter-spacing:-.018em}
+.blk{padding-top:72px}
+.page p{margin:14px 0 0;max-width:720px}
+.page .sub{margin:12px 0 0;max-width:720px;font-size:17px;line-height:1.47}
+.quiet{color:var(--muted);font-size:15px}
+.page ul.plain,.page ol.plain{margin:14px 0 0;padding-left:22px;max-width:720px}
+.page ul.plain li,.page ol.plain li{margin:6px 0}
+.addr{font-family:Consolas,"Cascadia Mono","SFMono-Regular",Menlo,"Liberation Mono",monospace;font-size:21px;font-weight:600;overflow-wrap:anywhere}
+.tocrow{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;margin:28px 0 0}
+.tocrow p{margin:0}
+.toc{display:flex;flex-wrap:wrap;gap:6px 22px;margin:14px 0 0;padding:0;list-style:none;font-size:15px}
+.toc a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.toc a:hover{color:var(--ink)}
+.mini{padding:4px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:none;color:var(--muted);font:inherit;font-size:13px;
+  line-height:1.5;cursor:pointer;white-space:nowrap}
+.mini:hover{color:var(--ink);border-color:rgba(255,255,255,.4)}
+.mini.done{color:#5cbd88;border-color:#5cbd88}
+
+/* факт — строка: что слева, зачем одной строкой справа; длинное пояснение раскрывается в самой строке */
+.facts{margin:18px 0 0;padding:0;list-style:none;border-bottom:1px solid var(--line)}
+.facts > li,.facts > .row{border-top:1px solid var(--line)}
+.facts details,.facts details:last-of-type{border:0}
+.facts .row,.facts summary{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,9fr);align-items:baseline;gap:2px 28px;
+  padding:16px 40px 16px 0;font-size:17px;font-weight:400}
+.facts summary::after{top:22px}
+.facts details[open] summary::after{top:27px}
+.facts .k{margin:0;font-weight:600;overflow-wrap:anywhere}
+.facts .k code{font-weight:400}
+.facts .v{margin:0;color:var(--muted);overflow-wrap:break-word}
+.w{padding:0 40px 20px 0;max-width:760px;color:var(--muted)}
+.w p,.page .w p{margin:0;max-width:none}
+.w p + p,.w pre + p,.w p + pre,.page .w p + p{margin-top:10px}
+.w b{color:var(--ink);font-weight:600}
+ul.files{margin:0;padding:0;list-style:none}
+ul.files li{display:grid;grid-template-columns:minmax(0,160px) minmax(0,1fr);gap:0 16px;padding:5px 0}
+ul.files code{color:var(--ink)}
+pre{margin:10px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--ink);font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* правило GGG слева, программа справа — каждое под своей подписью */
+.rules{margin:18px 0 0;border-bottom:1px solid var(--line)}
+.rule{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 40px;padding:18px 0;border-top:1px solid var(--line)}
+.rule dt,.rule dd{margin:0}
+.rule dd{color:var(--muted)}
+.ttl{display:block;margin-bottom:4px;color:var(--faint);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+blockquote{margin:22px 0 0;padding:0 0 0 18px;border-left:2px solid rgba(255,255,255,.22)}
+blockquote p,.page blockquote p{margin:0}
+.page blockquote p + p{margin-top:4px}
+
+/* «Скачать» на странице установки: кнопка и строки */
+.dl{margin-top:44px}
+.dl .cta{margin:0}
 .dl-wait{display:none;color:var(--muted)}
 .js .dl-wait{display:block}
+.dl .facts{margin-top:28px}
+.sha{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px}
+.sha code{color:var(--ink);word-break:break-all}
+.after{color:var(--muted)}
 .soon b{font-weight:600}
-.quiet{color:var(--muted);font-size:14px}
+.page .soon p + p,.page .dl noscript p + p{margin-top:6px}
 
-.shots{margin:14px 0 12px}
-figure{margin:0}
-.shot{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#111316}   /* ссылка: снимок в полный размер */
-.shot:hover{border-color:var(--accent)}
-.shot:focus-visible{border-radius:10px}
-.shot img{display:block;width:100%;height:auto}
-figcaption{margin:6px 2px 0;color:var(--muted);font-size:13.5px;line-height:1.4}
-figcaption b{color:var(--text);font-weight:600}
-.pair{display:grid;grid-template-columns:minmax(0,480fr) minmax(0,540fr);align-items:start;gap:12px;margin-top:12px}
-.shots .quiet{margin:10px 2px 0}
+/* «Установка»: беды первого запуска — строки с раскрытием, как «Вопросы» главной */
+.troubles{margin-top:18px}
+.troubles .w{padding-top:0}
 
-/* Sections — the program's cards. A fact is a row: what on the left, why and when on the right. */
-main section{margin:0 0 12px;padding:16px 18px 18px;border:1px solid var(--line);border-radius:10px;background:var(--card);scroll-margin-top:104px}
-h2{margin:0 0 4px;font-size:20px;font-weight:600;line-height:1.25}
-.sub{margin:0 0 4px;color:var(--muted);font-size:15px}
-h3{margin:18px 0 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-main p{margin:0 0 8px}
-main section > :last-child{margin-bottom:0}
-.facts{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
-.fr{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,9fr);gap:2px 18px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);
-  background:var(--tile)}
-.fr dt{margin:0;font-weight:600;overflow-wrap:anywhere}
-.fr dd{margin:0;overflow-wrap:break-word}
-.fr .w{display:block;font-weight:400;color:var(--muted);font-size:14px}
-.fr.one{display:block}      /* строка-утверждение: обычный текст (в сетке каждая клавиша и каждый <code> встали бы отдельной строкой) */
-/* правило GGG слева, программа справа — каждое под своей подписью */
-.fr.rule{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.fr.rule dt{font-weight:400}
-.fr .ttl{display:block;margin-bottom:2px}
-code,kbd,pre{font-family:var(--mono)}
-code{font-size:.875em;overflow-wrap:anywhere}
-.nb{white-space:nowrap}      /* имя папки с пробелом не рвётся: путь переносится по обратным чертам */
-dt code{font-size:.84em;font-weight:400}
-kbd{display:inline-block;min-width:22px;padding:0 5px;border:1px solid var(--key);border-bottom-width:2px;border-radius:4px;
-  font:700 11px/15px "Segoe UI",system-ui,sans-serif;text-align:center;color:var(--muted);vertical-align:1px;white-space:nowrap}
-ul.no{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0;padding:0;list-style:none}
-ul.no li{position:relative;padding:8px 12px 8px 36px;border-radius:8px;border:1px solid var(--line);background:var(--tile)}
-ul.no li::before{content:"";position:absolute;left:13px;top:15px;width:12px;height:12px;
-  background:linear-gradient(45deg,transparent 43%,var(--over) 43%,var(--over) 57%,transparent 57%),
-             linear-gradient(-45deg,transparent 43%,var(--over) 43%,var(--over) 57%,transparent 57%)}
-ul.files{margin:6px 0 0;padding:0;list-style:none}
-ul.files li{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:0 12px;padding:3px 0;border-top:1px solid var(--line);font-size:14px}
-ul.files li:first-child{border-top:0}
-ul.files span{color:var(--muted)}
-ol.steps{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none;counter-reset:step}
-ol.steps > li{position:relative;padding:10px 12px 10px 48px;border-radius:8px;border:1px solid var(--line);background:var(--tile);counter-increment:step}
-ol.steps > li::before{content:counter(step);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:6px;border:1px solid var(--line);
-  background:var(--card);color:var(--muted);font-size:13px;font-weight:600;line-height:22px;text-align:center}
-ol.steps b{font-weight:600}
-ol.steps .w{display:block;color:var(--muted);font-size:14px}
-pre{position:relative;margin:8px 0 0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:13px;
-  line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
-/* Планы: строка — один план: название, под ним кто, для какой игры, версия и дата — через точку, ниже одно предложение */
-ul.plans{display:flex;flex-direction:column;gap:6px;margin:8px 0;padding:0;list-style:none}
-.plan{padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--tile);overflow-wrap:anywhere}
-.plan .pn{display:block;font-weight:600}
-.plan .pm{display:block;color:var(--muted);font-size:14px}
-.plan .ps{display:block;margin-top:2px}
-ul.plain{margin:0 0 8px;padding-left:22px}
-ul.plain li{margin:3px 0}
-.langs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;padding:0;list-style:none}
-.langs li{padding:3px 10px;border-radius:8px;border:1px solid var(--line);background:var(--tile);font-size:14px}
-blockquote{margin:10px 0 0;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--tile)}
-blockquote p{margin:0}
-.addr{font:600 17px/1.4 var(--mono);overflow-wrap:anywhere}
-
-.foot{max-width:var(--col);margin:0 auto;padding:6px 16px 40px;color:var(--muted);font-size:13px}
-.foot p{margin:0 0 6px}
-
-@media (max-width:760px){
-  .pair{grid-template-columns:minmax(0,1fr)}
-  .pair figure{max-width:540px}
-  .fr,.fr.rule{grid-template-columns:minmax(0,1fr)}
-  .fr.rule{gap:8px}
-  ul.no{grid-template-columns:minmax(0,1fr)}
-}
-@media (max-width:640px){
-  .ttime{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .sha{grid-template-columns:minmax(0,1fr) auto}
-  .sha code{grid-column:1 / -1;grid-row:2}
-  h1{font-size:26px}
-  .lead{font-size:16px}
-  main section{padding:14px 12px 16px}
-  .panel{padding:12px 12px 14px}
+@media (max-width:860px){
+  .page{padding-top:48px}
+  .blk{padding-top:56px}
+  .page .lead{font-size:19px}
+  .page h2{font-size:24px}
+  .facts .row,.facts summary{grid-template-columns:minmax(0,1fr)}
+  .rule{grid-template-columns:minmax(0,1fr);gap:14px}
   ul.files li{grid-template-columns:minmax(0,1fr)}
+  .w{padding-right:0}
 }
-@media (max-width:400px){
-  .in{padding:0 12px}
-  .foot{padding-left:12px;padding-right:12px}
-  .mode a{padding:3px 9px}
+/* самые узкие телефоны (360 px): имя программы, язык и кнопка в шапке не должны сойтись вплотную ни на одном языке */
+@media (max-width:380px){
+  .bar-nav{gap:12px}
+  .btn-s{padding:7px 12px}
 }
-@media print{.hbar{position:static}.tabs{display:none}}
+@media print{.bar{position:static}}

@@ -1,0 +1,14 @@
+  <section class="faq plans" id="plans" data-plans-row hidden>
+    <div class="wrap narrow">
+      <h2>{{w plans_title}}</h2>
+      <div class="rows" id="plans-list"></div>
+      <p class="fine">{{w plans_how}}<span data-contact-row hidden> {{plans_offer}}</span></p>
+      <template id="plan-tpl">
+        <div class="plan">
+          <b class="pn" data-p="title"></b>
+          <span class="pm"><span data-p="author-row">{{w p_author}} <span data-p="author"></span></span><span data-p="game-row">{{w p_game}} <span data-p="game"></span></span><span data-p="version-row">{{w p_version}} <span data-p="version"></span></span><span data-p="date"></span></span>
+          <span class="ps" data-p="summary"></span>
+        </div>
+      </template>
+    </div>
+  </section>

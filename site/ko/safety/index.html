@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ko" data-locale="ko-KR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>프로그램이 읽는 것 — PoE2 Runbook</title>
+<meta name="description" content="프로그램 코드를 기준으로 한 정확한 목록: 어떤 게임 파일을 읽는지, 언제 클립보드를 여는지, 어떤 키를 감지하고 게임에 무엇을 보내는지, 디스크에 무엇을 쓰고 네트워크에 무엇을 요청하는지.">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://poe2.labutin.gg/ko/safety/">
+<link rel="alternate" hreflang="en" href="https://poe2.labutin.gg/safety/">
+<link rel="alternate" hreflang="ru" href="https://poe2.labutin.gg/ru/safety/">
+<link rel="alternate" hreflang="de" href="https://poe2.labutin.gg/de/safety/">
+<link rel="alternate" hreflang="es" href="https://poe2.labutin.gg/es/safety/">
+<link rel="alternate" hreflang="fr" href="https://poe2.labutin.gg/fr/safety/">
+<link rel="alternate" hreflang="ja" href="https://poe2.labutin.gg/ja/safety/">
+<link rel="alternate" hreflang="ko" href="https://poe2.labutin.gg/ko/safety/">
+<link rel="alternate" hreflang="pt-BR" href="https://poe2.labutin.gg/pt/safety/">
+<link rel="alternate" hreflang="th" href="https://poe2.labutin.gg/th/safety/">
+<link rel="alternate" hreflang="x-default" href="https://poe2.labutin.gg/safety/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PoE2 Runbook">
+<meta property="og:title" content="PoE2 Runbook: 프로그램이 읽는 것, 감지하는 것, 누르는 것">
+<meta property="og:description" content="프로그램 코드를 기준으로 한 정확한 목록: 어떤 게임 파일을 읽는지, 언제 클립보드를 여는지, 어떤 키를 감지하고 게임에 무엇을 보내는지, 디스크에 무엇을 쓰고 네트워크에 무엇을 요청하는지.">
+<meta property="og:url" content="https://poe2.labutin.gg/ko/safety/">
+<meta property="og:image" content="https://poe2.labutin.gg/assets/og-ko.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="‘사냥터’ 지역 목록: 스킬 2개, 보상이 2포인트인 보스, 거점 2개. 이 지역에 쓴 시간은 7:00 중 1:26.">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../assets/site.css">
+<script src="../../assets/lang.js"></script>
+<script src="../../assets/config.js" defer></script>
+<script src="../../assets/site.js" defer></script>
+</head>
+<body class="p-safety">
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="../"><img src="../../assets/icon.png" width="28" height="28" alt="">PoE2 Runbook</a>
+    <nav class="bar-nav" aria-label="언어 및 다운로드">
+      <details class="langs">
+        <summary class="lang"><span class="ln">한국어</span><span class="lc">KO</span><span aria-hidden="true"> ▾</span></summary>
+        <div class="langs-menu"><a href="../../safety/?lang=en" lang="en" hreflang="en" data-lang="en">English</a><a href="../../ru/safety/" lang="ru" hreflang="ru" data-lang="ru">Русский</a><a href="../../de/safety/" lang="de" hreflang="de" data-lang="de">Deutsch</a><a href="../../es/safety/" lang="es" hreflang="es" data-lang="es">Español</a><a href="../../fr/safety/" lang="fr" hreflang="fr" data-lang="fr">Français</a><a href="../../ja/safety/" lang="ja" hreflang="ja" data-lang="ja">日本語</a><span class="here" lang="ko" aria-current="true">한국어</span><a href="../../pt/safety/" lang="pt-BR" hreflang="pt-BR" data-lang="pt">Português (Brasil)</a><a href="../../th/safety/" lang="th" hreflang="th" data-lang="th">ไทย</a></div>
+      </details>
+      <a class="btn btn-s" href="../install/#download" data-dl-link>다운로드</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap page">
+  <div class="page-h">
+    <h1>프로그램이 읽는 것, 감지하는 것, 누르는 것</h1>
+    <p class="lead">게임 옆에 따로 뜨는 창입니다. 게임 로그와 설정을 읽고, 키 세 개를 감지하며, <kbd>F2</kbd>를 한 번 누를 때마다 아이템 복사 키를 한 번 게임에 보냅니다. 게임 자체는 파일도 메모리도 전혀 바꾸지 않습니다.</p>
+    <div class="tocrow">
+      <p class="quiet">아래의 줄은 모두 프로그램 코드에서 가져온 것입니다. 화살표가 있는 줄은 펼칠 수 있습니다.</p>
+      <button class="mini" type="button" data-open-all data-on="모두 접기" hidden>모두 펼치기</button>
+    </div>
+    <ul class="toc" aria-label="목차">
+      <li><a href="#files">게임 파일</a></li>
+      <li><a href="#windows">Windows</a></li>
+      <li><a href="#clipboard">클립보드</a></li>
+      <li><a href="#keys">키</a></li>
+      <li><a href="#sends">게임에 보내는 것</a></li>
+      <li><a href="#overlay">게임 위 창</a></li>
+      <li><a href="#disk">디스크</a></li>
+      <li><a href="#network">네트워크</a></li>
+      <li><a href="#rules">GGG 규정</a></li>
+    </ul>
+  </div>
+
+  <section class="blk" id="files">
+    <h2>읽는 것: 게임 파일</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>logs\Client.txt</code></span><span class="v">게임 로그. 읽기 전용: 지역, 영웅 레벨, 보상.</span></summary>
+        <div class="w">게임 폴더에 있습니다. 시작할 때 로그 전체를 읽고, 그 뒤로는 새로 추가된 줄을 1초에 두 번 읽습니다. 로그에서 가져오는 것: 게임의 시작과 종료, 들어간 지역, 영웅 레벨(이 줄에서 영웅의 이름과 직업을 알 수 있습니다), 퀘스트 보상, 영웅의 사망, 게임이 불러온 아이템 필터, 패시브 스킬 트리에서 누른 노드, 게임 버전. 채팅에 나온 말 가운데서는 계획이 기다리는 NPC 대사만 알아보며, 나머지는 저장하지 않습니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>poe2_production_Config.ini</code></span><span class="v">게임 설정. 읽기 전용: 필터, 언어, 게임의 키.</span></summary>
+        <div class="w"><code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>에 있으며, 파일이 바뀌면 다시 읽습니다. 여기서 가져오는 것: 선택된 아이템 필터, 클라이언트 언어, 게임에 지정된 키. 프로그램의 키가 게임이 쓰는 키를 차지하지 않게 하기 위해서입니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>OnlineFilters\</code></span><span class="v">계정의 아이템 필터. 읽기 전용.</span></summary>
+        <div class="w"><code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code> 안의 폴더로, 게임이 계정에서 내려받은 필터가 들어 있습니다. 필터마다 이름과 규칙을 읽습니다. 필터를 이름으로 부르고, 선택된 필터가 계획에서 찾는 아이템을 숨길 때 경고하기 위해서입니다. 게임이 불러온 필터 버전마다 사본이 프로그램 자체의 폴더에 남습니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Steam 파일과 Windows 레지스트리</span><span class="v">읽기 전용. 게임이 설치된 곳을 찾기 위해서입니다.</span></summary>
+        <div class="w"><code>libraryfolders.vdf</code>, <code>appmanifest_2694490.acf</code>. 레지스트리에서는 Steam 폴더와 설치된 프로그램 목록의 ‘Path of Exile 2’ 항목을 읽습니다. 게임을 찾지 못하면 폴더는 직접 지정하면 됩니다.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="windows">
+    <h2>Windows에 묻는 것</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">활성 창</span><span class="v">어떤 창이 맨 앞에 있고 누구의 창인지. 게임 메모리는 읽지 않습니다.</span></summary>
+        <div class="w">지금 어떤 창이 맨 앞에 있고 어느 프로그램의 창인지 묻습니다. 그 창이 게임인지 알기 위해서입니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">게임 창, 커서, <kbd>Alt</kbd></span><span class="v">지금 어디에 있는지. 화면에서는 아무것도 읽지 않습니다.</span></summary>
+        <div class="w">게임 창이 어디에 있는지, 마우스 커서가 어디에 있는지, <kbd>Alt</kbd>가 눌려 있는지 묻습니다. 프로그램의 창을 게임 위에 놓고 그 창을 클릭할 수 있게 하기 위해서입니다.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="clipboard">
+    <h2>클립보드</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">지켜보는 것</span><span class="v">클립보드의 변경 카운터뿐입니다. 내용은 읽지 않습니다.</span></summary>
+        <div class="w">카운터는 Windows가 관리하는 숫자로, 복사할 때마다 바뀝니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">내용을 읽는 때</span><span class="v">게임에서 아이템을 복사한 뒤 한 번.</span></summary>
+        <div class="w">게임 창이 활성화된 상태에서 카운터가 바뀌었을 때입니다. 아이템 위에서 <kbd>Ctrl</kbd>+<kbd>C</kbd> 또는 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd>를 누른 경우입니다. 다른 창에서는 클립보드를 아예 열지 않습니다. 프로그램을 시작하기 전에 클립보드에 있던 것은 읽지 않습니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">남는 것</span><span class="v">아이템 텍스트뿐이며, 프로그램 메모리에만 남습니다.</span></summary>
+        <div class="w">텍스트만, 200,000바이트까지만 받습니다. 게임의 ‘아이템 종류’ 줄로 시작하지 않는 텍스트는 바로 버립니다. 보관하지도, 어디에 기록하지도 않습니다. 아이템 텍스트는 메모리에만 있습니다. ‘장착’ 버튼을 누르면 그 아이템이 착용 중인 아이템으로 영웅 파일에 기록됩니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><kbd>F2</kbd>로 하는 복사</span><span class="v">클립보드에 있던 내용은 제자리로 돌아갑니다.</span></summary>
+        <div class="w">프로그램은 클립보드 전체를 기억해 두고(최대 32MB), 게임에서 복사 키를 누르고, 아이템을 한 번 읽은 다음, 클립보드에 있던 것을 되돌려 놓습니다. 기억해 둔 내용은 들여다보지 않습니다.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="keys">
+    <h2>감지하는 키</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>F2</kbd> 비교 / 장착</span><span class="v">커서 아래의 아이템을 착용 중인 아이템과 비교합니다.</span></summary>
+        <div class="w">같은 아이템 위에서 한 번 더 누르면 그 아이템을 착용 중으로 기록합니다. <kbd>Alt</kbd>를 누른 채로도 작동합니다.</div>
+      </details></li>
+      <li><div class="row"><span class="k"><kbd>F3</kbd> 닫기</span><span class="v">게임 위에 뜬 프로그램 창 가운데 맨 위의 창을 닫습니다.</span></div></li>
+      <li><div class="row"><span class="k"><kbd>F7</kbd> 프로그램 ↔ 게임</span><span class="v">프로그램 창을 앞으로 가져오고, 다시 게임으로 돌아갑니다.</span></div></li>
+      <li><details>
+        <summary><span class="k">감지하는 때</span><span class="v">게임 창이 활성화된 동안에만.</span></summary>
+        <div class="w"><kbd>F7</kbd>은 프로그램 자체의 창에서도 감지합니다. 다른 창이 활성화되는 즉시 키를 놓아주므로, 다른 프로그램에서는 평소대로 작동합니다. 그중 하나를 게임이 쓰고 있으면 F2, F3, F7, F6, F9, F10, F11 가운데 비어 있는 다음 키를 씁니다. F4는 절대 쓰지 않습니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">그 밖의 키</span><span class="v">키보드 후크는 없습니다. 프로그램은 다른 키를 보지 못합니다.</span></summary>
+        <div class="w">그 밖에 무엇을 누르는지 프로그램은 보지 못합니다. 예외는 <kbd>Alt</kbd> 하나입니다. ‘게임 위 창’ 설정이 켜져 있는 동안, 프로그램은 Alt가 눌려 있는지 Windows에 묻습니다.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="sends">
+    <h2>게임에 보내는 것</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd></span><span class="v"><kbd>F2</kbd>를 한 번 누를 때마다 한 번.</span></summary>
+        <div class="w">게임 창이 활성화된 동안에만 보냅니다. 게임 자체의 ‘심화 설명과 함께 아이템 복사’ 키입니다. 게임에서 심화 설명이 Alt가 아닌 키에 지정되어 있으면 Alt 대신 그 키를 누릅니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">그 밖에는 없음</span><span class="v">채팅도, 명령어도, 마우스도, 타이머로 보내는 것도 없습니다.</span></summary>
+        <div class="w">채팅 메시지와 명령어도, 마우스 클릭도, 타이머에 따른 것도, 로그나 화면에 반응해서 보내는 것도 없습니다. ‘장착’ 버튼과 직접 한 표시는 프로그램 자체의 기록만 바꿉니다.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="overlay">
+    <h2>게임 위 창</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">작은 창 세 개</span><span class="v">구간 목록, 아이템 복사에 대한 답, 트리 안내.</span></summary>
+        <div class="w">게임 창 위에 떠 있습니다. 포커스는 절대 가져가지 않으며, 마우스는 이 창들을 지나 게임으로 전달됩니다. <kbd>Alt</kbd>를 누른 채 커서가 창 위에 있을 때와 답 창의 버튼만 예외입니다.</div>
+      </details></li>
+      <li><div class="row"><span class="k">필요한 것</span><span class="v">게임이 ‘창 모드’ 또는 ‘전체 창 모드’여야 합니다.</span></div></li>
+      <li><div class="row"><span class="k">끄는 방법</span><span class="v">‘설정’의 스위치 하나로 끕니다.</span></div></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="disk">
+    <h2>디스크에 쓰는 것</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">프로그램이 실행 중에 쓰는 모든 것.</span></summary>
+        <div class="w">
+          <ul class="files">
+            <li><code>plans\</code><span>내 계획과 카탈로그에서 추가한 계획. 프로그램에 딸려 오는 계획은 처음 실행할 때 여기에 놓입니다</span></li>
+            <li><code>runs\</code><span>영웅마다 파일 하나: 로그의 이벤트, 직접 한 표시, 착용 중으로 기록한 아이템</span></li>
+            <li><code>filters\</code><span>게임이 불러온 필터 버전의 사본</span></li>
+            <li><code>backup\</code><span>계획의 이전 버전(편집할 때마다 그 직전 상태)과 제거한 계획</span></li>
+            <li><code>export\</code><span>공유하려고 저장한 계획 파일</span></li>
+            <li><code>update\</code><span>새 버전의 설치 프로그램. ‘업데이트’ 버튼을 누른 뒤에 생기고, 설치가 끝나면 지워집니다</span></li>
+            <li><code>settings.json</code><span>게임 폴더, 창의 크기와 위치, ‘설정’에서 고른 값</span></li>
+            <li><code>program.log</code><span>이번 실행에서 프로그램이 한 일. 그 앞의 다섯 번의 실행 기록도 보관합니다</span></li>
+            <li><code>webview\</code><span>창 엔진의 저장소: 페이지 자체의 설정과 캐시</span></li>
+          </ul>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">프로그램 본체. 여기에는 설치 프로그램만 씁니다.</span></summary>
+        <div class="w">이때 관리자 권한은 요청하지 않습니다.</div>
+      </details></li>
+      <li><div class="row"><span class="k">‘다운로드’ 폴더</span><span class="v">계획 파일. ‘계획 파일 다운로드’ 버튼을 누를 때 저장됩니다.</span></div></li>
+      <li><details>
+        <summary><span class="k">게임의 폴더</span><span class="v">아무것도 쓰지 않습니다.</span></summary>
+        <div class="w">게임 폴더에도, <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>에도 쓰지 않습니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">제거한 뒤</span><span class="v">내 계획과 영웅은 남습니다.</span></summary>
+        <div class="w">프로그램을 제거해도 <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> 폴더는 그대로 남습니다. 내 계획과 영웅이 거기에 있습니다. 필요 없으면 폴더를 직접 삭제하세요.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="network">
+    <h2>네트워크</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">사용자 정보</span><span class="v">프로그램은 사용자와 플레이에 관한 것을 어디에도 보내지 않습니다.</span></summary>
+        <div class="w">계정도, 통계도, 오류 보고도 없습니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">업데이트와 계획 카탈로그</span><span class="v">시작할 때, 그리고 6시간에 한 번 이 사이트에서 파일 네 개를 받습니다.</span></summary>
+        <div class="w">
+          <p>작은 파일들입니다. 업데이트 파일 <code>update/latest.json</code>과 계획 카탈로그 <code>plans/index.json</code>, 그리고 각각의 서명(<code>.sig</code>)입니다. 사이트가 응답하지 않거나, 게임이 이미 프로그램보다 최신인데 새 버전이 아직 없으면 프로그램은 30분 뒤에 다시 요청합니다. ‘설정’의 ‘업데이트 확인’에서 끌 수 있습니다.</p>
+          <p>계획 카탈로그는 ‘편집기’에서 계획 목록을 열 때도 요청하며, 1분에 한 번을 넘지 않습니다. ‘업데이트 확인’ 설정이 꺼져 있으면 프로그램이 스스로 이 사이트에 접속하는 일은 없습니다. 카탈로그는 ‘카탈로그 요청’ 버튼을 누를 때만 요청합니다.</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">요청에 담기는 것</span><span class="v">프로그램 버전뿐입니다.</span></summary>
+        <div class="w">이런 요청에는 매번 프로그램 버전이 들어갑니다(<code>User-Agent: PoE2Runbook/&lt;버전&gt;</code>). 쿠키도, 이름도, 플레이에 관한 것도 들어가지 않습니다. 호스팅 서버는 여느 요청과 마찬가지로 IP 주소를 봅니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">서명</span><span class="v">두 파일 모두 프로그램이 직접 검증하고, 그런 뒤에야 읽습니다.</span></summary>
+        <div class="w">프로그램에 내장된 키로 검증합니다. 업데이트는 그 버전이 현재 버전보다 최신일 때만 받아들입니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">다운로드</span><span class="v">‘업데이트’ 또는 ‘추가’ 버튼을 누른 뒤에만.</span></summary>
+        <div class="w">
+          <p>‘업데이트’ 또는 ‘추가’ 버튼을 누르기 전에는 아무것도 다운로드되지 않고, 아무것도 설치되지 않습니다.</p>
+          <p>상단 바의 ‘업데이트’: 프로그램이 서명된 파일에 적힌 주소에서 설치 프로그램을 다운로드하고, 크기와 SHA-256을 대조한 뒤, 설치 프로그램을 실행하고 종료합니다. 설치 프로그램은 새 버전을 설치하고 실행합니다.</p>
+          <p>카탈로그의 ‘추가’ 또는 ‘업데이트’: 프로그램이 서명된 카탈로그에 적힌 주소에서 계획 파일을 다운로드하고, 크기와 SHA-256을 대조한 뒤, 계획을 라이브러리에 넣습니다.</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">창의 페이지</span><span class="v">이 컴퓨터에서 직접 제공되며, 이 컴퓨터에만 응답합니다.</span></summary>
+        <div class="w">주소는 127.0.0.1입니다. 프로그램이 자기 창의 페이지를 스스로에게 제공합니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">창 엔진</span><span class="v">Microsoft Edge WebView2. Windows의 구성 요소입니다.</span></summary>
+        <div class="w">창은 이 엔진이 그립니다. Microsoft의 것이며, Edge 브라우저가 그러듯 스스로 Microsoft 서버에 접속할 수 있습니다.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">브라우저</span><span class="v">직접 클릭할 때만 열립니다.</span></summary>
+        <div class="w">이 사이트는 ‘프로그램 정보’ 창에서, 계획 제작자의 페이지는 카탈로그에서 엽니다. 그 밖에 pathofexile2.com의 아이템 필터 페이지, 그리고 WebView2가 없을 때 Microsoft의 WebView2 다운로드 페이지가 있습니다.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="rules">
+    <h2>프로그램이 따르는 Grinding Gear Games의 규정</h2>
+    <dl class="rules">
+      <div class="rule">
+        <dt><span class="ttl">GGG 규정</span>게임과 따로 작동하는 프로그램은 허용됩니다. 게임이나 게임 파일을 바꾸는 프로그램은 허용되지 않습니다.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>PoE2 Runbook은 별도의 프로그램입니다. 로그와 자기 파일을 읽을 뿐, 게임에서는 아무것도 바꾸지 않습니다.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">GGG 규정</span>게임에서 작동하는 키는 플레이어가 직접 누릅니다. 그 키는 정해진 한 가지 일만 하고, 게임에서 한 가지 동작만 합니다.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span><kbd>F2</kbd>는 한 번 누를 때 복사를 한 번 합니다. 타이머나 로그, 화면에 따라 실행되는 것은 없습니다.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">GGG 규정</span>로그, 클립보드, 화면은 그것으로 무엇을 하는지 플레이어가 알고 있을 때 읽을 수 있습니다. 클립보드와 화면은 키를 한 번 누를 때 한 번만 읽을 수 있습니다.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>이 페이지가 바로 그 목록입니다. 클립보드는 복사 한 번에 한 번 읽고, 화면은 읽지 않습니다.</dd>
+      </div>
+    </dl>
+    <p class="quiet">규정은 원문 그대로가 아니라 풀어서 옮긴 것입니다. 출처는 <a href="https://www.pathofexile.com/developer/docs/index" rel="noopener noreferrer">Path of Exile 개발자 문서</a>(영어)입니다. GGG는 프로그램을 하나하나 승인하지 않습니다. 규정은 GGG의 것이며, GGG가 바꿀 수 있습니다.</p>
+    <blockquote>
+      <p lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+      <p class="quiet">한국어로: 이 프로그램은 Grinding Gear Games와 어떠한 제휴 관계도 없으며, Grinding Gear Games의 승인을 받지 않았습니다.</p>
+    </blockquote>
+  </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>© 2026 Sergei Labutin</p>
+    <nav aria-label="페이지">
+      <a href="../install/">설치</a>
+      <a href="./">프로그램이 읽는 것</a>
+      <a href="../about/#licence" data-repo rel="noopener noreferrer">소스 코드</a>
+      <a href="../about/#licence">라이선스</a>
+      <a href="../about/#contact" data-contact-row hidden>문의</a>
+    </nav>
+    <p class="ggg" lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+  </div>
+</footer>
+
+</body>
+</html>

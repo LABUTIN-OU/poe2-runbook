@@ -1,0 +1,20 @@
+{
+ "pages": [
+  {
+   "id": "overview",
+   "dir": ""
+  },
+  {
+   "id": "safety",
+   "dir": "safety/"
+  },
+  {
+   "id": "install",
+   "dir": "install/"
+  },
+  {
+   "id": "about",
+   "dir": "about/"
+  }
+ ]
+}

@@ -1,0 +1,91 @@
+  <div class="page-h">
+    <h1>Установка</h1>
+    <p class="lead">Один установщик для Windows 10 и 11. Прав администратора не просит.</p>
+  </div>
+
+  <div class="dl" id="download" data-dl-panel data-t-button="Скачать PoE2 Runbook {version}" data-t-mb="{n} МБ" data-t-bytes="{n} байт">
+    <p class="dl-wait" id="dl-wait">Узнаю текущую сборку…</p>
+    <div id="dl-ready" hidden>
+      <p class="cta"><a class="btn" id="dl-link" href="#download">Скачать для Windows</a></p>
+      <dl class="facts">
+        <div class="row"><dt class="k">Файл</dt><dd class="v" id="dl-file"></dd></div>
+        <div class="row"><dt class="k">Версия программы</dt><dd class="v" id="dl-version"></dd></div>
+        <div class="row"><dt class="k">Версия игры</dt><dd class="v" id="dl-game"></dd></div>
+        <div class="row"><dt class="k">Размер</dt><dd class="v"><span id="dl-size"></span> · <span id="dl-bytes"></span></dd></div>
+        <div class="row"><dt class="k">Дата выпуска</dt><dd class="v" id="dl-date"></dd></div>
+        <div class="row"><dt class="k">SHA-256</dt><dd class="v sha"><code id="dl-sha"></code><button class="mini" type="button" data-copy="dl-sha" data-done="Скопировано" hidden>Скопировать</button></dd></div>
+        <div class="row" id="dl-notes" hidden><dt class="k">Что нового</dt><dd class="v" id="dl-notes-text"></dd></div>
+      </dl>
+      <p class="after"><a href="#first-start">Как сверить файл и о чём спросит Windows</a></p>
+    </div>
+    <div class="soon" id="dl-soon" hidden>
+      <p><b>Первая публичная сборка ещё не опубликована.</b></p>
+      <p class="quiet">Она появится здесь: программа скачивается только с этого сайта.</p>
+    </div>
+    <noscript>
+      <p>JavaScript выключен, поэтому страница не покажет текущую сборку. Версия, адрес установщика и его SHA-256 записаны в обычном текстовом файле: <a href="{{root}}update/latest.json">update/latest.json</a>.</p>
+      <p class="quiet">Файл появится вместе с первой публичной сборкой.</p>
+    </noscript>
+  </div>
+
+  <section class="blk" id="first-start">
+    <h2>Первый запуск</h2>
+    <p class="sub">Установщик пока не подписан, поэтому Windows не знает его издателя. Вместо подписи — SHA-256 у кнопки «Скачать»: он показывает, что ваш файл — тот самый, что опубликован на этой странице.</p>
+    <div class="troubles">
+      <details id="verify">
+        <summary>Сомневаюсь, что файл настоящий</summary>
+        <div class="w">
+          <p>Настоящий файл узнаётся по SHA-256. Откройте папку со скачанным файлом, нажмите на адресную строку Проводника, наберите <code>powershell</code> и нажмите Enter. В открывшемся окне выполните:</p>
+          <pre><code id="cmd-hash">Get-FileHash "<span data-file>PoE2Runbook-Setup-*.exe</span>"</code></pre>
+          <p>Сравните значение под словом <b>Hash</b> с SHA-256 у кнопки «Скачать». Совпасть должны все 64 знака; большие буквы или маленькие — не важно. Не совпало — не запускайте файл: скачайте его заново с этой страницы.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Windows не даёт запустить установщик</summary>
+        <div class="w">
+          <p>Установщик пока не подписан, и Windows не знает его издателя. Появится окно «Система Windows защитила ваш компьютер». Нажмите <b>«Подробнее»</b>, затем <b>«Выполнить в любом случае»</b>.</p>
+          <p>Браузер может предупредить ещё раньше: такой файл скачивают редко. Сохраните его всё равно.</p>
+          <p>В Windows 11 с включённым «Интеллектуальным управлением приложениями» кнопки «Выполнить в любом случае» нет: эта защита блокирует установщик совсем.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Нет прав администратора</summary>
+        <div class="w">
+          <p>Они не нужны. Установщик ставит программу только для вас — в папку <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Программа не нашла игру</summary>
+        <div class="w">
+          <p>Программа ищет игру сама: Steam или клиент с сайта игры, на любом диске. Если не нашла, она скажет об этом и даст указать папку игры.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="blk" id="needs">
+    <h2>Что нужно</h2>
+    <ul class="plain">
+      <li>Windows 10 или Windows 11, 64-разрядная.</li>
+      <li>Microsoft Edge WebView2 — в Windows 11 он есть, в Windows 10 его ставит Центр обновления Windows. Если его нет, программа так и скажет и предложит страницу загрузки Microsoft.</li>
+      <li>Path of Exile 2. Каждая сборка программы сделана под одну версию игры — она названа у кнопки «Скачать».</li>
+      <li>Игра в окне или в оконном полноэкранном режиме — для окон поверх игры.</li>
+    </ul>
+  </section>
+
+  <section class="blk" id="update">
+    <h2>Обновление</h2>
+    <p>О новой версии программа скажет сама и поставит её по кнопке «{{ui Обновить}}». Новая версия ставится поверх прежней: ваши планы и герои остаются.</p>
+  </section>
+
+  <section class="blk" id="langs">
+    <h2>Языки программы</h2>
+    <p class="langs">{{program_langs}}.</p>
+    <p class="quiet">Лог игры программа читает на любом из этих языков клиента.</p>
+  </section>
+
+  <section class="blk" id="remove">
+    <h2>Удаление</h2>
+    <p>В параметрах Windows: «Приложения» → PoE2 Runbook → «Удалить».</p>
+    <p class="quiet">Папка с вашими планами и героями — <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> — остаётся на месте. Не нужна — удалите её сами.</p>
+  </section>

@@ -29,12 +29,12 @@ html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.4 "Segoe U
 .abar .aname{min-width:0;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hbar .in{max-width:var(--col);margin:0 auto;padding:0 14px}
 html{scrollbar-gutter:stable}   /* место полосы прокрутки — всегда за страницей: колонка и шапка в ней не сдвигаются, есть прокрутка или нет */
-.tabs{display:flex;flex-wrap:nowrap;gap:6px;min-height:42px;padding:0 0 8px;overflow-x:auto;scrollbar-width:none}
-.tabs button{flex:none;padding:6px 11px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--text);
+.tabs{display:flex;flex-wrap:nowrap;gap:5px;min-height:42px;padding:0 0 8px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:none;padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--text);
   font:inherit;font-size:14px;line-height:20px;white-space:nowrap;cursor:pointer}
 .tabs button:hover{filter:brightness(1.15)}
 .tabs button.on{border-color:var(--accent);background:#1c2a40;font-weight:700}
-.tabs .cnt{color:var(--muted);font-weight:400;margin-left:6px}
+.tabs .cnt{color:var(--muted);font-weight:400;margin-left:5px}
 .tabs button.warn .cnt{color:var(--due-text);font-weight:700}
 @media (max-width:780px){.abar,.hbar .in{padding-left:8px;padding-right:8px}.tabs{gap:4px;min-height:38px}.tabs button{padding:5px 8px;font-size:13px}}
 @media (max-width:780px){#app{padding-left:8px;padding-right:8px}}   /* узкое окно: страница вровень с шапкой */
@@ -2585,10 +2585,10 @@ function reviewPage() {
   const lastStep = h => h.steps.find(s => s.c != null) || h.steps[h.steps.length - 1];
   // шаги, пройденные до конца обоими героями: только по ним честно сравнивать суммы
   const common = () => H().steps.filter(s => s.c == null && twin(s) && twin(s).c == null);
-  // Карта, начатая заново: герой вышел из игры на карте и вернулся уже в новую её копию. s.q — сколько попыток на шаге
+  // Прерванная попытка: герой вышел из игры на карте и вернулся уже в новую её копию. s.q — сколько попыток на шаге
   // так прервано, lost — сколько времени осталось в брошенных копиях (оно часть зон шага или «вне маршрута»).
   const lost = s => (s.qz || 0) + (s.qo || 0);
-  const times = n => n + ' ' + TN(n, 'раз|раза|раз');
+  const attempts = n => n + ' ' + TN(n, 'прерванная попытка|прерванные попытки|прерванных попыток');
 
   // --- запрос к программе ------------------------------------------------------------------------------------------------
   // pick.hero — героя выбрали в списке. Страница уже кого-то показывает — обновляется он же: сам герой на открытой
@@ -2630,7 +2630,7 @@ function reviewPage() {
       ['late', D && D.base ? T('Где отстал от {0}', tag(D.base)) : T('Где отстал от цели'), steps.filter(s => delta(s) > 0).length],
       ['town', T('Где дольше в городе'), steps.filter(s => s.t > 0).length],
       ['off', T('Где уходил с маршрута'), steps.filter(s => s.o > 0).length],
-      ['again', T('Карты заново'), steps.filter(s => s.q > 0).length]];
+      ['again', T('Где больше попыток'), steps.filter(s => s.q > 0).length]];
   }
   function bar() {
     const tabs = `<nav class="tabs" aria-label="${ctxEsc(T('Порядок строк'))}">` + orders().map(([id, name, n]) =>
@@ -2674,7 +2674,7 @@ function reviewPage() {
     whole.id = 'rv-whole';
     whole.setAttribute('role', 'img');
     agl.id = 'rv-agl';
-    sum.append(tiles, whole, agl, el('p', 'rv-rule', T('Время идёт шагу, которым герой занят. Шаг сменяется, когда герой пришёл на карту следующего работать. Короткий заход — открыть точку, взять вход — шаг не меняет, и город после него остаётся у прежнего шага. Вне игры и на паузе время не идёт.') + ' ' + T('Карта начата заново — герой вышел из игры на карте, а вернулся уже в новую её копию.')));
+    sum.append(tiles, whole, agl, el('p', 'rv-rule', T('Время идёт шагу, которым герой занят. Шаг сменяется, когда герой пришёл на карту следующего работать. Короткий заход — открыть точку, взять вход — шаг не меняет, и город после него остаётся у прежнего шага. Вне игры и на паузе время не идёт.') + ' ' + T('Попытка прервана — герой вышел из игры на карте, а вернулся уже в новую её копию.')));
     const cmp = el('div', 'rv-chips');
     cmp.id = 'rv-cmp';
     cmp.setAttribute('role', 'group');
@@ -2836,17 +2836,17 @@ function reviewPage() {
     w.textContent = '';
     w.setAttribute('aria-label', T('В зонах шагов {0}, в городах {1}, вне маршрута {2}', words(tot.z), words(tot.t), words(tot.o)));
     RV.strip(w, {z: tot.z, t: tot.t, o: tot.o, qz: sumOf(h, 'qz'), qo: sumOf(h, 'qo')});
-    // Карты, начатые заново: сколько раз и сколько времени осталось в брошенных копиях (в полосах — штриховкой)
+    // Прерванные попытки: сколько их и сколько времени осталось в брошенных копиях (в полосах — штриховкой)
     const ag = $('rv-agl'), q = sumOf(h, 'q'), ql = sumOf(h, 'qz') + sumOf(h, 'qo');
     ag.textContent = '';
     ag.append(el('i', 'rv-sw rv-zq'));
     if (q) {
-      fill(ag, T('Карты начаты заново: {0} · в прерванных попытках {1} · {2}% времени'),
-           [el('b', '', times(q)), el('b', '', words(ql)), sum ? Math.round(100 * ql / sum) : 0]);
-    } else ag.append(T('Ни одну карту герой не начинал заново.'));
+      fill(ag, T('Прерванных попыток: {0} · в них {1} · {2}% времени'),
+           [el('b', '', String(q)), el('b', '', words(ql)), sum ? Math.round(100 * ql / sum) : 0]);
+    } else ag.append(T('Прерванных попыток нет — все карты с первой попытки.'));
     if (b) {
       const bq = sumOf(b, 'q'), bl = sumOf(b, 'qz') + sumOf(b, 'qo');
-      ag.append(' · ', bq ? T('у {0}: {1}, {2}', tag(b), times(bq), words(bl)) : T('у {0}: ни разу', tag(b)));
+      ag.append(' · ', bq ? T('у {0}: {1}, {2}', tag(b), bq, words(bl)) : T('у {0}: ни разу', tag(b)));
     }
     if (D.again && D.again.rows.length) {
       const all = el('span', 'rv-all', T('по всем героям'));
@@ -2889,15 +2889,15 @@ function reviewPage() {
     if (b) rows.push(sums(list.map(twin).filter(Boolean), tag(b), ' rv-b'));
     RV.head(box, title, fig, rows);
   }
-  // Где карты начинают заново — по всем героям лога: зоны, где в брошенных копиях осталось больше всего времени
+  // Где больше попыток — по всем героям лога: зоны, где в брошенных копиях осталось больше всего времени
   function popAgain(anchor) {
     const pop = $('rv-pop'), a = D.again, rows = a.rows.slice(0, 10), most = Math.max(...rows.map(r => r.lost), 1);
     pop.textContent = '';
     pop.className = 'rv-pop rv-wide';
-    pop.append(el('div', 'rv-ph', T('Где карты начинают заново')),
+    pop.append(el('div', 'rv-ph', T('Где больше попыток — у всех героев')),
                el('div', 'rv-fig', T('по всем героям из лога: {0} · сначала карты, где в прерванных попытках осталось больше времени', a.heroes)));
     const head = el('div', 'rv-ag rv-head');
-    for (const [t, c] of [[T('карта'), ''], ['', ''], [T('начинали заново'), ''], [T('сколько раз'), 'rv-num'], [T('время'), 'rv-num']]) head.append(el('span', c, t));
+    for (const [t, c] of [[T('карта'), ''], ['', ''], [T('прерывали попытки'), ''], [T('прервано'), 'rv-num'], [T('время'), 'rv-num']]) head.append(el('span', c, t));
     pop.append(head);
     for (const r of rows) {
       const row = el('div', 'rv-ag'), trk = el('div', 'rv-trk'), i = el('i', 'rv-zq');
@@ -2978,13 +2978,12 @@ function reviewPage() {
     return h.fate === 'dead' ? el('span', 'rv-cut rv-dead', T('гибель на {0}', clock(s.c)))
       : el('span', 'rv-cut', h.fate === 'now' ? T('сейчас') : T('не пройден'));
   }
-  // карту шага начинали заново: сколько раз — плашкой у названия, со штриховкой, как эта часть в полосе
-  // (в порядке «Карты заново» строки стоят по времени в прерванных попытках — там оно названо и на плашке)
+  // прерванные попытки на шаге: сколько — плашкой у названия, со штриховкой, как эта часть в полосе
+  // (в порядке «Где больше попыток» строки стоят по времени в прерванных попытках — там оно названо и на плашке)
   function againTag(s, withTime) {
     const t = el('span', 'rv-cut rv-re');
-    t.append(el('i', 'rv-sw rv-' + (s.qz || !s.qo ? 'zq' : 'oq')),
-             withTime ? T('заново {0} · {1}', times(s.q), clock(lost(s))) : T('заново {0}', times(s.q)));
-    t.title = T('Карта начата заново: {0} · в прерванных попытках {1}', times(s.q), clock(lost(s)));
+    t.append(el('i', 'rv-sw rv-' + (s.qz || !s.qo ? 'zq' : 'oq')), attempts(s.q) + (withTime ? ' · ' + clock(lost(s)) : ''));
+    t.title = T('{0} · в них {1}', attempts(s.q), clock(lost(s)));
     return t;
   }
   function stepRow(s, axis, withAct) {
@@ -2997,7 +2996,7 @@ function reviewPage() {
     if (s.c != null) name.append(cutTag(H(), s));
     th.append(name);
     if (b) th.append(el('div', 'rv-b', tag(b) + (x ? (x.c != null ? ' · ' + (b.fate === 'dead' ? T('погиб на этом шаге') : T('шаг не пройден')) : '')
-      + (x.q ? ' · ' + T('заново {0}', times(x.q)) : '') : ' · ' + T('не дошёл'))));
+      + (x.q ? ' · ' + attempts(x.q) : '') : ' · ' + T('не дошёл'))));
     const d = delta(s);
     tr.append(th, barCell(s, axis), cell(t0(s.z), x ? t0(x.z) : ''), cell(t0(s.t), x ? t0(x.t) : ''), cell(t0(s.o), x ? t0(x.o) : ''),
               cell(clock(all(s)), x ? clock(all(x)) : '—'), cell(s.g ? clock(s.g) : '—', '', 'rv-g'),
@@ -3010,9 +3009,9 @@ function reviewPage() {
     return tr;
   }
   // метки ленты: вышел из игры, страницу перевели на другой шаг, гибель; пометки у захода: заглянул, город, вне маршрута
-  // (карта начата заново — перед первым заходом в новую её копию; заход в брошенную копию — со штриховкой и словом)
+  // (новая попытка — перед первым заходом в новую копию карты; заход в брошенную копию — со штриховкой и словом)
   const MARK = {l: () => T('вышел из игры — время не идёт'), b: n => T('страница переведена на шаг «{0}»', n), d: () => T('гибель'),
-    a: () => T('карта начата заново')};
+    a: () => T('новая попытка')};
   const TAG = {x: T('заглянул'), t: T('город'), o: T('вне маршрута')};
   function tape(s, title) {
     const box = el('div'), head = el('div', 'rv-tph');
@@ -3112,12 +3111,12 @@ function reviewPage() {
       return;
     }
     const want = {late: s => delta(s) > 0, town: s => s.t > 0, off: s => s.o > 0, again: s => s.q > 0}[S.order];
-    // «заново» — по времени в брошенных копиях, при равном — по числу раз
+    // «больше попыток» — по времени в брошенных копиях, при равном — по числу прерванных попыток
     const key = {late: s => delta(s), town: s => s.t, off: s => s.o, again: s => lost(s) + s.q / 1000}[S.order];
     const list = h.steps.filter(want).sort((a, b) => key(b) - key(a));
     if (!list.length) {
       const none = S.order === 'late' ? (B() ? T('Ни на одном общем шаге герой не медленнее героя {0}.', tag(B())) : T('Ни один пройденный шаг не дольше своей цели.'))
-        : S.order === 'town' ? T('В города герой не заходил.') : S.order === 'off' ? T('С маршрута герой не уходил.') : T('Ни одну карту герой не начинал заново.');
+        : S.order === 'town' ? T('В города герой не заходил.') : S.order === 'off' ? T('С маршрута герой не уходил.') : T('Прерванных попыток нет — все карты с первой попытки.');
       const tr = el('tr', 'rv-none'), td = el('td', '', none);
       td.colSpan = 8;
       tr.append(td);
@@ -3151,11 +3150,11 @@ function reviewPage() {
     if (x) line(tag(b), x);
     if (s.g) { const tr = el('tr'); tr.append(el('td', '', T('цель##время')), el('td'), el('td'), el('td'), el('td', 'rv-v', clock(s.g))); tb.append(tr); }
     tip.append(tb);
-    // карту начинали заново: сколько из времени шага осталось в брошенных копиях (в полосе — штриховкой)
+    // прерванные попытки: сколько из времени шага осталось в брошенных копиях (в полосе — штриховкой)
     for (const [who, v] of [[b ? tag(H()) : '', s], [b ? tag(b) : '', x]]) {
       if (!v || !v.q) continue;
       const ln = el('div', 'rv-tq');
-      ln.append(el('i', 'rv-sw rv-' + (v.qz || !v.qo ? 'zq' : 'oq')), (who ? who + ' · ' : '') + T('Карта начата заново: {0} · в прерванных попытках {1}', times(v.q), clock(lost(v))));
+      ln.append(el('i', 'rv-sw rv-' + (v.qz || !v.qo ? 'zq' : 'oq')), (who ? who + ' · ' : '') + T('{0} · в них {1}', attempts(v.q), clock(lost(v))));
       tip.append(ln);
     }
     tip.hidden = false;
@@ -3418,7 +3417,7 @@ function tilePop(v) {
           [{name: '', z, t: sum('townTime'), o: sum('offTime'), qz: Math.min(z, sum('lost'))}]);
   if (sum('again')) {
     const n = sum('again');
-    pop.append(el('div', 'rv-ln', T('Карта начата заново: {0}', n + ' ' + TN(n, 'раз|раза|раз'))));
+    pop.append(el('div', 'rv-ln', T('Прерванных попыток: {0}', n)));
   }
   if (tileOver !== 'step' && pts.some(p => p.d != null)) {
     const bands = [];
@@ -4395,9 +4394,9 @@ let atlasGeo = null;
 let mapKind = 'tree';    // 'tree' — дерево героя, 'atlas' — атлас
 const mapGeo = () => (mapKind === 'atlas' ? atlasGeo : treeGeo);
 const mapTree = v => { const x = v || V; return x ? (mapKind === 'atlas' ? x.atlas : x.tree) : null; };
-// Название узла из данных дерева: как в клиенте, если данные его знают (атлас), иначе английское.
-// название узла: по-русски — слой ru файла, на другом языке игры — here (программа добавляет его к файлу), иначе английское
-const geoName = (g, i) => { const n = g.nodes[i]; return (I18N.lang === I18N.source && g.ru && g.ru[n[4]]) || (g.here && g.here[n[0]]) || n[4]; };
+// Название узла — как в клиенте на языке страницы: here (программа добавляет к файлу названия из таблиц игры этого языка,
+// русского тоже), по-русски без них — слой ru файла атласа, иначе английское название из данных дерева.
+const geoName = (g, i) => { const n = g.nodes[i]; return (g.here && g.here[n[0]]) || (I18N.lang === I18N.source && g.ru && g.ru[n[4]]) || n[4]; };
 // Условия узла атласа словами клиента: когда он действует («Действует на области 70+ уровня») и что нужно,
 // чтобы его взять («Требует активации большого зеркала»). Пустой список — условий нет; null — данных нет:
 // у малого узла основного дерева условие зависит от раздела, и для части таких узлов его взять неоткуда.

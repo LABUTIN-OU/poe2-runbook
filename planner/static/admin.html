@@ -30,12 +30,12 @@ a{color:var(--accent);text-decoration:none}
 .abar .aname{min-width:0;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hbar .in{max-width:var(--col);margin:0 auto;padding:0 14px}
 html{scrollbar-gutter:stable}   /* место полосы прокрутки — всегда за страницей: колонка и шапка в ней не сдвигаются, есть прокрутка или нет */
-.tabs{display:flex;flex-wrap:nowrap;gap:6px;min-height:42px;padding:0 0 8px;overflow-x:auto;scrollbar-width:none}
-.tabs button{flex:none;padding:6px 11px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--text);
+.tabs{display:flex;flex-wrap:nowrap;gap:5px;min-height:42px;padding:0 0 8px;overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:none;padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--text);
   font:inherit;font-size:14px;line-height:20px;white-space:nowrap;cursor:pointer}
 .tabs button:hover{filter:brightness(1.15)}
 .tabs button.on{border-color:var(--accent);background:#1c2a40;font-weight:700}
-.tabs .cnt{color:var(--muted);font-weight:400;margin-left:6px}
+.tabs .cnt{color:var(--muted);font-weight:400;margin-left:5px}
 .tabs button.warn .cnt{color:var(--due-text);font-weight:700}
 @media (max-width:780px){.abar,.hbar .in{padding-left:8px;padding-right:8px}.tabs{gap:4px;min-height:38px}.tabs button{padding:5px 8px;font-size:13px}}
 /* Вкладки — блоки плана: билд целиком (название, герой, проверка), дерево, маршрут, этапы (что меняется
@@ -1664,6 +1664,16 @@ function namePart(s, whole) {
   }
   return hit;
 }
+// Составная строка по частям: пары «Русское (English)», затем части между « · », «: », « → », « — ».
+function nameParts(text) {
+  const parts = namePairs(text).split(NAME_SPLIT);
+  for (let n = 0; n < parts.length; n += 2) {
+    if (!CYR_RX.test(parts[n])) continue;
+    const w = namePart(parts[n].trim(), parts.length === 1);
+    if (w != null) parts[n] = parts[n].replace(parts[n].trim(), w);
+  }
+  return parts.join('');
+}
 function showName(s) {
   if (I18N.lang === I18N.source || typeof s !== 'string' || !CYR_RX.test(s)) return s;
   if (window.zoneWords) window.zoneWords();       // данные плана сменились — память показанных названий сбрасывается
@@ -1672,18 +1682,12 @@ function showName(s) {
   const text = s.trim(), lead = s.slice(0, s.length - s.trimStart().length), tail = s.slice(s.trimEnd().length);
   let out = nameWord(text);
   if (out == null) {
-    const parts = namePairs(text).split(NAME_SPLIT);
-    for (let n = 0; n < parts.length; n += 2) {
-      if (!CYR_RX.test(parts[n])) continue;
-      const w = namePart(parts[n].trim(), parts.length === 1);
-      if (w != null) parts[n] = parts[n].replace(parts[n].trim(), w);
-    }
-    out = parts.join('');
+    out = nameParts(text);
     // название в кавычках внутри текста: «получить не позже «Клирфелл»»
     if (CYR_RX.test(out)) {
       out = out.replace(/([«“„「‘]\u00a0?)([^«»“”„「」‘’\u00a0]+)(\u00a0?[»”“」’])/g, (all, a, inner, b) => {
         const w = CYR_RX.test(inner) ? nameWord(inner) : null;
-        return a + (w == null ? namePairs(inner) : w) + b;
+        return a + (w == null ? nameParts(inner) : w) + b;      // составное («Карты · Господство») — по частям
       });
     }
   }
@@ -2062,8 +2066,8 @@ function zoneItems() {
   const real = a => (a.town || a.level > 0) && !/hideout/i.test(a.code);       // не меню, не убежище
   const used = new Map();       // зона -> шаг, который по ней узнаётся
   for (const s of S.route.steps) for (const c of [s.zone].concat(s.also || [])) if (c && !used.has(c)) used.set(c, s.name || s.id);
-  const item = (a, now) => ({type: 'zone', code: a.code, name: a.own || a.name, now: !!now, step: used.get(a.code) || null,
-    sub: [a.own ? a.name : '', actOf(a.code), a.town ? T('город') : a.level ? (T('ур.') + ' ') + a.level : '', a.code].filter(Boolean).join(' · ')});
+  const item = (a, now) => ({type: 'zone', code: a.code, name: zoneWord(a), now: !!now, step: used.get(a.code) || null,
+    sub: [zoneWord(a) !== a.name ? a.name : '', actOf(a.code), a.town ? T('город') : a.level ? (T('ур.') + ' ') + a.level : '', a.code].filter(Boolean).join(' · ')});
   const order = (a, b) => (b.town - a.town) || (a.level - b.level) || (a.code < b.code ? -1 : 1);
   const out = [], sid = String(PK.i).split('|')[0], at = S.route.steps.findIndex(s => s.id === sid);
   const nowA = NOWZONE && areaOf(NOWZONE.code);
@@ -3148,7 +3152,8 @@ const fndList = pairs => { const mine = new Map(pairs);
   return F.filter(f => mine.has(f.goal)).map(f => `<div${f.level === 'bad' ? '' : ' class="soft"'} title="${esc(fndTip(f))}">` +
     esc((mine.get(f.goal) ? mine.get(f.goal) + ' — ' : '') + (f.later ? T('с этапа «') + f.later + '» — ' : '') + f.text) + '</div>').join(''); };
 const shortName = t => (I18N.lang === I18N.source ? String(t || '').split(' (')[0] : showName(String(t || '')));
-const fndSlot = id => fndList(S.goals.filter(g => g.slot === id).map(g => [g.id, g.part ? (g.label || statName(g.stat)) + ' ' + (g.title || '') : shortName(g.title) || T('предмет')]));
+// подпись стата и порог склеены пробелом: на языке страницы каждая часть — сама (по склейке их не разобрать)
+const fndSlot = id => fndList(S.goals.filter(g => g.slot === id).map(g => [g.id, g.part ? showName(g.label || statName(g.stat)) + ' ' + showName(g.title || '') : shortName(g.title) || T('предмет')]));
 // Что о слоте записано — одной строкой у его названия: предметы по порядку (каждый следующий сменяет прежний)
 // и сколько при них целей по статам.
 function slotHow(sl) {
@@ -3313,7 +3318,8 @@ function goalLabel(id) {
   if (sk) return (g.title || g.id) + ' → ' + short(sk.title);
   if (g.slot) {
     const slot = (slotOf(g.slot) || {name: g.slot}).name;
-    return (g.part ? (g.label || statName(g.stat)) + ' ' : '') + (g.title || g.id) + ' · ' + slot;
+    // подпись стата и порог склеены пробелом: на языке страницы каждая часть — сама (по склейке их не разобрать)
+    return (g.part ? showName(g.label || statName(g.stat)) + ' ' : '') + showName(g.title || g.id) + ' · ' + slot;
   }
   return g.title || g.id;
 }
@@ -3338,12 +3344,15 @@ window.zoneWords = () => {
 };
 // названия из игры на языке страницы (не русском и не английском) — их прислала программа вместе с планом
 window.gameNames = () => (D && D.gameNames) || null;
-const zoneName = code => { const a = areaOf(code); return a ? a.own || a.name : ''; };
-// Название зоны, каким его ПОКАЗЫВАЮТ: на языке страницы (по-русски — как его называет лог или план, по-английски —
-// английское, на другом языке игры — её название на этом языке). В план пишется и с планом сравнивается zoneName.
+// Название зоны в плане — словами игры на языке программы (ru — из таблиц игры), а нет их — как её называл лог или
+// шаг плана (own), иначе английское название данных игры. Так редактор называет новый шаг.
+const zoneWord = a => a.ru || a.own || a.name;
+const zoneName = code => { const a = areaOf(code); return a ? zoneWord(a) : ''; };
+// Название зоны, каким его ПОКАЗЫВАЮТ: на языке страницы (по-русски — словами игры, по-английски — английское, на другом
+// языке игры — её название на этом языке). В план пишется и с планом сравнивается zoneName.
 const zoneShown = code => {
   const a = areaOf(code);
-  return !a ? '' : I18N.lang === I18N.source ? a.own || a.name : a.here || a.name;
+  return !a ? '' : I18N.lang === I18N.source ? zoneWord(a) : a.here || a.name;
 };
 const EVENTS = {ascend: T('первое восхождение'), ascend2: T('второе восхождение'), ascend3: T('третье восхождение'), ascend4: T('четвёртое восхождение')};
 // Вид цели шага: босс, задание и механика названы полем kind, уровень героя — полем reach, остальное — награда.
@@ -3417,7 +3426,7 @@ function addStep(after) {
 function zoned(st) {
   const a = areaOf(st.zone);
   if (!a) return;
-  if (!st.name) st.name = a.own || a.name;
+  if (!st.name) st.name = zoneWord(a);
   if (freshSteps.has(st.id)) renameStep(st, freeStepId(slug(a.name.replace(/^the\s+/i, '')) || 'step', st));
 }
 // Место новой цели шага в списке: за последней целью этого шага, а если на шаге их ещё нет — за последней
@@ -4008,8 +4017,9 @@ const teCur = () => tePlan().versions.find(v => v.id === TE.ver) || null;
 const teHave = () => ((RUN && RUN[TE.kind]) || {}).have || [];
 // Этапы, которые назвали версию: с них она действует; ни одного — это черновик.
 const teStages = id => S.stages.filter(st => st[TE.kind] === id).map(st => st.name || st.id);
-// название узла: по-русски — слой ru файла, на другом языке игры — here (программа добавляет его к файлу), иначе английское
-const geoName = (g, i) => { const n = g.nodes[i]; return (I18N.lang === I18N.source && g.ru && g.ru[n[4]]) || (g.here && g.here[n[0]]) || n[4]; };
+// Название узла — как в клиенте на языке страницы: here (программа добавляет к файлу названия из таблиц игры этого языка,
+// русского тоже), по-русски без них — слой ru файла атласа, иначе английское название из данных дерева.
+const geoName = (g, i) => { const n = g.nodes[i]; return (g.here && g.here[n[0]]) || (I18N.lang === I18N.source && g.ru && g.ru[n[4]]) || n[4]; };
 // Условия узла атласа словами клиента; пустой список — условий нет; null — данных нет.
 const atlasWhen = (g, i) => { const c = g.nodes[i][6]; return c === null ? null : (c || []).map(k => g.conds[k]); };
 // Название узла: как в игре, если оно известно (из плана или из лога), иначе английское из данных дерева.
@@ -4875,6 +4885,14 @@ const VIEW_ONLY = '[data-more],[data-rmore],[data-smore],[data-stopen],[data-got
 function lockView() {
   for (const el of document.querySelectorAll('#app input, #app select, #app textarea')) el.disabled = true;
   for (const b of document.querySelectorAll('#app button')) if (!b.matches(VIEW_ONLY)) b.disabled = true;
+  // Из плана только для просмотра ничего не пишется — его поля показывают слова плана на языке страницы: заметку —
+  // целиком, если у неё есть перевод (слова плана в словаре языка), название и подпись — как везде на странице.
+  if (I18N.lang === I18N.source) return;
+  for (const el of document.querySelectorAll('#app input:not([type]), #app input[type="text"], #app textarea')) {
+    const v = el.value, key = v.trim();
+    const t = el.tagName === 'TEXTAREA' ? (Object.prototype.hasOwnProperty.call(I18N.texts, key) ? I18N.texts[key] : v) : showName(v);
+    if (t !== v) el.value = t;
+  }
 }
 function render() {
   if (!D) return;

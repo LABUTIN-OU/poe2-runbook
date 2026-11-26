@@ -1,0 +1,91 @@
+  <div class="page-h">
+    <h1>インストール</h1>
+    <p class="lead">インストーラーは1つで、Windows 10 にも 11 にも使えます。管理者権限は求めません。</p>
+  </div>
+
+  <div class="dl" id="download" data-dl-panel data-t-button="PoE2 Runbook {version} をダウンロード" data-t-mb="{n} MB" data-t-bytes="{n} バイト">
+    <p class="dl-wait" id="dl-wait">現在のビルドを確認しています…</p>
+    <div id="dl-ready" hidden>
+      <p class="cta"><a class="btn" id="dl-link" href="#download">Windows 版をダウンロード</a></p>
+      <dl class="facts">
+        <div class="row"><dt class="k">ファイル</dt><dd class="v" id="dl-file"></dd></div>
+        <div class="row"><dt class="k">プログラムのバージョン</dt><dd class="v" id="dl-version"></dd></div>
+        <div class="row"><dt class="k">ゲームのバージョン</dt><dd class="v" id="dl-game"></dd></div>
+        <div class="row"><dt class="k">サイズ</dt><dd class="v"><span id="dl-size"></span> · <span id="dl-bytes"></span></dd></div>
+        <div class="row"><dt class="k">リリース日</dt><dd class="v" id="dl-date"></dd></div>
+        <div class="row"><dt class="k">SHA-256</dt><dd class="v sha"><code id="dl-sha"></code><button class="mini" type="button" data-copy="dl-sha" data-done="コピーしました" hidden>コピー</button></dd></div>
+        <div class="row" id="dl-notes" hidden><dt class="k">更新内容</dt><dd class="v" id="dl-notes-text"></dd></div>
+      </dl>
+      <p class="after"><a href="#first-start">ファイルを確認する方法と、Windows から聞かれること</a></p>
+    </div>
+    <div class="soon" id="dl-soon" hidden>
+      <p><b>最初の公開ビルドは、まだリリースされていません。</b></p>
+      <p class="quiet">リリースされると、ここに表示されます。プログラムをダウンロードできるのは、このサイトだけです。</p>
+    </div>
+    <noscript>
+      <p>JavaScript がオフのため、このページは現在のビルドを表示できません。バージョン、インストーラーのアドレス、その SHA-256 は、普通のテキストファイルに書かれています：<a href="{{root}}update/latest.json">update/latest.json</a>。</p>
+      <p class="quiet">このファイルは、最初の公開ビルドと一緒に用意されます。</p>
+    </noscript>
+  </div>
+
+  <section class="blk" id="first-start">
+    <h2>初回起動</h2>
+    <p class="sub">インストーラーにはまだ署名がないため、Windows は発行元を認識できません。署名の代わりになるのが、「ダウンロード」ボタンの横にある SHA-256 です。あなたのファイルが、このページで公開されているものと同じであることを示します。</p>
+    <div class="troubles">
+      <details id="verify">
+        <summary>ファイルが本物か不安です</summary>
+        <div class="w">
+          <p>本物のファイルは SHA-256 で見分けられます。ダウンロードしたファイルのあるフォルダーを開き、エクスプローラーのアドレス バーをクリックして <code>powershell</code> と入力し、Enter を押します。開いたウィンドウで、次を実行します：</p>
+          <pre><code id="cmd-hash">Get-FileHash "<span data-file>PoE2Runbook-Setup-*.exe</span>"</code></pre>
+          <p><b>Hash</b> の下に表示された値を、「ダウンロード」ボタンの横の SHA-256 と比べてください。64文字すべてが一致していなければなりません。大文字か小文字かは関係ありません。一致しない場合は、ファイルを実行しないでください。このページからダウンロードし直してください。</p>
+        </div>
+      </details>
+      <details>
+        <summary>Windows がインストーラーを起動させてくれません</summary>
+        <div class="w">
+          <p>インストーラーにはまだ署名がなく、Windows は発行元を認識できません。「Windows によって PC が保護されました」というウィンドウが表示されます。<b>「詳細情報」</b>をクリックし、次に<b>「実行」</b>をクリックしてください。</p>
+          <p>ブラウザーが、それより先に警告することもあります。このようなファイルは、ダウンロードされることが少ないためです。それでも保存してください。</p>
+          <p>「スマート アプリ コントロール」がオンの Windows 11 には、「実行」ボタンがありません。この保護機能は、インストーラーを完全にブロックします。</p>
+        </div>
+      </details>
+      <details>
+        <summary>管理者権限がありません</summary>
+        <div class="w">
+          <p>必要ありません。インストーラーは、プログラムをあなたのユーザーアカウントにだけインストールします。インストール先は <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code> フォルダーです。</p>
+        </div>
+      </details>
+      <details>
+        <summary>ゲームが見つかりません</summary>
+        <div class="w">
+          <p>プログラムはゲームを自分で探します。Steam 版でも、ゲーム公式サイトのクライアントでも、どのドライブにあっても探します。見つからなかった場合は、そのことを知らせ、ゲームフォルダーを指定できるようにします。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="blk" id="needs">
+    <h2>必要なもの</h2>
+    <ul class="plain">
+      <li>Windows 10 または Windows 11（64 ビット版）。</li>
+      <li>Microsoft Edge WebView2。Windows 11 には入っており、Windows 10 には Windows Update がインストールします。入っていない場合は、プログラムがそう知らせ、Microsoft のダウンロードページを案内します。</li>
+      <li>Path of Exile 2。プログラムの各ビルドは、ゲームの1つのバージョンに合わせて作られています。そのバージョンは、「ダウンロード」ボタンの横に書かれています。</li>
+      <li>ウィンドウモードまたはウィンドウフルスクリーンモードのゲーム。「{{ui Окна поверх игры}}」に必要です。</li>
+    </ul>
+  </section>
+
+  <section class="blk" id="update">
+    <h2>更新</h2>
+    <p>新しいバージョンが出ると、プログラムが自分で知らせ、「{{ui Обновить}}」ボタンでインストールします。新しいバージョンは、前のバージョンに上書きされます。あなたのプランとヒーローは残ります。</p>
+  </section>
+
+  <section class="blk" id="langs">
+    <h2>プログラムの言語</h2>
+    <p class="langs">{{program_langs}}.</p>
+    <p class="quiet">クライアントの言語がこのうちのどれであっても、プログラムはゲームのログを読み取れます。</p>
+  </section>
+
+  <section class="blk" id="remove">
+    <h2>アンインストール</h2>
+    <p>Windows の「設定」→「アプリ」→ PoE2 Runbook →「アンインストール」。</p>
+    <p class="quiet">あなたのプランとヒーローが入ったフォルダー（<code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code>）は、そのまま残ります。不要なら、自分で削除してください。</p>
+  </section>

@@ -30,7 +30,8 @@
             системные строки (уровень героя, смерть, награда, очки умений) и тексты свойств (stat: коды свойств ->
             шаблоны) — по ним строка награды находит, какое свойство дала игра;
   names   — названия из игры на её языках по английскому названию (names-<язык>.json.gz): предметы, монстры,
-            NPC, задания, зоны, узлы дерева — так страница на этом языке показывает пары «Русское (English)» плана.
+            NPC, задания, зоны, узлы дерева — так страница на этом языке показывает пары «Русское (English)» плана,
+            а русская страница — узлы деревьев и названия, которые план записал не по-русски.
 
 Запуск: python -I catalog/build.py [--fetch] [--sources ПАПКА] [--out ПАПКА] [--lang ru en]
   --fetch    скачать исходные файлы в ПАПКА/<версия данных игры>/ (рядом ложится SOURCE.txt: откуда,
@@ -1012,6 +1013,12 @@ def plain_name(text):
     return ' '.join(RE_UI_TAG.sub('', t).split())
 
 
+def plain_link(text):
+    """Название без ссылок клиента на понятия игры: «Гнездо для [Jewel|самоцвета]» -> «Гнездо для самоцвета» —
+    так его показывает игра (узел дерева, строка интерфейса)."""
+    return ' '.join(RE_CSD_MARK.sub(r'\1', text or '').split())
+
+
 def placeholders_to_shape(template):
     """Шаблон описания свойства -> написание каталога: места для чисел — # (знак + у «{0:+d}»), без разметки."""
     t = re.sub(r'\{(\d*)(?::([^}]*))?\}', lambda m: '+#' if (m.group(2) or '').startswith('+') else '#', template)
@@ -1160,17 +1167,18 @@ RE_UI_NAME = re.compile(r"[A-Z][A-Za-z '’,:-]*")
 
 def build_names(folder):
     """Названия из игры на её языках по английскому названию — для страницы на этом языке: {язык: {names:
-    {English: местное}, nodes: {id узла дерева: местное}}}. Английского и русского нет: английское —
-    само название, русское записано в плане парой с ним. Одно английское название у нескольких записей с разным
-    переводом — берётся самый частый перевод. Из строк интерфейса — только короткие, похожие на названия.
-    nodes — по id узла (PassiveSkills.Id: так узлы названы в данных деревьев героя и атласа)."""
+    {English: местное}, nodes: {id узла дерева: местное}}}. Английского нет: английское — само название. Русский
+    есть: план записывает название так, как его назвал автор (узел дерева он мог взять на карте английским),
+    а русская страница показывает название игры — по id узла и по английскому названию. Одно английское название
+    у нескольких записей с разным переводом — берётся самый частый перевод. Из строк интерфейса — только короткие,
+    похожие на названия. nodes — по id узла (PassiveSkills.Id: так узлы названы в данных деревьев героя и атласа)."""
     tabs = {t: read_dat(folder, t) for t, _ in NAME_TABLES}
     langs = set()
     for t, c in NAME_TABLES:
         if tabs.get(t) and isinstance(tabs[t]['columns'].get(c), dict):
             langs |= set(tabs[t]['columns'][c])
     out = {}
-    for lang in sorted(langs - {'en', 'ru'}):
+    for lang in sorted(langs - {'en'}):
         votes = {}
         for t, c in NAME_TABLES:
             tab = tabs.get(t)
@@ -1180,7 +1188,7 @@ def build_names(folder):
             for en, loc in zip(en_col, loc_col):
                 if not isinstance(en, str) or not isinstance(loc, str) or '[' in en or '{' in en:
                     continue
-                en, loc = plain_name(en), plain_name(loc)
+                en, loc = plain_name(en), plain_link(plain_name(loc))
                 if not en or not loc or en == loc or len(en) > 60:
                     continue
                 if t == 'ClientStrings' and (len(en) > 40 or not RE_UI_NAME.fullmatch(en)):
@@ -1190,8 +1198,8 @@ def build_names(folder):
         ps = tabs.get('PassiveSkills')
         if ps and dat_column(ps, 'Name', lang):
             for nid, loc in zip(ps['columns']['Id'], dat_column(ps, 'Name', lang)):
-                if nid and plain_name(loc):
-                    nodes[nid] = plain_name(loc)
+                if nid and plain_link(plain_name(loc)):
+                    nodes[nid] = plain_link(plain_name(loc))
         out[lang] = {'names': {en: c.most_common(1)[0][0] for en, c in sorted(votes.items())}, 'nodes': nodes}
     return out
 

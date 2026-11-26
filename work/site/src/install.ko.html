@@ -1,0 +1,91 @@
+  <div class="page-h">
+    <h1>설치</h1>
+    <p class="lead">Windows 10 및 11용 설치 프로그램 하나입니다. 관리자 권한은 요구하지 않습니다.</p>
+  </div>
+
+  <div class="dl" id="download" data-dl-panel data-t-button="PoE2 Runbook {version} 다운로드" data-t-mb="{n}MB" data-t-bytes="{n} 바이트">
+    <p class="dl-wait" id="dl-wait">현재 버전을 확인하는 중…</p>
+    <div id="dl-ready" hidden>
+      <p class="cta"><a class="btn" id="dl-link" href="#download">Windows용 다운로드</a></p>
+      <dl class="facts">
+        <div class="row"><dt class="k">파일</dt><dd class="v" id="dl-file"></dd></div>
+        <div class="row"><dt class="k">프로그램 버전</dt><dd class="v" id="dl-version"></dd></div>
+        <div class="row"><dt class="k">게임 버전</dt><dd class="v" id="dl-game"></dd></div>
+        <div class="row"><dt class="k">크기</dt><dd class="v"><span id="dl-size"></span> · <span id="dl-bytes"></span></dd></div>
+        <div class="row"><dt class="k">출시일</dt><dd class="v" id="dl-date"></dd></div>
+        <div class="row"><dt class="k">SHA-256</dt><dd class="v sha"><code id="dl-sha"></code><button class="mini" type="button" data-copy="dl-sha" data-done="복사됨" hidden>복사</button></dd></div>
+        <div class="row" id="dl-notes" hidden><dt class="k">달라진 점</dt><dd class="v" id="dl-notes-text"></dd></div>
+      </dl>
+      <p class="after"><a href="#first-start">파일을 확인하는 방법과 Windows가 묻는 것</a></p>
+    </div>
+    <div class="soon" id="dl-soon" hidden>
+      <p><b>첫 공개 버전이 아직 게시되지 않았습니다.</b></p>
+      <p class="quiet">게시되면 여기에 올라옵니다. 프로그램은 이 사이트에서만 받을 수 있습니다.</p>
+    </div>
+    <noscript>
+      <p>JavaScript가 꺼져 있어 이 페이지가 현재 버전을 보여 주지 못합니다. 버전, 설치 프로그램의 주소, SHA-256은 일반 텍스트 파일에 적혀 있습니다: <a href="{{root}}update/latest.json">update/latest.json</a>.</p>
+      <p class="quiet">이 파일은 첫 공개 버전과 함께 생깁니다.</p>
+    </noscript>
+  </div>
+
+  <section class="blk" id="first-start">
+    <h2>첫 실행</h2>
+    <p class="sub">설치 프로그램에 아직 서명이 없어서 Windows가 게시자를 알지 못합니다. 서명 대신 ‘다운로드’ 버튼 옆에 SHA-256이 있습니다. 받은 파일이 이 페이지에 게시된 바로 그 파일임을 보여 줍니다.</p>
+    <div class="troubles">
+      <details id="verify">
+        <summary>파일이 진짜인지 잘 모르겠어요</summary>
+        <div class="w">
+          <p>진짜 파일은 SHA-256으로 알아볼 수 있습니다. 다운로드한 파일이 있는 폴더를 열고, 파일 탐색기의 주소 표시줄을 클릭한 뒤 <code>powershell</code>을 입력하고 Enter를 누르세요. 열린 창에서 다음을 실행하세요:</p>
+          <pre><code id="cmd-hash">Get-FileHash "<span data-file>PoE2Runbook-Setup-*.exe</span>"</code></pre>
+          <p><b>Hash</b> 아래에 나온 값을 ‘다운로드’ 버튼 옆의 SHA-256과 비교하세요. 64자가 모두 일치해야 합니다. 대문자인지 소문자인지는 상관없습니다. 일치하지 않으면 파일을 실행하지 말고, 이 페이지에서 다시 다운로드하세요.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Windows가 설치 프로그램 실행을 막아요</summary>
+        <div class="w">
+          <p>설치 프로그램에 아직 서명이 없어서 Windows가 게시자를 알지 못합니다. ‘Windows의 PC 보호’ 창이 나타납니다. <b>‘추가 정보’</b>를 누른 다음 <b>‘실행’</b>을 누르세요.</p>
+          <p>그보다 먼저 브라우저가 경고할 수도 있습니다. 이런 파일은 다운로드하는 사람이 드물기 때문입니다. 그래도 파일을 저장하세요.</p>
+          <p>‘스마트 앱 컨트롤’이 켜진 Windows 11에는 ‘실행’ 버튼이 없습니다. 이 보호 기능은 설치 프로그램을 아예 차단합니다.</p>
+        </div>
+      </details>
+      <details>
+        <summary>관리자 권한이 없어요</summary>
+        <div class="w">
+          <p>필요 없습니다. 설치 프로그램은 현재 사용자용으로만, <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code> 폴더에 프로그램을 설치합니다.</p>
+        </div>
+      </details>
+      <details>
+        <summary>프로그램이 게임을 찾지 못했어요</summary>
+        <div class="w">
+          <p>프로그램은 게임을 스스로 찾습니다. Steam이든 게임 사이트에서 받은 클라이언트든, 어느 드라이브에 있든 찾습니다. 찾지 못하면 그렇다고 알리고, 게임 폴더를 지정할 수 있게 합니다.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="blk" id="needs">
+    <h2>필요한 것</h2>
+    <ul class="plain">
+      <li>64비트 Windows 10 또는 Windows 11.</li>
+      <li>Microsoft Edge WebView2. Windows 11에는 들어 있고, Windows 10에는 Windows 업데이트가 설치합니다. 없으면 프로그램이 그렇다고 알리고 Microsoft의 다운로드 페이지를 안내합니다.</li>
+      <li>Path of Exile 2. 프로그램은 버전마다 게임 버전 하나에 맞춰 만들어집니다. 그 게임 버전은 ‘다운로드’ 버튼 옆에 적혀 있습니다.</li>
+      <li>‘창 모드’ 또는 ‘전체 창 모드’로 실행한 게임. ‘{{ui Окна поверх игры}}’에 필요합니다.</li>
+    </ul>
+  </section>
+
+  <section class="blk" id="update">
+    <h2>업데이트</h2>
+    <p>새 버전이 나오면 프로그램이 직접 알려 주고, ‘{{ui Обновить}}’ 버튼을 누르면 설치합니다. 새 버전은 이전 버전 위에 설치됩니다. 내 계획과 영웅은 그대로 남습니다.</p>
+  </section>
+
+  <section class="blk" id="langs">
+    <h2>지원 언어</h2>
+    <p class="langs">{{program_langs}}.</p>
+    <p class="quiet">게임 클라이언트가 이 가운데 어느 언어든, 프로그램은 게임 로그를 읽습니다.</p>
+  </section>
+
+  <section class="blk" id="remove">
+    <h2>제거</h2>
+    <p>Windows 설정에서: ‘앱’ → PoE2 Runbook → ‘제거’.</p>
+    <p class="quiet">내 계획과 영웅이 들어 있는 <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> 폴더는 그대로 남습니다. 필요 없으면 직접 삭제하세요.</p>
+  </section>

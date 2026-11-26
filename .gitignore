@@ -12,6 +12,9 @@ __pycache__/
 /planner/static/icons/
 /catalog/sources/
 
+# Site: page shots of work/site/tools/site_shots.py
+/work/site/preview/
+
 # Installer build (packaging/build.py)
 /packaging/.venv/
 /packaging/build/

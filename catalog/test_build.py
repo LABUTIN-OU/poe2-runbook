@@ -556,18 +556,27 @@ class GameTablesTest(unittest.TestCase):
             'ru': [{'Id': 'M1', 'Name': 'Зомби'}, {'Id': 'M2', 'Name': 'Зомби'}, {'Id': 'M3', 'Name': 'Зомби'}],
             'de': [{'Id': 'M1', 'Name': 'Zombie'}, {'Id': 'M2', 'Name': 'Untoter'}, {'Id': 'M3', 'Name': 'Untoter'}]}, ['Id', 'Name'])
         passives = dat_pack.pack_table('PassiveSkills', {
-            'en': [{'Id': 'fire37', 'Name': 'Volcanic Skin', 'PassiveSkillGraphId': 5}],
-            'ru': [{'Id': 'fire37', 'Name': 'Вулканическая кожа', 'PassiveSkillGraphId': 5}],
-            'de': [{'Id': 'fire37', 'Name': 'Vulkanische Haut', 'PassiveSkillGraphId': 5}]}, ['Id', 'Name', 'PassiveSkillGraphId'])
+            'en': [{'Id': 'fire37', 'Name': 'Volcanic Skin', 'PassiveSkillGraphId': 5},
+                   {'Id': 'jewel1', 'Name': 'Jewel Socket', 'PassiveSkillGraphId': 6}],
+            'ru': [{'Id': 'fire37', 'Name': 'Вулканическая кожа', 'PassiveSkillGraphId': 5},
+                   {'Id': 'jewel1', 'Name': 'Гнездо для [Jewel|самоцвета]', 'PassiveSkillGraphId': 6}],
+            'de': [{'Id': 'fire37', 'Name': 'Vulkanische Haut', 'PassiveSkillGraphId': 5},
+                   {'Id': 'jewel1', 'Name': '[Jewel|Juwelen]fassung', 'PassiveSkillGraphId': 6}]}, ['Id', 'Name', 'PassiveSkillGraphId'])
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / 'dat').mkdir()
             for name, tab in (('BaseItemTypes', bases), ('MonsterVarieties', monsters), ('PassiveSkills', passives)):
                 (Path(d) / 'dat' / (name + '.json.gz')).write_bytes(gzip.compress(json.dumps(tab).encode('utf-8')))
             names = build.build_names(d)
-        self.assertEqual(sorted(names), ['de'])          # английского и русского нет: их названия записаны в плане
+        # английского нет — это само название; русский есть: план пишет названия по-своему (узел, взятый на карте, —
+        # английским), а русская страница показывает название игры
+        self.assertEqual(sorted(names), ['de', 'ru'])
         self.assertEqual(names['de']['names'], {'Rattling Sceptre': 'Rasselndes Zepter', 'Frost Bomb': 'Frostbombe',
-                                                'Zombie': 'Untoter', 'Volcanic Skin': 'Vulkanische Haut'})
-        self.assertEqual(names['de']['nodes'], {'fire37': 'Vulkanische Haut'})
+                                                'Zombie': 'Untoter', 'Volcanic Skin': 'Vulkanische Haut',
+                                                'Jewel Socket': 'Juwelenfassung'})
+        # ссылка клиента на понятие игры («[Jewel|Juwelen]») — словом, как его показывает игра
+        self.assertEqual(names['de']['nodes'], {'fire37': 'Vulkanische Haut', 'jewel1': 'Juwelenfassung'})
+        self.assertEqual(names['ru']['nodes'], {'fire37': 'Вулканическая кожа', 'jewel1': 'Гнездо для самоцвета'})
+        self.assertEqual(names['ru']['names']['Rattling Sceptre'], 'Гремящий скипетр')
         self.assertEqual(build.plain_name('<size:37>{ระเบิดน้ำแข็ง} '), 'ระเบิดน้ำแข็ง')
         self.assertEqual(build.plain_name('Lanzar al\xa0recibir daño'), 'Lanzar al recibir daño')
 

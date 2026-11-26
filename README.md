@@ -1,69 +1,43 @@
 # PoE2 Runbook
 
-PoE2 Runbook is a Windows program for playing Path of Exile 2 by a plan. A plan is the route of the campaign step by
-step and the goals of a build on each step: skills and supports, gem levels, items and their affixes, bosses,
-rewards, hero level. While you play, the program follows the game's own log: it sees the zone you are in, your level,
-deaths, passive points and rewards, ticks off what is done and shows in red what is late. It compares an item you copy
-in the game with the plan, shows the current step in a small window over the game and keeps the time of every step
-for a review after the run. Plans are made and edited in the program itself. The interface speaks nine languages.
+**Play like a pro**
 
-**Official site and downloads: <https://poe2.labutin.gg>**
+The plan's author has already spent the hundreds of hours of trial and error for you. Runbook leads you through the
+plan: where to go, what to kill and what to pick up in every zone.
 
-© 2026 Sergei Labutin · [Русская версия](README.ru.md)
+![The list of the zone Hunting Grounds.](site/assets/og-en.png)
 
-Designed and directed by the author; most of the code was written with an AI coding assistant (Claude by Anthropic).
+[poe2.labutin.gg](https://poe2.labutin.gg) · [Install](https://poe2.labutin.gg/install/) · [What Runbook reads](https://poe2.labutin.gg/safety/) · [Русский](README.ru.md)
 
-## Official builds — only from the site and the releases
+- **You just play.** Enter a zone and Runbook already shows what to do there.
+- **The red line stays.** Fall behind and the line turns red and stays until it's done.
+- **Equip or drop.** Press F2 over an item to see whether it beats what you're wearing.
+- **At the author's pace.** Every step and act has its time from the plan.
+- **Know a better way?** Build your own plan. The campaign is already mapped: every zone, boss and reward.
 
-Official builds of PoE2 Runbook are published only at <https://poe2.labutin.gg>; the installer files themselves are
-stored in the [releases of this repository](https://github.com/LABUTIN-OU/poe2-runbook/releases). A file from anywhere else is not an official build, even
-if it carries the same name and icon. Versions that others build from this source must carry a name and an icon of their own (see
-`NOTICE.md`). If you meet a build passed off as the official one, please report it in the
-[issues of this repository](https://github.com/LABUTIN-OU/poe2-runbook/issues).
+**Every minute counts.** After the game, Review shows where the time went: step by step, in the zone, in town and off
+the route. Compare with your previous hero and see where you got faster.
 
-A version number such as `0.5.5.17` reads as "made for the game 0.5.5, build 17": a new version of the game comes with
-a new version of the program, older ones are not updated.
+**For build authors.** You've put hundreds of hours into your build. Let them help others. In the catalogue your plan
+stands under your name, with a link to you.
+[How to add a plan to the catalogue](https://poe2.labutin.gg/about/#catalogue)
 
-## What the program reads
+This is the first version, the program will keep developing, and any request is welcome: write what's missing or what
+doesn't work in [Issues](https://github.com/LABUTIN-OU/poe2-runbook/issues/new/choose).
 
-The game's log file (`Client.txt`), the game's settings file and item filter files, and the text of an item you copy
-in the game with Ctrl+Alt+C — the clipboard is read only while the game window is in front, once per copy. On its
-"Compare" key the program presses the game's own copy keys once, as you would. It does not read the game's memory or
-the screen. Plans, runs and settings stay on your computer.
+Runbook reads the game's log and settings, listens to three keys and sends the game one item copy per press of F2:
+[What Runbook reads](https://poe2.labutin.gg/safety/).
 
 ## Run from source
 
-You need Windows 10 or 11 and [Python 3.12](https://www.python.org/downloads/) — the version official builds use.
+Windows 10 or 11 and [Python 3.12](https://www.python.org/downloads/):
 
-1. Get the source: `git clone https://github.com/LABUTIN-OU/poe2-runbook.git`, or download it as a ZIP (Code → Download ZIP) and unpack it.
-2. Optional: download the pictures of items and gems (see [Pictures](#pictures)).
-3. Start the program in one of two ways.
-   - **In its own window**, like the installed program:
+    python -m pip install pywebview
+    python planner/desktop.py
 
-         python -m pip install pywebview
-         python planner/desktop.py
-
-     The window needs the Microsoft Edge WebView2 Runtime (part of Windows 11; the program says so if it is
-     missing). Plans, runs and settings go to `%APPDATA%\PoE2 Runbook` — the same folder the installed program uses.
-   - **As a page in your browser**, with Python alone: double-click `start.cmd`, or run
-
-         python -u planner/server.py --open
-
-     In this mode the program keeps its data inside the source folder — `runs/`, `filters/`, `backup/`, `export/`
-     (all four are in `.gitignore`) — and plan edits change the files in `plans/`.
-
-The program finds the game by itself: Steam, the client from the game's site, or the running game. If it does not,
-start the game. The window can also be told the game folder; the browser mode takes `--log <path to Client.txt>`.
-
-## Pictures
-
-Pictures of item bases, gems and unique items are art of Grinding Gear Games and are not in the repository. Download
-them once:
-
-    python -I catalog/fetch_icons.py
-
-About 1,900 files, 15 MB, from the CDN of poe2db.tw into `planner/static/icons/`; files already there are kept,
-`--dry` only says what is missing. Without the pictures the program works and their places stay empty.
+It opens in its own window (WebView2 Runtime, part of Windows 11); data go to `%APPDATA%\PoE2 Runbook`.
+`start.cmd` needs only Python: a page in the browser, data in the source folder, plan edits in `plans/`. Item and gem
+pictures (art of Grinding Gear Games, 15 MB): `python -I catalog/fetch_icons.py`.
 
 ## Tests
 
@@ -71,53 +45,43 @@ About 1,900 files, 15 MB, from the CDN of poe2db.tw into `planner/static/icons/`
     python -X utf8 -m unittest discover -s catalog
     python -X utf8 -m unittest discover -s release
 
-A few tests need the raw game tables (`catalog/sources`, not in the repository) and are skipped without them. The
-tests of the release tool (`release/publish.py`: signed update files) need openssl — the one of Git for Windows will
-do.
+A few skip without the raw game tables; `release` needs openssl (Git for Windows has it).
 
 ## Build the installer
 
-You need Python 3.12 and [Inno Setup 6](https://jrsoftware.org/isinfo.php). Download the pictures first (see
-[Pictures](#pictures)): the installer takes what lies in `planner/static/icons`.
+With [Inno Setup 6](https://jrsoftware.org/isinfo.php) and the pictures downloaded:
 
     python -m venv packaging\.venv
     packaging\.venv\Scripts\python -m pip install pyinstaller pywebview
     packaging\.venv\Scripts\python packaging\build.py
 
-The program folder appears in `packaging\dist\PoE2Runbook`, the installer in `dist\`
-(`PoE2Runbook-Setup-<version>.exe`). Before the installer is made, the built program starts once, hidden, on a test
-log. Official builds use PyInstaller 6.22.3 and pywebview 6.2.1. A build of your own is not an official build: before
-you share it, read `NOTICE.md` (another name and another icon).
+The installer lands in `dist\`; official builds use PyInstaller 6.22.3 and pywebview 6.2.1.
 
-## Game data in the repository
+## Site
 
-The built game data the program and its tests need are here: the catalogue `catalog/data/<version>`, the passive and
-Atlas trees `planner/static/*.json` and the tree export `treedata/ggg`. They belong to Grinding Gear Games; each of
-these folders has a README saying so. The raw game tables (`catalog/sources`) are not here: `catalog/dat_pack.py` and
-`catalog/build.py` describe how to get them and how to rebuild the catalogue after a patch of the game.
-
-## Licence
-
-PoE2 Runbook is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
-License, version 3, as published by the Free Software Foundation, supplemented by the additional terms in `NOTICE.md`.
-The text of the licence is in the file `LICENSE`. This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-You may use the program for any purpose, study it, change it and share your own version. If you share a version of
-your own, you must publish its source under the same licence; keep "Based on PoE2 Runbook by Sergei Labutin —
-https://poe2.labutin.gg" in its "About" window and in its description; say that it is a modified version, and when
-it was modified; give it another name and another icon.
+`site/` is the published site (GitHub Pages); its pages are built from `work/site/src/` — edit there, then run
+`python -X utf8 work/site/tools/build_site.py .` (`--check` only compares). More in `work/site/README.md`.
 
 ## Path of Exile 2
 
 This product isn't affiliated with or endorsed by Grinding Gear Games in any way.
 
-Path of Exile 2 game data and images that come with the program belong to Grinding Gear Games. The licence above does
-not cover them.
+The game data here (`catalog/data/<version>`, `planner/static/*.json`, `treedata/ggg`) and the game's pictures belong
+to Grinding Gear Games; the program's licence does not cover them. Raw game tables: `catalog/dat_pack.py`.
+
+## Author and licence
+
+© 2026 Sergei Labutin.
+
+Designed and directed by the author; most of the code was written with an AI coding assistant (Claude by Anthropic).
+
+Licensed under the GNU GPL version 3 with the author's additional terms (`LICENSE`, `NOTICE.md`); no warranty. A version
+you share stays open, keeps "Based on PoE2 Runbook by Sergei Labutin — https://poe2.labutin.gg", says it is modified
+and has its own name and icon. Official builds are published only at poe2.labutin.gg; the files themselves are stored
+in the [releases of this repository](https://github.com/LABUTIN-OU/poe2-runbook/releases).
 
 ## Contributing and security
 
-Contributions are welcome under the short contributor agreement in [CONTRIBUTING.md](CONTRIBUTING.md). A bug: open an
-[issue](https://github.com/LABUTIN-OU/poe2-runbook/issues/new/choose) with the bug report form. A vulnerability:
-[report it privately](https://github.com/LABUTIN-OU/poe2-runbook/security/advisories/new), see [SECURITY.md](SECURITY.md).
+Contributions: under the agreement in [CONTRIBUTING.md](CONTRIBUTING.md). Vulnerabilities:
+[report privately](https://github.com/LABUTIN-OU/poe2-runbook/security/advisories/new), see [SECURITY.md](SECURITY.md).
 Contact: <games@labutin.gg>.

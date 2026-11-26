@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en" data-locale="en-GB" data-root="../" data-page="safety/" data-langs="ru de es fr ja ko pt th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>What Runbook reads — PoE2 Runbook</title>
+<meta name="description" content="An exact list taken from the program&#x27;s code: which game files it reads, when it opens the clipboard, which keys it listens to and what it sends to the game, what it writes to disk and what it asks the network for.">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://poe2.labutin.gg/safety/">
+<link rel="alternate" hreflang="en" href="https://poe2.labutin.gg/safety/">
+<link rel="alternate" hreflang="ru" href="https://poe2.labutin.gg/ru/safety/">
+<link rel="alternate" hreflang="de" href="https://poe2.labutin.gg/de/safety/">
+<link rel="alternate" hreflang="es" href="https://poe2.labutin.gg/es/safety/">
+<link rel="alternate" hreflang="fr" href="https://poe2.labutin.gg/fr/safety/">
+<link rel="alternate" hreflang="ja" href="https://poe2.labutin.gg/ja/safety/">
+<link rel="alternate" hreflang="ko" href="https://poe2.labutin.gg/ko/safety/">
+<link rel="alternate" hreflang="pt-BR" href="https://poe2.labutin.gg/pt/safety/">
+<link rel="alternate" hreflang="th" href="https://poe2.labutin.gg/th/safety/">
+<link rel="alternate" hreflang="x-default" href="https://poe2.labutin.gg/safety/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PoE2 Runbook">
+<meta property="og:title" content="PoE2 Runbook: what the program reads, listens to and presses">
+<meta property="og:description" content="An exact list taken from the program&#x27;s code: which game files it reads, when it opens the clipboard, which keys it listens to and what it sends to the game, what it writes to disk and what it asks the network for.">
+<meta property="og:url" content="https://poe2.labutin.gg/safety/">
+<meta property="og:image" content="https://poe2.labutin.gg/assets/og-en.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The list of the zone Hunting Grounds: two skills, a boss with a reward of two points, two waypoints; 1:26 of 7:00 spent in the zone.">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../assets/icon.png">
+<link rel="stylesheet" href="../assets/site.css">
+<script src="../assets/lang.js"></script>
+<script src="../assets/config.js" defer></script>
+<script src="../assets/site.js" defer></script>
+</head>
+<body class="p-safety">
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="../"><img src="../assets/icon.png" width="28" height="28" alt="">PoE2 Runbook</a>
+    <nav class="bar-nav" aria-label="Language and download">
+      <details class="langs">
+        <summary class="lang"><span class="ln">English</span><span class="lc">EN</span><span aria-hidden="true"> ▾</span></summary>
+        <div class="langs-menu"><span class="here" lang="en" aria-current="true">English</span><a href="../ru/safety/" lang="ru" hreflang="ru" data-lang="ru">Русский</a><a href="../de/safety/" lang="de" hreflang="de" data-lang="de">Deutsch</a><a href="../es/safety/" lang="es" hreflang="es" data-lang="es">Español</a><a href="../fr/safety/" lang="fr" hreflang="fr" data-lang="fr">Français</a><a href="../ja/safety/" lang="ja" hreflang="ja" data-lang="ja">日本語</a><a href="../ko/safety/" lang="ko" hreflang="ko" data-lang="ko">한국어</a><a href="../pt/safety/" lang="pt-BR" hreflang="pt-BR" data-lang="pt">Português (Brasil)</a><a href="../th/safety/" lang="th" hreflang="th" data-lang="th">ไทย</a></div>
+      </details>
+      <a class="btn btn-s" href="../install/#download" data-dl-link>Download</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap page">
+  <div class="page-h">
+    <h1>What the program reads, listens to and presses</h1>
+    <p class="lead">A separate window beside the game: it reads the game's log and settings, listens to three keys and sends the game one item copy for one press of <kbd>F2</kbd> of yours. It changes nothing of the game itself&nbsp;— not its files, not its memory.</p>
+    <div class="tocrow">
+      <p class="quiet">Each line below is taken from the program's code. A line with an arrow opens.</p>
+      <button class="mini" type="button" data-open-all data-on="Close all" hidden>Open all</button>
+    </div>
+    <ul class="toc" aria-label="Sections of the list">
+      <li><a href="#files">Game files</a></li>
+      <li><a href="#windows">Windows</a></li>
+      <li><a href="#clipboard">Clipboard</a></li>
+      <li><a href="#keys">Keys</a></li>
+      <li><a href="#sends">Sent to the game</a></li>
+      <li><a href="#overlay">Windows over the game</a></li>
+      <li><a href="#disk">Disk</a></li>
+      <li><a href="#network">Network</a></li>
+      <li><a href="#rules">GGG’s rules</a></li>
+    </ul>
+  </div>
+
+  <section class="blk" id="files">
+    <h2>Reads: the game's files</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>logs\Client.txt</code></span><span class="v">The game's log. Read only: zone, hero level, rewards.</span></summary>
+        <div class="w">It is in the game's folder. The whole log is read at start, then the new lines twice a second. Taken from it: when the game starts and closes; the zone you enter; the hero's level&nbsp;— the hero's name and class come from these lines; quest rewards; deaths; the item filter the game loaded; your clicks in the passive tree; the game's version. Of everything said in chat, only the NPC lines your plan waits for are noticed; the rest is not stored.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>poe2_production_Config.ini</code></span><span class="v">The game's settings. Read only: filter, language, the game's keys.</span></summary>
+        <div class="w">It is in <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>; read again when the file changes. Taken from it: which item filter is selected, the client's language, and the game's key bindings&nbsp;— so that the program's keys never take a key the game uses.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>OnlineFilters\</code></span><span class="v">Item filters from your account. Read only.</span></summary>
+        <div class="w">A folder in <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>: the filters the game downloaded from your account. Each filter's name and rules are read&nbsp;— to call a filter by its name and to warn when the selected filter hides an item your plan looks for. A copy of each filter version the game loads is kept in the program's own folder.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Steam's files and the Windows registry</span><span class="v">Read only, to find where the game is installed.</span></summary>
+        <div class="w"><code>libraryfolders.vdf</code>, <code>appmanifest_2694490.acf</code>; in the registry&nbsp;— Steam's folder and the “Path of Exile 2” record of installed programs. If the game is not found, you point to its folder yourself.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="windows">
+    <h2>Asks Windows</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">The active window</span><span class="v">Which window is in front. The game's memory is not read.</span></summary>
+        <div class="w">Which window is in front now and which program owns it&nbsp;— to know that it is the game.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">The game's window, the cursor, <kbd>Alt</kbd></span><span class="v">Where they are now. Nothing is read from the screen.</span></summary>
+        <div class="w">Where the game's window stands, where the mouse cursor is and whether <kbd>Alt</kbd> is held&nbsp;— to place the program's windows over the game and to let you click them.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="clipboard">
+    <h2>Clipboard</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">What is watched</span><span class="v">Only the clipboard's change counter. The content is not read.</span></summary>
+        <div class="w">The counter is a number Windows keeps: it changes with every copy.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">When the content is read</span><span class="v">Once, after your copy of an item in the game.</span></summary>
+        <div class="w">When the counter changes while the game's window is active&nbsp;— that is your <kbd>Ctrl</kbd>+<kbd>C</kbd> or <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd> over an item. In any other window the clipboard is not opened at all. What lay in it before the program started is not read.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">What is kept</span><span class="v">Only an item's text, and only in the program's memory.</span></summary>
+        <div class="w">Text only, up to 200,000 bytes. A text that does not begin with the game's “Item Class” line is dropped at once: not stored, not written anywhere. An item's text is kept in memory only; when you press Equip, the item is saved in the hero's file as the worn one.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Copy by <kbd>F2</kbd></span><span class="v">What was in the clipboard before is put back.</span></summary>
+        <div class="w">The program remembers the whole clipboard (up to 32 MB), presses the game's copy keys, reads the item once and puts back what was there. What it remembered is not looked into.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="keys">
+    <h2>Keys it listens to</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>F2</kbd> Compare / Equip</span><span class="v">Compares the item under the cursor with what the hero wears.</span></summary>
+        <div class="w">Pressed again on the same item&nbsp;— records it as worn. Works with <kbd>Alt</kbd> held as well.</div>
+      </details></li>
+      <li><div class="row"><span class="k"><kbd>F3</kbd> Close</span><span class="v">Closes the program's top window over the game.</span></div></li>
+      <li><div class="row"><span class="k"><kbd>F7</kbd> Program ↔ game</span><span class="v">Brings the program's window forward, and back to the game.</span></div></li>
+      <li><details>
+        <summary><span class="k">When they are listened to</span><span class="v">Only while the game's window is active.</span></summary>
+        <div class="w"><kbd>F7</kbd>&nbsp;— in the program's own window too. The moment another window is active the keys are released: in other programs they work as usual. If the game itself uses one of them, the program takes the next free one of F2, F3, F7, F6, F9, F10, F11. F4 is never taken.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Other keys</span><span class="v">No keyboard hook is installed: the program does not see them.</span></summary>
+        <div class="w">The program does not see what else you press. The one exception is <kbd>Alt</kbd>&nbsp;— while its windows over the game are on, the program asks Windows whether Alt is held.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="sends">
+    <h2>What it sends to the game</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd></span><span class="v">Once for each press of <kbd>F2</kbd> of yours.</span></summary>
+        <div class="w">Only while the game's window is active. It is the game's own “copy the item with its full description”. If the game binds the full description to a key other than Alt, that key is pressed in its place.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Nothing else</span><span class="v">No chat, no commands, no mouse, nothing on a timer.</span></summary>
+        <div class="w">No chat messages or commands, no mouse clicks, nothing on a timer, nothing in answer to the log or the screen. Equip and your marks change the program's own records only.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="overlay">
+    <h2>Windows over the game</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">Three small windows</span><span class="v">The step list, the answer to a copied item, the passive tree hint.</span></summary>
+        <div class="w">They stand above the game's window. They never take the focus, and the mouse goes through them into the game&nbsp;— except while <kbd>Alt</kbd> is held with the cursor over a window, and on the buttons of the answer.</div>
+      </details></li>
+      <li><div class="row"><span class="k">What they need</span><span class="v">The game in windowed or borderless full-screen mode.</span></div></li>
+      <li><div class="row"><span class="k">How to turn them off</span><span class="v">One switch in Settings.</span></div></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="disk">
+    <h2>What it writes to disk</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">Everything the program writes while it runs.</span></summary>
+        <div class="w">
+          <ul class="files">
+            <li><code>plans\</code><span>your plans and the plans installed from the catalogue; the plan that comes with the program is put here at the first start</span></li>
+            <li><code>runs\</code><span>a file per hero: events from the log, your marks, the items you recorded as worn</span></li>
+            <li><code>filters\</code><span>copies of the filter versions the game loaded</span></li>
+            <li><code>backup\</code><span>earlier versions of a plan, saved before each edit; removed plans</span></li>
+            <li><code>export\</code><span>plan files you saved to share</span></li>
+            <li><code>update\</code><span>the installer of a new version&nbsp;— after you press Update; removed once it is installed</span></li>
+            <li><code>settings.json</code><span>the game's folder, the window's size and place, your choices in Settings</span></li>
+            <li><code>program.log</code><span>what the program did at this start; the five starts before it are kept too</span></li>
+            <li><code>webview\</code><span>storage of the window's engine: the pages' own settings and cache</span></li>
+          </ul>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">The program itself. Only the installer writes here.</span></summary>
+        <div class="w">Administrator rights are not asked for it.</div>
+      </details></li>
+      <li><div class="row"><span class="k">Your Downloads folder</span><span class="v">A plan file, when you press “Download plan file”.</span></div></li>
+      <li><details>
+        <summary><span class="k">The game's folders</span><span class="v">Nothing is written into them.</span></summary>
+        <div class="w">Neither into the game's folder nor into <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">After removal</span><span class="v">Your plans and heroes stay.</span></summary>
+        <div class="w">Removing the program leaves <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> in place&nbsp;— your plans and heroes. Delete the folder yourself if you do not need them.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="network">
+    <h2>Network</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">About you</span><span class="v">The program sends nothing about you or your game anywhere.</span></summary>
+        <div class="w">It has no account, no statistics, no error reports.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Updates and the plan catalogue</span><span class="v">At start and every 6 hours&nbsp;— four files from this site.</span></summary>
+        <div class="w">
+          <p>The files are small: the update file <code>update/latest.json</code> and the plan catalogue <code>plans/index.json</code>, each with its signature (<code>.sig</code>). If the site does not answer&nbsp;— or the game is already newer than the program and no new build is out yet&nbsp;— the program asks again in 30 minutes. It is switched off in Settings: “Check for updates”.</p>
+          <p>The program also asks for the plan catalogue when you open the list of plans in Edit&nbsp;— at most once a minute. With “Check for updates” switched off the program makes no request to this site by itself: the catalogue is asked for only when you press “Ask for the catalogue”.</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">What a request carries</span><span class="v">The program's version and nothing else.</span></summary>
+        <div class="w">Each of these requests carries the program's version (<code>User-Agent: PoE2Runbook/&lt;version&gt;</code>): no cookies, no name, nothing about your game. The hosting sees your IP address, as with any web request.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Signatures</span><span class="v">The program checks both files itself before it reads them.</span></summary>
+        <div class="w">It checks them with a key built into it. An update is accepted only when its version is newer than the program's own.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Downloads</span><span class="v">Only after you press Update or Install.</span></summary>
+        <div class="w">
+          <p>Nothing is downloaded or installed until you press Update or Install.</p>
+          <p>Update in the header: the program downloads the installer from the address named in the signed file, compares its size and SHA-256, starts it and closes; the installer puts the new version in place and opens it.</p>
+          <p>Install or Update in the catalogue: the program downloads the plan's file from the address named in the signed catalogue, compares its size and SHA-256 and puts the plan into its library.</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">The window's pages</span><span class="v">Served from your own computer; they answer this computer only.</span></summary>
+        <div class="w">The address is 127.0.0.1: the program serves the pages of its own window to itself.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">The window's engine</span><span class="v">Microsoft Edge WebView2, a component of Windows.</span></summary>
+        <div class="w">It draws the window. It is Microsoft's, and it may contact Microsoft on its own, the way the Edge browser does.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Your browser</span><span class="v">Opened only on your click.</span></summary>
+        <div class="w">This site&nbsp;— from the program's About window; a plan author's page&nbsp;— from the catalogue; an item filter's page on pathofexile2.com; Microsoft's download page for WebView2 when that component is missing.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="rules">
+    <h2>The rules of Grinding Gear Games it follows</h2>
+    <dl class="rules">
+      <div class="rule">
+        <dt><span class="ttl">GGG’s rule</span>A program that runs separately from the game is permitted; one that changes the game or its files is not.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>PoE2 Runbook is a separate program: it reads the log and its own files and changes nothing of the game.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">GGG’s rule</span>A key that acts in the game is pressed by you, does one fixed thing and makes one action in the game.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span><kbd>F2</kbd> makes one copy per press. Nothing runs on a timer, by the log or by the screen.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">GGG’s rule</span>The log, the clipboard and the screen may be read when you know what is done with them; the clipboard and the screen&nbsp;— once per key press of yours.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>This page is that list. The clipboard is read once per copy; the screen is not read.</dd>
+      </div>
+    </dl>
+    <p class="quiet">The rules are retold here in our words. Source: the <a href="https://www.pathofexile.com/developer/docs/index" rel="noopener noreferrer">developer documentation of Path of Exile</a>. GGG does not approve programs one by one; the rules are its own and may change.</p>
+    <blockquote><p>This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p></blockquote>
+  </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>© 2026 Sergei Labutin</p>
+    <nav aria-label="Pages">
+      <a href="../install/">Install</a>
+      <a href="./">What Runbook reads</a>
+      <a href="../about/#licence" data-repo rel="noopener noreferrer">Source code</a>
+      <a href="../about/#licence">Licence</a>
+      <a href="../about/#contact" data-contact-row hidden>Contact</a>
+    </nav>
+    <p class="ggg">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+  </div>
+</footer>
+
+</body>
+</html>

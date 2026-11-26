@@ -1,0 +1,37 @@
+{
+ "words": {
+  "nav": "언어 및 다운로드",
+  "pages": "페이지",
+  "download": "다운로드",
+  "install": "설치",
+  "reads": "프로그램이 읽는 것",
+  "source": "소스 코드",
+  "licence": "라이선스",
+  "contact": "문의",
+  "none": "첫 버전이 아직 공개되지 않았습니다",
+  "plans_title": "완성된 계획",
+  "plans_how": "프로그램 안에서 바로 추가합니다: ‘{{ui Редактор}}’ → ‘{{ui Каталог}}’.",
+  "plans_offer": "내 계획을 제안하려면 계획 파일을 다음 주소로 보내 주세요: {link}",
+  "p_author": "제작자:",
+  "p_game": "게임",
+  "p_version": "버전",
+  "issues": "GitHub 이슈"
+ },
+ "titles": {
+  "safety": {
+   "title": "프로그램이 읽는 것 — PoE2 Runbook",
+   "og_title": "PoE2 Runbook: 프로그램이 읽는 것, 감지하는 것, 누르는 것",
+   "description": "프로그램 코드를 기준으로 한 정확한 목록: 어떤 게임 파일을 읽는지, 언제 클립보드를 여는지, 어떤 키를 감지하고 게임에 무엇을 보내는지, 디스크에 무엇을 쓰고 네트워크에 무엇을 요청하는지."
+  },
+  "install": {
+   "title": "설치 — PoE2 Runbook",
+   "og_title": "PoE2 Runbook: 다운로드와 설치",
+   "description": "Windows용 PoE2 Runbook 다운로드: 설치 프로그램의 버전, 크기, SHA-256, 단계별 첫 실행, 프로그램에 필요한 것과 제거 방법."
+  },
+  "about": {
+   "title": "프로그램 정보 — PoE2 Runbook",
+   "og_title": "PoE2 Runbook: 제작자, 라이선스, 공식 주소",
+   "description": "PoE2 Runbook: 제작자와 라이선스(GNU GPL v3 및 제작자의 추가 조건), 프로그램의 유일한 공식 주소, 문의 방법."
+  }
+ }
+}

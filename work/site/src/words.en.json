@@ -1,0 +1,37 @@
+{
+ "words": {
+  "nav": "Language and download",
+  "pages": "Pages",
+  "download": "Download",
+  "install": "Install",
+  "reads": "What Runbook reads",
+  "source": "Source code",
+  "licence": "Licence",
+  "contact": "Contact",
+  "none": "The first build is not published yet",
+  "plans_title": "Ready-made plans",
+  "plans_how": "Installed from the program itself: {{ui Редактор}} → {{ui Каталог}}.",
+  "plans_offer": "To propose a plan of your own, send the plan's file to {link}.",
+  "p_author": "by",
+  "p_game": "for game",
+  "p_version": "version",
+  "issues": "Issues on GitHub"
+ },
+ "titles": {
+  "safety": {
+   "title": "What Runbook reads — PoE2 Runbook",
+   "og_title": "PoE2 Runbook: what the program reads, listens to and presses",
+   "description": "An exact list taken from the program's code: which game files it reads, when it opens the clipboard, which keys it listens to and what it sends to the game, what it writes to disk and what it asks the network for."
+  },
+  "install": {
+   "title": "Install — PoE2 Runbook",
+   "og_title": "PoE2 Runbook: download and install",
+   "description": "Download PoE2 Runbook for Windows: the installer's version, size and SHA-256, the first start step by step, what the program needs and how to remove it."
+  },
+  "about": {
+   "title": "About — PoE2 Runbook",
+   "og_title": "PoE2 Runbook: author, licence, official addresses",
+   "description": "PoE2 Runbook: the author and the licence (GNU GPL v3 with the author's terms), the program's only official address and how to get in touch."
+  }
+ }
+}

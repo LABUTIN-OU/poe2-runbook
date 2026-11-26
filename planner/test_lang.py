@@ -30,9 +30,9 @@ import langscan  # noqa: E402
 from i18n import tr  # noqa: E402
 
 PAGES = ('index.html', 'admin.html')
-# модули без текстов программы: сам слой языка и его проверка; проверочные инструменты (враждебные планы — их данные
-# и отчёт; в программу они не входят)
-SKIP = ('i18n.py', 'langscan.py', 'hostile.py', 'hostile_pages.py')
+# модули без текстов программы: сам слой языка и его проверка; проверочные инструменты (враждебные планы, язык страниц —
+# их данные и отчёт; в программу они не входят)
+SKIP = ('i18n.py', 'langscan.py', 'hostile.py', 'hostile_pages.py', 'lang_pages.py')
 
 
 def modules():
@@ -328,6 +328,56 @@ class NamesTest(unittest.TestCase):
         self.assertEqual(n.game_names(view), {'Frost Bomb': 'Frostbombe'})
         self.assertEqual(i18n.Names('en', cat, None, pack).game_names(view), {})
 
+    def test_zone_named_by_a_client_of_another_language(self):
+        """Лог нерусского клиента называет зону по-своему, а план — словами игры по-русски: шаг плана «Клирфелл» всё равно
+        показывается на языке страницы. Раньше название из лога вытесняло русское — и шаг оставался русским."""
+        cat = {'lang': {'ru': {'areas': {'G1_2': 'Клирфелл'}}, 'en': {}, 'de': {'areas': {'G1_2': 'Lichtfall'}}},
+               'areas': {'G1_2': {'name': 'Clearfell'}}}
+        for client in ({'G1_2': 'Clearfell'}, {'G1_2': 'Lichtfall'}, {'G1_2': 'Клирфелл'}, None):
+            self.assertEqual(i18n.Names('en', cat, client).of('Клирфелл'), 'Clearfell', client)
+            self.assertEqual(i18n.Names('de', cat, client).of('Клирфелл'), 'Lichtfall', client)
+            self.assertEqual(i18n.Names('de', cat, client).of('Клирфелл · дерево'), 'Lichtfall · Baum', client)
+
+    def test_author_note_whole_or_as_written(self):
+        """Заметка автора переводится только целиком — если её перевод есть среди слов плана в файле языка; нет перевода —
+        как записана, и названия внутри неё по одному не переводятся (заметка чужого плана — на языке своего автора)."""
+        names = i18n.Names('en')
+        word = next(k for k in i18n.table('en')['plan'] if ' ' in k)
+        view = {'goal': {'note': word, 'other': {'note': 'Сфера превращения (Orb of Transmutation) на белую базу'}}}
+        out = i18n.render(view, 'en', names, plain=True)
+        self.assertEqual(out['goal']['note'], i18n.table('en')['plan'][word])
+        self.assertEqual(out['goal']['other']['note'], 'Сфера превращения (Orb of Transmutation) на белую базу')
+
+    def test_game_stat_line_in_page_language(self):
+        """Текст свойства игры (вариант награды, строка аффикса в заметке) — словами игры на языке страницы: по описанию
+        свойства из файлов игры; знак, разброс «61–73» и порядок мест шаблона сохраняются."""
+        ru = {'charm_duration_+%': ['{0}% увеличение длительности эффекта оберега', '{0}% уменьшение длительности эффекта оберега'],
+              'local_energy_shield': ['{0:+d} к максимуму энергетического щита'],
+              'two': ['{0}% урона и {1} к силе']}
+        de = {'charm_duration_+%': ['{0}% verlängerte Phiolen-Wirkdauer', '{0}% verkürzte Phiolen-Wirkdauer'],
+              'local_energy_shield': ['{0:+d} zu maximalem Energieschild'],
+              'two': ['{1} zu Stärke und {0}% Schaden']}
+        n = i18n.Names('de', stats=(ru, de))
+        self.assertEqual(n.stat('30% увеличение длительности эффекта оберега'), '30% verlängerte Phiolen-Wirkdauer')
+        self.assertEqual(n.stat('30% уменьшение длительности эффекта оберега'), '30% verkürzte Phiolen-Wirkdauer')
+        self.assertEqual(n.stat('+61–73 к максимуму энергетического щита'), '+61–73 zu maximalem Energieschild')
+        self.assertEqual(n.stat('15% урона и 7 к силе'), '7 zu Stärke und 15% Schaden')
+        self.assertIsNone(n.stat('урон без числа'))
+        self.assertEqual(n.of('Медальон: 30% увеличение длительности эффекта оберега'), 'Медальон: 30% verlängerte Phiolen-Wirkdauer')
+
+    def test_skill_name_made_by_a_game_template(self):
+        """Название умения, которое игра собирает по шаблону («Spectre: {0}»), — шаблоном языка страницы и названием
+        монстра на этом языке."""
+        cat = {'lang': {'ru': {}, 'de': {'gems': {'Spectre: {0}': 'Schemen: {0}'}}}, 'areas': {}}
+        pack = {'names': {'Powered Zealot': 'Angetriebener Eiferer'}, 'nodes': {}}
+        n = i18n.Names('de', cat, None, pack)
+        self.assertEqual(n.of('Призрак: Заряженный подвижник (Spectre: Powered Zealot)'),
+                         'Schemen: Angetriebener Eiferer (Spectre: Powered Zealot)')
+
+    def test_composite_name_in_quotes(self):
+        """Составное название в кавычках («вместо «Карты · Атлас»») — по частям, как вне кавычек."""
+        self.assertEqual(i18n.Names('en').of('вместо «Карты · Атлас»'), 'вместо «Maps · Atlas»')
+
     def test_names_inside_program_text(self):
         """Название, подставленное в текст программы, показывается по тому же правилу."""
         n = i18n.Names('en', self.CAT, {'G1_2': 'Клирфелл'})
@@ -339,7 +389,7 @@ class NamesTest(unittest.TestCase):
         """Состояние страницы забега: тексты программы и названия — по-английски, тексты автора и коды — как были."""
         n = i18n.Names('en', self.CAT, {'G1_2': 'Клирфелл'})
         view = {'step': {'id': 'clearfell', 'name': 'Клирфелл', 'act': tr('Акт %s') % '1',
-                         'goals': [{'id': 'g', 'title': 'Морозная бомба (Frost Bomb)', 'kind': tr('умение'), 'note': 'любой',
+                         'goals': [{'id': 'g', 'title': 'Морозная бомба (Frost Bomb)', 'kind': tr('умение'), 'note': 'взять сразу',
                                     'since': tr('с %d уровня') % 10, 'attr': 'инт',
                                     'fact': i18n.join(' · ', [tr('награду выдают в городе: %s') % 'Клирфелл',
                                                               tr('сначала: %s') % i18n.join(', ', ['Морозная бомба (Frost Bomb)'])])}]},
@@ -347,7 +397,7 @@ class NamesTest(unittest.TestCase):
         out = i18n.render(view, 'en', n, plain=True)
         self.assertEqual(out['step']['name'], 'Clearfell')
         self.assertEqual(out['step']['act'], 'Act 1')
-        self.assertEqual(out['step']['goals'][0], {'id': 'g', 'title': 'Frost Bomb', 'kind': 'skill', 'note': 'любой',
+        self.assertEqual(out['step']['goals'][0], {'id': 'g', 'title': 'Frost Bomb', 'kind': 'skill', 'note': 'взять сразу',
                                                    'since': 'from level 10', 'attr': 'инт',
                                                    'fact': 'reward given in town: Clearfell · first: Frost Bomb'})
         # текст программы, вставленный в обычную строку, узнаётся по своему шаблону

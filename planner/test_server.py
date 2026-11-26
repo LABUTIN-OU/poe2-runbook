@@ -75,6 +75,55 @@ class AppTest(unittest.TestCase):
             app.attach_run()
         return app
 
+    def test_log_of_another_client_language_gives_game_words(self):
+        """Лог английского клиента называет зону и класс героя по-английски («Clearfell», «Sorceress»), а программа считает
+        на своём языке: событие получает слово игры по-русски (из таблиц игры, по коду зоны и по слою языка), страница на
+        другом языке — название из игры на своём языке. Раньше русская страница показывала «Clearfell», немецкая —
+        тоже английское, а шаг плана «Клирфелл» оставался там русским."""
+        self.log.write_text('\n'.join([
+            '2026/11/11 20:07:03 1 a [DEBUG Client 1] Generating level 1 area "G1_1" with seed 1',
+            '2026/11/11 20:07:03 1 a [INFO Client 1] [SCENE] Set Source [The Riverbank]',
+            '2026/11/11 20:08:00 1 a [INFO Client 1] : Proba (Sorceress) is now level 2',
+            '2026/11/11 20:10:55 1 a [DEBUG Client 1] Generating level 2 area "G1_2" with seed 5',
+            '2026/11/11 20:10:56 1 a [INFO Client 1] [SCENE] Set Source [Clearfell]',
+        ]) + '\n', encoding='utf-8')
+        app = server.App(self.log, self.plan, self.runs)
+        with app.cond:
+            app.load_plan()
+            app.set_client_lang('en')
+            app.poll_log(initial=True)
+            app.attach_run()
+        langs = app.base_catalog['lang']
+        v = app.view()
+        self.assertEqual(v['zone']['name'], langs['ru']['areas']['G1_2'])
+        self.assertEqual(app.zone_names(), {'G1_1': langs['ru']['areas']['G1_1'], 'G1_2': langs['ru']['areas']['G1_2']})
+        self.assertEqual(v['hero']['cls'], langs['ru']['heroClasses']['Sorceress'])
+        de = json.loads(app.view_json('de'))
+        self.assertEqual(de['zone']['name'], langs['de']['areas']['G1_2'])
+        self.assertEqual(de['step']['name'], langs['de']['areas']['G1_2'])          # шаг плана «Клирфелл»
+        self.assertEqual(de['hero']['cls'], langs['de']['heroClasses']['Sorceress'])
+        self.assertEqual(json.loads(app.view_json('en'))['hero']['cls'], 'Sorceress')
+
+    def test_tree_nodes_on_the_russian_page_are_named_by_the_game(self):
+        """Узел дерева на русской странице назван так, как его называет игра по-русски (таблицы игры, names-ru): и в
+        состоянии страницы — какое бы имя ни записали план (узел, взятый на карте, — английским) и лог (клиент на другом
+        языке), — и на карте (геометрия дерева получает here). Раньше там оставалось «Spell Critical Damage»."""
+        app = self.start()
+        ru = gamedata.names_pack(app.catalog, 'ru')
+        if not ru:
+            self.skipTest('каталог без русского слоя названий')
+        want = ru['nodes']['spell_criticals4']
+        v = {'tree': {'items': [{'id': 'spell_criticals4', 'name': 'Spell Critical Damage'}],
+                      'goalNode': {'id': 'passive_keystone_chaos_inoculation', 'name': 'Узел-цель', 'goal': 'g'}},
+             'atlas': {}}
+        app._local_nodes(v, 'ru')
+        self.assertEqual(v['tree']['items'][0]['name'], want)
+        self.assertEqual(v['tree']['goalNode']['name'], 'Узел-цель')             # узел-цель — названием цели
+        geo = json.loads(app.geo_file(app.tree_path, 'ru'))
+        self.assertEqual(geo['here']['spell_criticals4'], want)
+        self.assertNotIn('[', geo['here'].get('jewel_slot1979', ''))            # без разметки игры: «Гнездо для самоцвета»
+        self.assertNotIn('here', json.loads(app.geo_file(app.tree_path, 'en')))
+
     def test_filter_page_is_opened_in_the_system_browser_on_request(self):
         """Во встроенном браузере отдельной вкладки нет: страницу фильтра на сайте игры по просьбе страницы открывает
         программа — в браузере системы. Адрес она собирает сама из кода фильтра."""
@@ -620,17 +669,18 @@ class AppTest(unittest.TestCase):
         self.assertEqual(app.speech_lines('en')['AsalaA2DreadnoughtCutOffHisHead'], 'Sekhema Asala: It is done.')
 
     def test_tree_names_in_page_language(self):
-        # карта деревьев на другом языке игры: к файлу геометрии добавлены названия узлов на этом языке (here)
+        # карта деревьев на языке игры, кроме английского: к файлу геометрии добавлены названия узлов на этом языке (here) —
+        # и по-русски тоже (в файле названия английские); по-английски — файл как есть
         app = server.App(self.log, self.plan, self.runs, None, None)
         with app.cond:
             app.load_plan()
-        if 'de' not in ((app.catalog or {}).get('namePacks') or ()):
-            self.skipTest('в каталоге нет названий из игры на немецком')
+        if not {'de', 'ru'} <= set((app.catalog or {}).get('namePacks') or ()):
+            self.skipTest('в каталоге нет названий из игры на немецком и русском')
         path = Path(self.tmp.name) / 'tree.json'
         path.write_text(json.dumps({'nodes': [['fire37', 0, 0, 1, 'Volcanic Skin'], ['nope', 0, 0, 1, 'X']]}), encoding='utf-8')
         self.assertEqual(json.loads(app.geo_file(path, 'de'))['here'], {'fire37': 'Vulkanische Haut'})
-        # по-русски и по-английски — файл как есть
-        self.assertEqual((app.geo_file(path, 'ru'), app.geo_file(path, 'en')), (path.read_bytes(), path.read_bytes()))
+        self.assertEqual(json.loads(app.geo_file(path, 'ru'))['here'], {'fire37': 'Вулканическая кожа'})
+        self.assertEqual(app.geo_file(path, 'en'), path.read_bytes())
 
     def test_selected_filter_comes_from_game_config(self):
         root = Path(self.tmp.name)

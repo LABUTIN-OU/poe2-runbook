@@ -1,0 +1,91 @@
+  <div class="page-h">
+    <h1>Installation</h1>
+    <p class="lead">Ein Installationsprogramm für Windows 10 und 11. Administratorrechte verlangt es nicht.</p>
+  </div>
+
+  <div class="dl" id="download" data-dl-panel data-t-button="Runbook {version} herunterladen" data-t-mb="{n} MB" data-t-bytes="{n} Bytes">
+    <p class="dl-wait" id="dl-wait">Aktuelle Version wird ermittelt…</p>
+    <div id="dl-ready" hidden>
+      <p class="cta"><a class="btn" id="dl-link" href="#download">Für Windows herunterladen</a></p>
+      <dl class="facts">
+        <div class="row"><dt class="k">Datei</dt><dd class="v" id="dl-file"></dd></div>
+        <div class="row"><dt class="k">Programmversion</dt><dd class="v" id="dl-version"></dd></div>
+        <div class="row"><dt class="k">Spielversion</dt><dd class="v" id="dl-game"></dd></div>
+        <div class="row"><dt class="k">Größe</dt><dd class="v"><span id="dl-size"></span> · <span id="dl-bytes"></span></dd></div>
+        <div class="row"><dt class="k">Erscheinungsdatum</dt><dd class="v" id="dl-date"></dd></div>
+        <div class="row"><dt class="k">SHA-256</dt><dd class="v sha"><code id="dl-sha"></code><button class="mini" type="button" data-copy="dl-sha" data-done="Kopiert" hidden>Kopieren</button></dd></div>
+        <div class="row" id="dl-notes" hidden><dt class="k">Neuerungen</dt><dd class="v" id="dl-notes-text"></dd></div>
+      </dl>
+      <p class="after"><a href="#first-start">Wie du die Datei prüfst und was Windows fragen wird</a></p>
+    </div>
+    <div class="soon" id="dl-soon" hidden>
+      <p><b>Die erste öffentliche Version ist noch nicht erschienen.</b></p>
+      <p class="quiet">Sie erscheint hier: Das Programm gibt es nur auf dieser Website zum Herunterladen.</p>
+    </div>
+    <noscript>
+      <p>JavaScript ist ausgeschaltet, deshalb zeigt die Seite die aktuelle Version nicht an. Versionsnummer, Adresse des Installationsprogramms und sein SHA-256 stehen in einer gewöhnlichen Textdatei: <a href="{{root}}update/latest.json">update/latest.json</a>.</p>
+      <p class="quiet">Die Datei erscheint zusammen mit der ersten öffentlichen Version.</p>
+    </noscript>
+  </div>
+
+  <section class="blk" id="first-start">
+    <h2>Erster Start</h2>
+    <p class="sub">Das Installationsprogramm ist noch nicht signiert, deshalb kennt Windows seinen Herausgeber nicht. Statt einer Signatur gibt es den SHA-256 neben der Schaltfläche „Herunterladen“: Er zeigt, dass deine Datei genau die ist, die auf dieser Seite veröffentlicht ist.</p>
+    <div class="troubles">
+      <details id="verify">
+        <summary>Ich bin nicht sicher, ob die Datei echt ist</summary>
+        <div class="w">
+          <p>Die echte Datei erkennst du an ihrem SHA-256. Öffne den Ordner mit der heruntergeladenen Datei, klicke in die Adressleiste des Explorers, tippe <code>powershell</code> ein und drücke Enter. Führe im Fenster, das sich öffnet, diesen Befehl aus:</p>
+          <pre><code id="cmd-hash">Get-FileHash "<span data-file>PoE2Runbook-Setup-*.exe</span>"</code></pre>
+          <p>Vergleiche den Wert unter <b>Hash</b> mit dem SHA-256 neben der Schaltfläche „Herunterladen“. Alle 64 Zeichen müssen übereinstimmen; ob Groß- oder Kleinbuchstaben, ist egal. Stimmen sie nicht überein, starte die Datei nicht: Lade sie erneut von dieser Seite herunter.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Windows lässt mich das Installationsprogramm nicht starten</summary>
+        <div class="w">
+          <p>Das Installationsprogramm ist noch nicht signiert, und Windows kennt seinen Herausgeber nicht. Es erscheint das Fenster „Der Computer wurde durch Windows geschützt“. Klicke auf <b>„Weitere Informationen“</b>, dann auf <b>„Trotzdem ausführen“</b>.</p>
+          <p>Der Browser warnt vielleicht schon vorher: Eine solche Datei wird selten heruntergeladen. Behalte sie trotzdem.</p>
+          <p>Ist unter Windows 11 die „Intelligente App-Steuerung“ (Smart App Control) eingeschaltet, gibt es die Schaltfläche „Trotzdem ausführen“ nicht: Dieser Schutz blockiert das Installationsprogramm ganz.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Ich habe keine Administratorrechte</summary>
+        <div class="w">
+          <p>Die brauchst du nicht. Das Installationsprogramm installiert das Programm nur für dich – in den Ordner <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Das Programm hat das Spiel nicht gefunden</summary>
+        <div class="w">
+          <p>Das Programm sucht das Spiel selbst: Steam oder der Client von der Website des Spiels, auf jedem Laufwerk. Findet es das Spiel nicht, sagt es das und lässt dich den Spielordner angeben.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="blk" id="needs">
+    <h2>Was du brauchst</h2>
+    <ul class="plain">
+      <li>Windows 10 oder Windows 11, 64 Bit.</li>
+      <li>Microsoft Edge WebView2 – in Windows 11 ist es enthalten, unter Windows 10 wird es von Windows Update installiert. Fehlt es, sagt das Programm das und bietet die Download-Seite von Microsoft an.</li>
+      <li>Path of Exile 2. Jede Version des Programms ist für genau eine Spielversion gemacht – sie steht neben der Schaltfläche „Herunterladen“.</li>
+      <li>Das Spiel im Modus „Fenster“ oder „Vollbild-Fenster“ – für die Fenster über dem Spiel.</li>
+    </ul>
+  </section>
+
+  <section class="blk" id="update">
+    <h2>Aktualisierung</h2>
+    <p>Eine neue Version meldet das Programm selbst und installiert sie per Klick auf „{{ui Обновить}}“. Die neue Version wird über die alte installiert: Deine Pläne und Helden bleiben.</p>
+  </section>
+
+  <section class="blk" id="langs">
+    <h2>Sprachen des Programms</h2>
+    <p class="langs">{{program_langs}}.</p>
+    <p class="quiet">Das Spiel-Log liest das Programm in jeder dieser Client-Sprachen.</p>
+  </section>
+
+  <section class="blk" id="remove">
+    <h2>Deinstallieren</h2>
+    <p>In den Windows-Einstellungen: „Apps“ → PoE2 Runbook → „Deinstallieren“.</p>
+    <p class="quiet">Der Ordner mit deinen Plänen und Helden – <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> – bleibt an seinem Platz. Brauchst du ihn nicht mehr, lösche ihn selbst.</p>
+  </section>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="th" data-locale="th-TH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>PoE2 Runbook — เล่นแบบโปร</title>
+<meta name="description" content="ลองผิดลองถูกหลายร้อยชั่วโมง ผู้สร้างแผนทำแทนคุณไปแล้ว Runbook พาคุณเดินตามแผนนั้น: แต่ละด่านต้องไปไหน ฆ่าตัวไหน และเก็บอะไร">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://poe2.labutin.gg/th/">
+<link rel="alternate" hreflang="en" href="https://poe2.labutin.gg/">
+<link rel="alternate" hreflang="ru" href="https://poe2.labutin.gg/ru/">
+<link rel="alternate" hreflang="de" href="https://poe2.labutin.gg/de/">
+<link rel="alternate" hreflang="es" href="https://poe2.labutin.gg/es/">
+<link rel="alternate" hreflang="fr" href="https://poe2.labutin.gg/fr/">
+<link rel="alternate" hreflang="ja" href="https://poe2.labutin.gg/ja/">
+<link rel="alternate" hreflang="ko" href="https://poe2.labutin.gg/ko/">
+<link rel="alternate" hreflang="pt-BR" href="https://poe2.labutin.gg/pt/">
+<link rel="alternate" hreflang="th" href="https://poe2.labutin.gg/th/">
+<link rel="alternate" hreflang="x-default" href="https://poe2.labutin.gg/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PoE2 Runbook">
+<meta property="og:title" content="PoE2 Runbook — เล่นแบบโปร">
+<meta property="og:description" content="ลองผิดลองถูกหลายร้อยชั่วโมง ผู้สร้างแผนทำแทนคุณไปแล้ว Runbook พาคุณเดินตามแผนนั้น: แต่ละด่านต้องไปไหน ฆ่าตัวไหน และเก็บอะไร">
+<meta property="og:url" content="https://poe2.labutin.gg/th/">
+<meta property="og:image" content="https://poe2.labutin.gg/assets/og-th.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="รายการของด่าน “แดนนักล่า”: 2 สกิล บอสที่ให้รางวัล 2 แต้ม และเวย์พอยน์ 2 จุด ใช้เวลาในด่านไป 1:26 จาก 7:00">
+<meta property="og:locale" content="th_TH">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../assets/icon.png">
+<link rel="stylesheet" href="../assets/site.css">
+<script src="../assets/lang.js"></script>
+<script src="../assets/config.js" defer></script>
+<script src="../assets/site.js" defer></script>
+</head>
+<body class="p-overview">
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="#top"><img src="../assets/icon.png" width="28" height="28" alt="">PoE2 Runbook</a>
+    <nav class="bar-nav" aria-label="ภาษาและการดาวน์โหลด">
+      <details class="langs">
+        <summary class="lang"><span class="ln">ไทย</span><span class="lc">TH</span><span aria-hidden="true"> ▾</span></summary>
+        <div class="langs-menu"><a href="../?lang=en" lang="en" hreflang="en" data-lang="en">English</a><a href="../ru/" lang="ru" hreflang="ru" data-lang="ru">Русский</a><a href="../de/" lang="de" hreflang="de" data-lang="de">Deutsch</a><a href="../es/" lang="es" hreflang="es" data-lang="es">Español</a><a href="../fr/" lang="fr" hreflang="fr" data-lang="fr">Français</a><a href="../ja/" lang="ja" hreflang="ja" data-lang="ja">日本語</a><a href="../ko/" lang="ko" hreflang="ko" data-lang="ko">한국어</a><a href="../pt/" lang="pt-BR" hreflang="pt-BR" data-lang="pt">Português (Brasil)</a><span class="here" lang="th" aria-current="true">ไทย</span></div>
+      </details>
+      <a class="btn btn-s" href="install/#download" data-dl-link>ดาวน์โหลด</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <h1>เล่นแบบโปร</h1>
+      <p class="lead">ลองผิดลองถูกหลายร้อยชั่วโมง ผู้สร้างแผนทำแทนคุณไปแล้ว <span>Runbook พาคุณเดินตามแผนนั้น: แต่ละด่านต้องไปไหน ฆ่าตัวไหน และเก็บอะไร</span></p>
+      <p class="cta"><a class="btn" href="install/#download" data-dl-link>ดาวน์โหลดสำหรับ Windows</a><a class="cta-2" href="#authors">สำหรับผู้สร้างบิลด์</a></p>
+      <p class="fine" id="get" data-t-line="เวอร์ชัน {version} · สำหรับเกม {game}"><span id="dl-line">&nbsp;</span><span id="dl-none" hidden>เวอร์ชันแรกยังไม่ได้เผยแพร่</span></p>
+    </div>
+    <div class="product"><img src="../assets/list-th.webp" width="1664" height="518" alt="รายการของด่าน “แดนนักล่า”: 2 สกิล บอสที่ให้รางวัล 2 แต้ม และเวย์พอยน์ 2 จุด ใช้เวลาในด่านไป 1:26 จาก 7:00"></div>
+  </section>
+
+  <section class="feat">
+    <div class="wrap">
+      <h2>คุณแค่เล่นก็พอ</h2>
+      <p class="sub">พอคุณเข้าด่าน Runbook ก็แสดงให้ดูแล้วว่าในด่านนั้นต้องทำอะไรบ้าง โปรแกรมติ๊กเลเวล รางวัล และโหนดในตารางพาสซีฟให้เอง</p>
+    </div>
+    <div class="shot shot-window"><img src="../assets/window-th.webp" width="2080" height="1574" loading="lazy" decoding="async" alt="หน้าต่าง PoE2 Runbook: ด่าน เวลาเทียบกับแผน เส้นทาง และสิ่งที่ยังต้องทำในขั้นนี้"></div>
+  </section>
+
+  <section class="feat">
+    <div class="wrap">
+      <h2>บรรทัดแดงไม่หายไปไหน</h2>
+      <p class="sub">ผู้สร้างแผนรู้ว่าถึงขั้นไหนต้องเก็บและใส่อะไรไว้แล้ว ถ้าเลยกำหนด บรรทัดนั้นจะเปลี่ยนเป็นสีแดงและค้างอยู่จนกว่าคุณจะทำเสร็จ</p>
+    </div>
+    <div class="shot shot-close"><img src="../assets/late-th.webp" width="1984" height="338" loading="lazy" decoding="async" alt=""></div>
+  </section>
+
+  <section class="split">
+    <div class="wrap split-in">
+      <div class="split-text">
+        <h2>ใส่หรือทิ้ง</h2>
+        <p class="sub">ชี้ที่ไอเทมแล้วกด F2 ก็เห็นทันทีว่าดีหรือแย่กว่าชิ้นที่ใส่อยู่ เทียบตามค่าสถานะที่ผู้สร้างแผนเลือกไว้</p>
+      </div>
+      <div class="split-pic"><img src="../assets/answer-th.webp" width="1120" height="785" loading="lazy" decoding="async" alt="คำตอบของโปรแกรม: “ดีกว่า”&nbsp;— ค่าต้านทานไฟ ค่าต้านทานน้ำแข็ง และพลังชีวิตสูงกว่าไอเทมที่ใส่อยู่"></div>
+    </div>
+  </section>
+
+  <section class="feat">
+    <div class="wrap">
+      <h2>ตามจังหวะผู้สร้างแผน</h2>
+      <p class="sub">ทุกขั้นและทุกบทมีเวลาจากแผน เห็นได้เลยว่าตรงไหนคุณเร็วกว่าแผน และตรงไหนช้ากว่า</p>
+    </div>
+    <div class="shot shot-strip"><img src="../assets/tiles-th.webp" width="2080" height="249" loading="lazy" decoding="async" alt="ช่องเวลา 3 ช่อง: ก่อนครองอำนาจ บท และด่านปัจจุบัน&nbsp;— เวลาที่ใช้ไป เวลาเป้าหมาย และเร็วกว่าเท่าไร"></div>
+  </section>
+
+  <section class="feat">
+    <div class="wrap">
+      <p class="eyebrow">ข้อมูลวิเคราะห์</p>
+      <h2>ทุกนาทีมีค่า</h2>
+      <p class="sub">หลังเล่นเสร็จ หน้า “วิเคราะห์” จะบอกว่าเวลาหมดไปไหน: ตามขั้น ในด่าน ในเมือง และนอกเส้นทาง เทียบกับฮีโร่ตัวก่อน ก็จะเห็นว่าเร็วขึ้นตรงไหน</p>
+      <p class="tags">ตรงไหนช้ากว่าเวลาเป้าหมาย · ตรงไหนอยู่ในเมืองนานกว่า · ตรงไหนออกนอกเส้นทาง · แต่ละแผนที่ต้องลองกี่ครั้ง</p>
+    </div>
+    <div class="shot shot-review"><img src="../assets/time-th.webp" width="1752" height="984" loading="lazy" decoding="async" alt="หน้า “วิเคราะห์”: เวลาของแต่ละขั้นในบทที่ 1 คู่กับเวลาเป้าหมาย และกราฟความล่าช้า"></div>
+  </section>
+
+  <section class="split split-rev">
+    <div class="wrap split-in">
+      <div class="split-pic plain"><img src="../assets/plan-th.webp" width="1040" height="584" loading="lazy" decoding="async" alt="หน้าแก้ไขแผน: ขั้นต่างๆ ของบทที่ 1 พร้อมเป้าหมายและเวลา"></div>
+      <div class="split-text">
+        <h2>รู้วิธีที่ดีกว่า?</h2>
+        <p class="sub">สร้างแผนของคุณเอง แคมเปญใส่ไว้ให้ครบแล้ว: ทุกด่าน ทุกบอส และทุกรางวัล เพิ่มบิลด์และกำหนดเวลาของคุณเข้าไปได้เลย</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq plans" id="plans" data-plans-row hidden>
+    <div class="wrap narrow">
+      <h2>แผนพร้อมใช้</h2>
+      <div class="rows" id="plans-list"></div>
+      <p class="fine">ติดตั้งได้จากในโปรแกรมเลย: “แก้ไข” → “แคตตาล็อก”<span data-contact-row hidden> อยากเสนอแผนของคุณเอง ส่งไฟล์แผนมาที่ <a data-contact href="about/#contact" rel="noopener noreferrer"></a></span></p>
+      <template id="plan-tpl">
+        <div class="plan">
+          <b class="pn" data-p="title"></b>
+          <span class="pm"><span data-p="author-row">ผู้สร้าง: <span data-p="author"></span></span><span data-p="game-row">สำหรับเกม <span data-p="game"></span></span><span data-p="version-row">เวอร์ชัน <span data-p="version"></span></span><span data-p="date"></span></span>
+          <span class="ps" data-p="summary"></span>
+        </div>
+      </template>
+    </div>
+  </section>
+
+  <section class="authors" id="authors">
+    <div class="wrap authors-in">
+      <p class="eyebrow">สำหรับผู้สร้างบิลด์</p>
+      <h2>คุณทุ่มเวลาให้บิลด์ไปหลายร้อยชั่วโมง <span>ให้ชั่วโมงเหล่านั้นได้ช่วยคนอื่นด้วย</span></h2>
+      <p class="sub">ทำบิลด์ของคุณให้เป็นแผน: เส้นทาง ช่วงของบิลด์ และเวลาของแต่ละขั้น แผนจะอยู่ในแคตตาล็อกในชื่อของคุณ พร้อมลิงก์ไปหาคุณ ผู้เล่นจะผ่านเกมไปตามเส้นทางของคุณ และรู้ว่าต้องขอบคุณใคร</p>
+      <p class="authors-do"><a href="about/#catalogue">วิธีเพิ่มแผนลงแคตตาล็อก</a></p>
+    </div>
+  </section>
+
+  <section class="release" id="download" data-t-name="PoE2 Runbook {version}" data-t-before="{date} · สำหรับเกม {game} · " data-t-after=" · {size}" data-t-mb="{n} MB">
+    <div class="wrap">
+      <div class="release-in">
+        <div>
+          <p class="release-name" id="rel-name">PoE2 Runbook</p>
+          <p class="release-meta"><span id="rel-before" hidden></span><span id="rel-none" hidden>เวอร์ชันแรกยังไม่ได้เผยแพร่ · </span>Windows 10 และ 11<span id="rel-after" hidden></span></p>
+        </div>
+        <p class="release-do"><a href="install/">วิธีติดตั้ง</a><a class="btn btn-m" href="install/#download" data-dl-link>ดาวน์โหลด</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap narrow">
+      <h2>คำถาม</h2>
+      <details>
+        <summary>มีไกด์อยู่แล้ว จะใช้ Runbook ไปทำไม</summary>
+        <p>ไกด์ต้องอ่าน ต้องจำ และต้องคอยเทียบกับเกม ส่วน Runbook เดินไปพร้อมกับคุณ: รู้ว่าคุณอยู่ด่านไหน และแสดงว่าตอนนี้ต้องทำอะไร</p>
+      </details>
+      <details>
+        <summary>ไม่มีแผนสำหรับคลาสที่เล่นอยู่ ทำยังไงดี</summary>
+        <p>แผนจะเข้ามาอยู่ในแคตตาล็อกเมื่อผู้สร้างแผนเอามาแชร์ ระหว่างนี้คุณสร้างแผนเองได้: แคมเปญใส่ไว้ให้ครบแล้ว เหลือแค่เพิ่มบิลด์</p>
+      </details>
+      <details>
+        <summary>แพทช์ใหม่ออกแล้ว Runbook จะยังใช้ได้ไหม</summary>
+        <p>หลังแพทช์ต้องใช้ Runbook เวอร์ชันใหม่ ระหว่างที่ยังไม่มี โปรแกรมจะเตือนว่าเกมเป็นเวอร์ชันที่ใหม่กว่า พอเวอร์ชันใหม่ออก กดปุ่มเดียวก็อัปเดตได้</p>
+      </details>
+      <details>
+        <summary>รายการไม่ขึ้นซ้อนบนเกม</summary>
+        <p>เป็นแบบนี้เมื่อเกมอยู่ในโหมด “เต็มจอ”: เกมจะบังหน้าต่างของ Runbook ไว้ ให้เลือกโหมด “เต็มจอในโหมดหน้าต่าง” ในการตั้งค่าของเกม แล้วรายการจะขึ้นมา ถ้ายังไม่ขึ้น ให้ตรวจดูใน “ตั้งค่า” ของ Runbook ว่าเปิด “หน้าต่างซ้อนบนเกม” ไว้แล้ว</p>
+      </details>
+      <details>
+        <summary>Windows ไม่ยอมให้เปิดตัวติดตั้ง</summary>
+        <p>ตัวติดตั้งยังไม่ได้ลงลายเซ็นดิจิทัล Windows จึงไม่รู้จักผู้เผยแพร่ ให้กด “ข้อมูลเพิ่มเติม” (More info) แล้วกด “เรียกใช้ต่อไป” (Run anyway) <a href="install/#verify">วิธีตรวจสอบไฟล์ก่อนเปิด</a></p>
+      </details>
+      <details>
+        <summary>อยากได้ฟีเจอร์ที่ยังไม่มี ขอได้ไหม</summary>
+        <p>ได้เลย นี่เป็นเวอร์ชันแรก โปรแกรมจะพัฒนาต่อไป และรับทุกคำขอ: เขียนมาบอกได้ว่ายังขาดอะไร หรืออะไรทำงานไม่ถูกต้อง <a href="about/#contact" data-contact data-contact-keep data-contact-row hidden>เขียนถึงผู้สร้างโปรแกรม</a><span data-issues-row hidden> · <a data-issues href="about/#contact" rel="noopener noreferrer">Issues บน GitHub</a></span></p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>© 2026 Sergei Labutin</p>
+    <nav aria-label="หน้าของเว็บไซต์">
+      <a href="install/">การติดตั้ง</a>
+      <a href="safety/">โปรแกรมอ่านอะไรบ้าง</a>
+      <a href="about/#licence" data-repo rel="noopener noreferrer">ซอร์สโค้ด</a>
+      <a href="about/#licence">สัญญาอนุญาต</a>
+      <a href="about/#contact" data-contact-row hidden>ติดต่อ</a>
+    </nav>
+    <p class="ggg" lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+  </div>
+</footer>
+
+</body>
+</html>

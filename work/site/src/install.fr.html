@@ -1,0 +1,91 @@
+  <div class="page-h">
+    <h1>Installation</h1>
+    <p class="lead">Un seul installateur pour Windows 10 et 11. Il ne demande pas les droits d’administrateur.</p>
+  </div>
+
+  <div class="dl" id="download" data-dl-panel data-t-button="Télécharger PoE2 Runbook {version}" data-t-mb="{n}&nbsp;Mo" data-t-bytes="{n}&nbsp;octets">
+    <p class="dl-wait" id="dl-wait">Recherche de la version actuelle…</p>
+    <div id="dl-ready" hidden>
+      <p class="cta"><a class="btn" id="dl-link" href="#download">Télécharger pour Windows</a></p>
+      <dl class="facts">
+        <div class="row"><dt class="k">Fichier</dt><dd class="v" id="dl-file"></dd></div>
+        <div class="row"><dt class="k">Version du programme</dt><dd class="v" id="dl-version"></dd></div>
+        <div class="row"><dt class="k">Version du jeu</dt><dd class="v" id="dl-game"></dd></div>
+        <div class="row"><dt class="k">Taille</dt><dd class="v"><span id="dl-size"></span> · <span id="dl-bytes"></span></dd></div>
+        <div class="row"><dt class="k">Date de sortie</dt><dd class="v" id="dl-date"></dd></div>
+        <div class="row"><dt class="k">SHA-256</dt><dd class="v sha"><code id="dl-sha"></code><button class="mini" type="button" data-copy="dl-sha" data-done="Copié" hidden>Copier</button></dd></div>
+        <div class="row" id="dl-notes" hidden><dt class="k">Nouveautés</dt><dd class="v" id="dl-notes-text"></dd></div>
+      </dl>
+      <p class="after"><a href="#first-start">Comment vérifier le fichier, et ce que Windows demandera</a></p>
+    </div>
+    <div class="soon" id="dl-soon" hidden>
+      <p><b>La première version publique n’est pas encore sortie.</b></p>
+      <p class="quiet">Elle apparaîtra ici&nbsp;: le programme ne se télécharge que depuis ce site.</p>
+    </div>
+    <noscript>
+      <p>JavaScript est désactivé, la page ne peut donc pas afficher la version actuelle. La version, l’adresse de l’installateur et son SHA-256 sont inscrits dans un simple fichier texte&nbsp;: <a href="{{root}}update/latest.json">update/latest.json</a>.</p>
+      <p class="quiet">Ce fichier apparaîtra avec la première version publique.</p>
+    </noscript>
+  </div>
+
+  <section class="blk" id="first-start">
+    <h2>Premier lancement</h2>
+    <p class="sub">L’installateur n’est pas encore signé, Windows ne connaît donc pas son éditeur. À la place de la signature, il y a le SHA-256 à côté du bouton «&nbsp;Télécharger&nbsp;»&nbsp;: il montre que votre fichier est bien celui qui est publié sur cette page.</p>
+    <div class="troubles">
+      <details id="verify">
+        <summary>Je doute que le fichier soit authentique</summary>
+        <div class="w">
+          <p>Le fichier authentique se reconnaît à son SHA-256. Ouvrez le dossier où se trouve le fichier téléchargé, cliquez dans la barre d’adresse de l’Explorateur de fichiers, tapez <code>powershell</code> et appuyez sur Entrée. Dans la fenêtre qui s’ouvre, exécutez&nbsp;:</p>
+          <pre><code id="cmd-hash">Get-FileHash "<span data-file>PoE2Runbook-Setup-*.exe</span>"</code></pre>
+          <p>Comparez la valeur affichée sous le mot <b>Hash</b> avec le SHA-256 à côté du bouton «&nbsp;Télécharger&nbsp;». Les 64&nbsp;caractères doivent tous être identiques&nbsp;; majuscules ou minuscules, peu importe. S’ils diffèrent, ne lancez pas le fichier&nbsp;: téléchargez-le de nouveau depuis cette page.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Windows m’empêche de lancer l’installateur</summary>
+        <div class="w">
+          <p>L’installateur n’est pas encore signé, et Windows ne connaît pas son éditeur. La fenêtre «&nbsp;Windows a protégé votre ordinateur&nbsp;» apparaît. Cliquez sur <b>«&nbsp;Informations complémentaires&nbsp;»</b>, puis sur <b>«&nbsp;Exécuter quand même&nbsp;»</b>.</p>
+          <p>Le navigateur peut vous avertir encore plus tôt&nbsp;: un tel fichier est rarement téléchargé. Conservez-le quand même.</p>
+          <p>Sous Windows 11, quand le «&nbsp;Contrôle intelligent des applications&nbsp;» est activé, il n’y a pas de bouton «&nbsp;Exécuter quand même&nbsp;»&nbsp;: cette protection bloque complètement l’installateur.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Je n’ai pas les droits d’administrateur</summary>
+        <div class="w">
+          <p>Ils ne sont pas nécessaires. L’installateur installe le programme pour vous seulement, dans le dossier <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Le programme n’a pas trouvé le jeu</summary>
+        <div class="w">
+          <p>Le programme cherche le jeu lui-même&nbsp;: Steam ou le client du site du jeu, sur n’importe quel disque. S’il ne le trouve pas, il vous le dit et vous laisse indiquer le dossier du jeu.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="blk" id="needs">
+    <h2>Ce qu’il faut</h2>
+    <ul class="plain">
+      <li>Windows 10 ou Windows 11, 64&nbsp;bits.</li>
+      <li>Microsoft Edge WebView2&nbsp;: Windows 11 l’inclut déjà&nbsp;; sous Windows 10, c’est Windows Update qui l’installe. S’il manque, le programme vous le dit et vous propose la page de téléchargement de Microsoft.</li>
+      <li>Path of Exile 2. Chaque version du programme est faite pour une seule version du jeu&nbsp;: elle est indiquée à côté du bouton «&nbsp;Télécharger&nbsp;».</li>
+      <li>Le jeu en mode fenêtré ou en plein écran fenêtré, pour les fenêtres par-dessus le jeu.</li>
+    </ul>
+  </section>
+
+  <section class="blk" id="update">
+    <h2>Mise à jour</h2>
+    <p>Le programme vous signale lui-même une nouvelle version et l’installe quand vous appuyez sur le bouton «&nbsp;{{ui Обновить}}&nbsp;». La nouvelle version s’installe par-dessus l’ancienne&nbsp;: vos plans et vos héros restent.</p>
+  </section>
+
+  <section class="blk" id="langs">
+    <h2>Langues du programme</h2>
+    <p class="langs">{{program_langs}}.</p>
+    <p class="quiet">Le programme lit le journal du jeu dans n’importe laquelle de ces langues du client.</p>
+  </section>
+
+  <section class="blk" id="remove">
+    <h2>Désinstallation</h2>
+    <p>Dans les Paramètres de Windows&nbsp;: «&nbsp;Applications&nbsp;» → PoE2 Runbook → «&nbsp;Désinstaller&nbsp;».</p>
+    <p class="quiet">Le dossier de vos plans et de vos héros — <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> — reste en place. Vous n’en avez plus besoin&nbsp;? Supprimez-le vous-même.</p>
+  </section>

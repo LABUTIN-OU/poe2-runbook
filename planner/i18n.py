@@ -37,6 +37,8 @@ import json
 import re
 from pathlib import Path
 
+import logtext
+
 SOURCE = 'ru'      # на этом языке тексты записаны в коде
 DEFAULT = 'en'     # язык страницы, пока пользователь не выбрал свой
 LANG_DIR = Path(__file__).resolve().parent / 'lang'
@@ -286,6 +288,9 @@ def to(x, lang, names=None):
 # и тексты автора (заметки) — они идут как записаны.
 KEEP = frozenset(('id', 'code', 'attr', 'path', 'key', 'icon', 'slot', 'row', 'node', 'hash', 'stat', 'part',
                   'note', 'notes', 'error'))
+# Заметка автора — целый текст, не название: она переводится только целиком, если её перевод есть среди слов плана
+# в файле языка (раздел plan: так переведены заметки плана, который идёт с программой); нет — идёт как записана.
+NOTES = frozenset(('note', 'notes'))
 
 
 def render(obj, lang, names=None, plain=False):
@@ -302,7 +307,11 @@ def render(obj, lang, names=None, plain=False):
         if isinstance(x, Raw):
             return str.__str__(x)
         if isinstance(x, str):
-            return names.of(x) if plain and names is not None and key not in KEEP else x
+            if not plain or names is None:
+                return x
+            if key in NOTES:
+                return names.whole(x)
+            return names.of(x) if key not in KEEP else x
         if isinstance(x, dict):
             return {k: walk(v, k) for k, v in x.items()}
         if isinstance(x, (list, tuple)):
@@ -322,6 +331,10 @@ _SPLIT = re.compile(r'(: | → | · | — )')
 _DIGITS = re.compile(r'\d+')
 _TAIL = re.compile(r'(.+?) \(([^()]+)\)')              # «Оружие (скипетры)»: слово и уточнение в скобках
 _QUOTED = re.compile('([«“])([^«»“”]+)([»”])')         # название в кавычках внутри текста
+# Число в тексте свойства игры: знак, число и, может быть, диапазон «61–73» (так автор пишет разброс аффикса).
+RE_STAT_NUM = re.compile(r'(?P<s>[+\-−])?(?P<a>\d+(?:[.,]\d+)?)(?P<b>\s*[–-]\s*\d+(?:[.,]\d+)?)?')
+# Место для числа в шаблоне описания свойства: {0}, {1:+d}.
+RE_ARG_AT = re.compile(r'\{(\d*)(?::([^{}]*))?\}')
 
 
 class _Shape:
@@ -385,8 +398,12 @@ class Names:
     Чего в данных нет, остаётся как записано. cat — каталог данных игры, zones — {код зоны: её название
     в логе игры}, pack — названия из игры на языке lang по английскому названию (gamedata.names_pack)."""
 
-    def __init__(self, lang, cat=None, zones=None, pack=None):
+    def __init__(self, lang, cat=None, zones=None, pack=None, stats=None):
         self.lang = lang
+        # Тексты свойств игры (строка награды, вариант награды с выбором): описания свойств из файлов игры — русские
+        # шаблоны и шаблоны языка страницы ({коды свойств: [варианты шаблона]}, gamedata.log_pack(…)['stat']).
+        self.stat_src, self.stat_dst = stats if stats else ({}, {})
+        self._stat_index = None
         tab = table(lang) or {}
         # слова программы: тексты кода и слова из файлов плана (раздел plan файла языка)
         self.texts = _words(lang)
@@ -426,15 +443,23 @@ class Names:
             for n, word in enumerate(pair if isinstance(pair, list) else ()):
                 if there and n < len(there) and isinstance(word, str):
                     self.exact.setdefault(word, there[n])
-        # зоны: название из лога игры (или из слоя языка каталога) -> название зоны в данных игры
+        # Зоны: русское название из таблиц игры (слой языка каталога) и название из лога игры -> название зоны в данных
+        # игры на языке страницы. Оба: лог называет зону словами клиента игрока, а план — словами своего автора; одно не
+        # затирает другое (раньше название из лога вытесняло русское — и шаг плана «Клирфелл» оставался русским).
         areas = (cat or {}).get('areas') or {}
-        known = dict(src.get('areas') or {})
-        known.update(zones or {})
         there = own.get('areas') or {}
-        for code, word in known.items():
-            en = (areas.get(code) or {}).get('name') if isinstance(areas.get(code), dict) else None
-            if isinstance(word, str) and en and word != en:
-                self.exact.setdefault(word, (there.get(code) if lang != 'en' else None) or en)
+        for words in (src.get('areas') or {}, zones or {}):
+            for code, word in words.items():
+                en = (areas.get(code) or {}).get('name') if isinstance(areas.get(code), dict) else None
+                if isinstance(word, str) and en and word != en:
+                    self.exact.setdefault(word, (there.get(code) if lang != 'en' else None) or en)
+        # Названия умений, которые игра собирает по шаблону («Spectre: {0}» — призрак монстра): английский шаблон ->
+        # шаблон этого языка; имя внутри — названием игры на этом языке (_lookup).
+        self.templates = []
+        for en, loc in (own.get('gems') or {}).items() if lang != 'en' else ():
+            if isinstance(loc, str) and en.count('{0}') == 1 and loc.count('{0}') == 1:
+                head, tail = en.split('{0}')
+                self.templates.append((re.compile(re.escape(head) + '(.+)' + re.escape(tail)), loc))
         # Текст программы, который дошёл сюда уже обычной строкой (его вставили в другой текст, склеили
         # через join, прочли из файла забега): узнаётся по своему шаблону — «зона 12» по ключу «зона %d».
         self.shapes = {}
@@ -451,6 +476,12 @@ class Names:
         if not self.local:
             return None
         hit = self.local.get(en)
+        for rx, loc in self.templates if hit is None else ():
+            m = rx.fullmatch(en)
+            if m:
+                inner = m.group(1)
+                hit = loc.replace('{0}', self.local.get(inner) or inner)
+                break
         if hit is None and ': ' in en:
             parts = [self.local.get(p) for p in en.split(': ')]
             hit = ': '.join(parts) if all(parts) else None
@@ -485,6 +516,12 @@ class Names:
             walk(data)
         return {en: loc for en, loc in found.items() if loc}
 
+    def whole(self, s):
+        """Текст автора целиком (заметка) на языке страницы: только его перевод из слов плана в файле языка; нет
+        перевода — как записан (заметка чужого плана остаётся на языке своего автора)."""
+        hit = self.texts.get(s.strip()) if isinstance(s, str) and CYR.search(s) else None
+        return hit if isinstance(hit, str) and hit else s
+
     def of(self, s):
         hit = self.cache.get(s)
         if hit is None:
@@ -505,12 +542,50 @@ class Names:
                 hit = table_.get(other)
                 if hit:
                     return (hit[0].lower() if s[0].islower() else hit[0].upper()) + hit[1:]
-        hit = self._shaped(s)
+        hit = self.stat(s)
+        if hit is None:
+            hit = self._shaped(s)
         if hit is None and len(s) > 1 and s[0].islower() and s[0].isalpha():
             # «кольцо 1» — название слота «Кольцо 1» со строчной буквы
             hit = self._shaped(s[0].upper() + s[1:])
             hit = hit and hit[0].lower() + hit[1:]
         return hit
+
+    def stat(self, s):
+        """Текст свойства игры («30% увеличение длительности эффекта оберега», «+61–73 к максимуму энергетического щита»)
+        на языке страницы — словами игры: русский шаблон описания свойства узнаётся по тексту без чисел, числа (и
+        диапазон «61–73») встают в шаблон того же варианта на языке страницы. Не узнан — None."""
+        if not self.stat_src or not self.stat_dst or not RE_STAT_NUM.search(s):
+            return None
+        if self._stat_index is None:
+            index = {}
+            for key, temps in self.stat_src.items():
+                for n, t in enumerate(temps if isinstance(temps, list) else ()):
+                    if isinstance(t, str) and '\\n' not in t and '\n' not in t:
+                        index.setdefault(logtext.skeleton(t), (key, n, t))
+            self._stat_index = index
+        nums = list(RE_STAT_NUM.finditer(s))
+        hit = self._stat_index.get(logtext.skeleton(RE_STAT_NUM.sub(lambda m: m.group('a'), s)))
+        if hit is None:
+            return None
+        key, n, src = hit
+        dst = self.stat_dst.get(key)
+        dst = dst[n] if isinstance(dst, list) and n < len(dst) and isinstance(dst[n], str) else None
+        # числа идут в тексте в порядке мест русского шаблона; в шаблоне другого языка места могут стоять иначе
+        order = [int(m.group(1)) if m.group(1) else k for k, m in enumerate(RE_ARG_AT.finditer(src))]
+        if not dst or len(order) != len(nums):
+            return None
+        value = {k: (m.group('s') or '', m.group('a') + (m.group('b') or '')) for k, m in zip(order, nums)}
+
+        def put(m):
+            k = int(m.group(1)) if m.group(1) else 0
+            if k not in value:
+                return m.group(0)
+            sign, text = value[k]
+            minus = '-' if sign in ('-', '−') else ''
+            return (minus or '+') + text if (m.group(2) or '').startswith('+') else minus + text
+        out = RE_ARG_AT.sub(put, dst)
+        return out if '{' not in out else None
 
     def _shaped(self, s):
         """Текст по образцу: образцы файла языка («от 120» -> «from 120») и шаблоны ключей («зона 12» по
@@ -577,23 +652,28 @@ class Names:
         return hit
 
     def _quoted(self, m):
-        """Название в кавычках внутри текста: «к шагу «Клирфелл»»."""
+        """Название в кавычках внутри текста: «к шагу «Клирфелл»», «вместо «Карты · Господство»» — целиком или по
+        частям, как название вне кавычек."""
         inner = m.group(2)
         hit = self._word(inner) if CYR.search(inner) else None
-        return m.group(1) + (self._pairs(inner) if hit is None else hit) + m.group(3)
+        return m.group(1) + (self._parts(inner) if hit is None else hit) + m.group(3)
 
-    def _show(self, s):
-        text, lead, tail = s.strip(), s[:len(s) - len(s.lstrip())], s[len(s.rstrip()):]
-        hit = self._word(text)
-        if hit is not None:
-            return lead + hit + tail
+    def _parts(self, text):
+        """Составная строка по частям: пары «Русское (English)», затем части между « · », «: », « → », « — »."""
         parts = _SPLIT.split(self._pairs(text))
         for n in range(0, len(parts), 2):
             if CYR.search(parts[n]):
                 hit = self._part(parts[n].strip(), whole=len(parts) == 1)
                 if hit is not None:
                     parts[n] = parts[n].replace(parts[n].strip(), hit, 1)
-        text = ''.join(parts)
+        return ''.join(parts)
+
+    def _show(self, s):
+        text, lead, tail = s.strip(), s[:len(s) - len(s.lstrip())], s[len(s.rstrip()):]
+        hit = self._word(text)
+        if hit is not None:
+            return lead + hit + tail
+        text = self._parts(text)
         if CYR.search(text):
             text = _QUOTED.sub(self._quoted, text)
         return lead + text + tail

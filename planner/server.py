@@ -256,6 +256,7 @@ class App:
         self._know_mtime = False      # False — файл ещё не читали (None — читали, файла нет)
         self._names = {}              # названия плана на языке страницы: язык -> (признак, i18n.Names)
         self._geo_lang = {}           # файлы геометрии деревьев с названиями узлов на языке страницы (geo_file)
+        self._words = (None, {}, {})  # слова игры на языке программы для событий лога (game_words): каталог, зоны, классы
         self.cond = threading.Condition()
         self.version = 0
         # Лог игры; None — игра не найдена (страница так и говорит). Папка игры, если её нашла или узнала программа:
@@ -1059,20 +1060,20 @@ class App:
         view['planInfo'] = shown(next((self._plan_row(p) for p in self.library() if p['id'] == self.book.id), {}))
         view['plans'] = shown(self.plans_view(rows))
         view['runs'] = shown(rows)
-        if lang != i18n.SOURCE:
-            # Редактор показывает названия сам (пары «Русское (English)» из плана и списков выбора, зоны). Зона в плане
-            # названа так, как её назвал автор (по-русски: ru), а лог героя — словами его клиента (own); на другом языке
-            # игры к ним — название зоны на этом языке (here) и названия из игры на этом языке (gameNames).
-            packs = (self.catalog or {}).get('lang') or {}
-            ru = (packs.get(i18n.SOURCE) or {}).get('areas') or {}
-            there = ((packs.get(lang) or {}).get('areas') or {}) if lang != 'en' else {}
-            for a in view.get('areas') or ():
-                if ru.get(a.get('code')) and ru[a['code']] != a.get('own'):
-                    a['ru'] = ru[a['code']]
-                if there.get(a.get('code')):
-                    a['here'] = there[a['code']]
-            if lang != 'en':
-                view['gameNames'] = self.names(lang).game_names(view)
+        # Редактор показывает названия сам (пары «Русское (English)» из плана и списков выбора, зоны). Зона в плане
+        # названа словами игры на языке программы (ru — из таблиц игры; этим словом редактор и называет новый шаг), лог
+        # героя называл её так же (own: App.game_words), а зону, которую лог не называл, план — названием шага; на другом
+        # языке игры к ним — название зоны на этом языке (here) и названия из игры на этом языке (gameNames).
+        packs = (self.catalog or {}).get('lang') or {}
+        ru = (packs.get(i18n.SOURCE) or {}).get('areas') or {}
+        there = ((packs.get(lang) or {}).get('areas') or {}) if lang not in ('en', i18n.SOURCE) else {}
+        for a in view.get('areas') or ():
+            if ru.get(a.get('code')):
+                a['ru'] = ru[a['code']]
+            if there.get(a.get('code')):
+                a['here'] = there[a['code']]
+        if lang not in ('en', i18n.SOURCE):
+            view['gameNames'] = self.names(lang).game_names(view)
         return dict(view, problems=list(self.plan_problems), error=self.plan_error)
 
     def zones_seen(self):
@@ -1743,11 +1744,34 @@ class App:
         if ev['type'] == 'session':
             self._session(ev['ts'], initial)
             return
+        self.game_words(ev)
         self.run.events.append(ev)
         if not initial:
             self.save_run()
             if ev['type'] == 'filter':
                 self.archive_filter(ev)
+
+    def game_words(self, ev):
+        """Слова клиента в событии лога — словами игры на языке программы (i18n.SOURCE): название зоны — по её коду,
+        класс и Восхождение героя — по слою языка каталога, который знает это слово. Лог пишет их на языке клиента
+        игрока, а программа считает на своём языке и переводит на выходе: зона, которую английский клиент назвал
+        «Clearfell», на русской странице — «Клирфелл», на немецкой — названием из немецких таблиц игры. Чего данные
+        игры не знают (зона новее каталога), остаётся словом лога."""
+        cat = self.base_catalog or {}
+        if self._words[0] is not cat:
+            packs = cat.get('lang') or {}
+            src = packs.get(i18n.SOURCE) or {}
+            classes = {}
+            for pack in packs.values():
+                for en, word in (pack.get('heroClasses') or {}).items():
+                    if isinstance(word, str) and word:
+                        classes.setdefault(word, (src.get('heroClasses') or {}).get(en) or en)
+            self._words = (cat, dict(src.get('areas') or {}), classes)
+        _, areas, classes = self._words
+        if ev.get('type') == 'zone' and areas.get(ev.get('code')):
+            ev['name'] = areas[ev['code']]
+        elif ev.get('type') == 'level' and ev.get('cls') in classes:
+            ev['cls'] = classes[ev['cls']]
 
     # --- файл фильтра -----------------------------------------------------
 
@@ -2961,11 +2985,12 @@ class App:
     # --- язык страницы ----------------------------------------------------
 
     def geo_file(self, path, lang):
-        """Файл геометрии дерева (tree.json, atlas.json) для страницы на языке lang. На другом языке игры к нему
-        добавлены названия узлов на этом языке (here: id узла -> название; данные игры, names-<язык>); по-русски
-        и по-английски — файл как есть. Собранное помнится, пока не изменился файл."""
+        """Файл геометрии дерева (tree.json, atlas.json) для страницы на языке lang. На языке игры, кроме английского,
+        к нему добавлены названия узлов на этом языке (here: id узла -> название; данные игры, names-<язык>) — и
+        по-русски тоже: в файле названия английские; по-английски — файл как есть. Собранное помнится, пока не
+        изменился файл."""
         body = path.read_bytes()
-        nodes = ((gamedata.names_pack(self.catalog, lang) or {}).get('nodes') or {}) if lang not in (i18n.SOURCE, 'en') else {}
+        nodes = ((gamedata.names_pack(self.catalog, lang) or {}).get('nodes') or {}) if lang != 'en' else {}
         if not nodes:
             return body
         key = (str(path), lang, len(body), path.stat().st_mtime)
@@ -2996,24 +3021,34 @@ class App:
         stamp = (id(self.catalog), len(zones), id(i18n.table(lang)))
         hit = self._names.get(lang)
         if not hit or hit[0] != stamp:
-            hit = self._names[lang] = (stamp, i18n.Names(lang, self.catalog, zones, gamedata.names_pack(self.catalog, lang)))
+            # тексты свойств игры (варианты наград, строки наград): описания свойств из файлов игры — русские и этого языка
+            stats = tuple((gamedata.log_pack(self.catalog, code) or {}).get('stat') or {} for code in (i18n.SOURCE, lang))
+            hit = self._names[lang] = (stamp, i18n.Names(lang, self.catalog, zones, gamedata.names_pack(self.catalog, lang),
+                                                         stats))
         return hit[1]
 
     def _local_nodes(self, v, lang):
-        """Названия узлов деревьев в состоянии страницы — на языке lang. План и лог называют узел так, как
-        клиент игрока (по-русски); английское название узла знают данные дерева (tree.json, atlas.json).
+        """Названия узлов деревьев в состоянии страницы — на языке lang, названиями игры по id узла. План и лог
+        называют узел по-своему: план — как его записал автор (узел, взятый на карте, — английским названием из
+        данных дерева), лог — словами клиента игрока. Английское название узла знают данные дерева (tree.json,
+        atlas.json), название на другом языке игры, русском тоже, — её таблицы (names-<язык>).
         Узел-цель («Иммунитет к хаосу») назван своей целью и идёт как название из плана."""
-        if lang == i18n.SOURCE:
-            return
-        # на другом языке игры — названием узла из её данных на этом языке (names-<язык>), а нет его — английским
-        local = ((gamedata.names_pack(self.catalog, lang) or {}).get('nodes') or {}) if lang != 'en' else {}
+        if lang == 'en':
+            local = {}
+        else:
+            pack = gamedata.names_pack(self.catalog, lang)
+            if pack is None and lang == i18n.SOURCE:
+                return          # каталог без русского слоя названий: узлы — как их назвали план и лог
+            local = (pack or {}).get('nodes') or {}
         for kind in ('tree', 'atlas'):
             names = (self.tree_geo(kind) or {}).get('en') or {}
 
             def walk(x):
                 if isinstance(x, dict):
                     if isinstance(x.get('name'), str) and x.get('id') in names and not x.get('goal'):
-                        x['name'] = core.clean_markup(local.get(x['id']) or names[x['id']]) or x['name']
+                        # чего нет в таблицах этого языка: на другом языке — английским, по-русски — как записано
+                        other = x['name'] if lang == i18n.SOURCE else names[x['id']]
+                        x['name'] = core.clean_markup(local.get(x['id']) or other) or x['name']
                     for val in x.values():
                         walk(val)
                 elif isinstance(x, list):

@@ -1,0 +1,37 @@
+{
+ "words": {
+  "nav": "言語とダウンロード",
+  "pages": "ページ",
+  "download": "ダウンロード",
+  "install": "インストール",
+  "reads": "プログラムが読み取るもの",
+  "source": "ソースコード",
+  "licence": "ライセンス",
+  "contact": "お問い合わせ",
+  "none": "最初のバージョンはまだ公開されていません",
+  "plans_title": "完成済みプラン",
+  "plans_how": "プログラムの中から追加できます：「{{ui Редактор}}」→「{{ui Каталог}}」。",
+  "plans_offer": "自分のプランを提案するには、プランファイルを {link} まで送ってください。",
+  "p_author": "作者:",
+  "p_game": "対応ゲーム",
+  "p_version": "バージョン",
+  "issues": "GitHub の Issues"
+ },
+ "titles": {
+  "safety": {
+   "title": "プログラムが読み取るもの - PoE2 Runbook",
+   "og_title": "PoE2 Runbook：プログラムが読み取るもの、受け付けるキー、押すキー",
+   "description": "プログラムのコードに基づく正確な一覧：ゲームのどのファイルを読むか、いつクリップボードを開くか、どのキーを受け付け、ゲームに何を送るか、ディスクに何を書き込み、ネットワークに何を問い合わせるか。"
+  },
+  "install": {
+   "title": "インストール - PoE2 Runbook",
+   "og_title": "PoE2 Runbook：ダウンロードとインストール",
+   "description": "PoE2 Runbook の Windows 版をダウンロード：インストーラーのバージョン、サイズ、SHA-256、初回起動の手順、プログラムに必要なもの、アンインストールの方法。"
+  },
+  "about": {
+   "title": "プログラムについて - PoE2 Runbook",
+   "og_title": "PoE2 Runbook：作者、ライセンス、公式アドレス",
+   "description": "PoE2 Runbook：作者とライセンス（GNU GPL v3、作者の追加条件付き）、プログラムの唯一の公式アドレス、連絡方法。"
+  }
+ }
+}

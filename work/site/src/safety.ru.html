@@ -1,0 +1,226 @@
+  <div class="page-h">
+    <h1>Что программа читает, слушает и нажимает</h1>
+    <p class="lead">Отдельное окно рядом с игрой: читает лог и настройки игры, слушает три клавиши и посылает игре одну копию предмета на одно ваше нажатие <kbd>F2</kbd>. В самой игре не меняет ничего — ни файлов, ни памяти.</p>
+    <div class="tocrow">
+      <p class="quiet">Каждая строка ниже взята из кода программы. Строка со стрелкой раскрывается.</p>
+      <button class="mini" type="button" data-open-all data-on="Свернуть всё" hidden>Раскрыть всё</button>
+    </div>
+    <ul class="toc" aria-label="Разделы перечня">
+      <li><a href="#files">Файлы игры</a></li>
+      <li><a href="#windows">Windows</a></li>
+      <li><a href="#clipboard">Буфер обмена</a></li>
+      <li><a href="#keys">Клавиши</a></li>
+      <li><a href="#sends">Что посылает игре</a></li>
+      <li><a href="#overlay">Окна поверх игры</a></li>
+      <li><a href="#disk">Диск</a></li>
+      <li><a href="#network">Сеть</a></li>
+      <li><a href="#rules">Правила GGG</a></li>
+    </ul>
+  </div>
+
+  <section class="blk" id="files">
+    <h2>Читает: файлы игры</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>logs\Client.txt</code></span><span class="v">Лог игры. Только чтение: зона, уровень героя, награды.</span></summary>
+        <div class="w">Лежит в папке игры. При запуске читается весь лог, дальше — новые строки дважды в секунду. Из него берётся: запуск и закрытие игры; зона, в которую вы вошли; уровень героя — из этих строк известны имя и класс героя; награды за задания; гибель героя; какой фильтр предметов загрузила игра; ваши нажатия в дереве пассивных умений; версия игры. Из всего, что сказано в чате, замечаются только реплики NPC, которых ждёт ваш план; остальное не сохраняется.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>poe2_production_Config.ini</code></span><span class="v">Настройки игры. Только чтение: фильтр, язык, клавиши игры.</span></summary>
+        <div class="w">Лежит в <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>; читается заново, когда файл меняется. Из него берётся: какой фильтр предметов выбран, язык клиента и клавиши, привязанные в игре, — чтобы клавиши программы не заняли клавишу, которой пользуется игра.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>OnlineFilters\</code></span><span class="v">Фильтры предметов из вашего аккаунта. Только чтение.</span></summary>
+        <div class="w">Папка в <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>: фильтры, которые игра скачала из вашего аккаунта. Читаются название и правила каждого — чтобы называть фильтр по имени и предупреждать, когда выбранный фильтр скрывает предмет, который ищет план. Копия каждой версии фильтра, которую загрузила игра, остаётся в папке самой программы.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Файлы Steam и реестр Windows</span><span class="v">Только чтение — чтобы найти, где стоит игра.</span></summary>
+        <div class="w"><code>libraryfolders.vdf</code>, <code>appmanifest_2694490.acf</code>; в реестре — папка Steam и запись «Path of Exile 2» среди установленных программ. Игра не нашлась — папку указываете сами.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="windows">
+    <h2>Спрашивает у Windows</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">Активное окно</span><span class="v">Какое окно впереди и чьё оно. Память игры не читается.</span></summary>
+        <div class="w">Какое окно сейчас впереди и какой программе оно принадлежит — чтобы знать, что это игра.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Окно игры, курсор, <kbd>Alt</kbd></span><span class="v">Где они сейчас. С экрана ничего не читается.</span></summary>
+        <div class="w">Где стоит окно игры, где курсор мыши и зажат ли <kbd>Alt</kbd> — чтобы поставить окна программы поверх игры и дать по ним нажать.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="clipboard">
+    <h2>Буфер обмена</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">За чем следит</span><span class="v">Только за счётчиком изменений буфера. Содержимое не читается.</span></summary>
+        <div class="w">Счётчик — число, которое ведёт Windows: оно меняется при каждой копии.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Когда читает содержимое</span><span class="v">Один раз — после вашей копии предмета в игре.</span></summary>
+        <div class="w">Когда счётчик изменился при активном окне игры: это ваше <kbd>Ctrl</kbd>+<kbd>C</kbd> или <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd> над предметом. В любом другом окне буфер не открывается вовсе. То, что лежало в буфере до запуска программы, не читается.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Что остаётся</span><span class="v">Только текст предмета и только в памяти программы.</span></summary>
+        <div class="w">Только текст, не больше 200 000 байт. Текст, который не начинается со строки игры «Класс предмета», сразу отбрасывается: не хранится и никуда не пишется. Текст предмета живёт только в памяти; когда вы нажимаете «Надеть», предмет записывается в файл героя как надетый.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Копия по <kbd>F2</kbd></span><span class="v">Прежнее содержимое буфера возвращается на место.</span></summary>
+        <div class="w">Программа запоминает буфер целиком (до 32 МБ), нажимает в игре клавиши копии, один раз читает предмет и возвращает в буфер то, что в нём лежало. В то, что запомнила, она не заглядывает.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="keys">
+    <h2>Клавиши, которые слушает</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>F2</kbd> Сравнить / Надеть</span><span class="v">Сравнивает предмет под курсором с надетым.</span></summary>
+        <div class="w">Нажата ещё раз над тем же предметом — записывает его как надетый. Работает и с зажатым <kbd>Alt</kbd>.</div>
+      </details></li>
+      <li><div class="row"><span class="k"><kbd>F3</kbd> Закрыть</span><span class="v">Убирает верхнее окно программы поверх игры.</span></div></li>
+      <li><div class="row"><span class="k"><kbd>F7</kbd> Программа ↔ игра</span><span class="v">Выводит окно программы вперёд и возвращает в игру.</span></div></li>
+      <li><details>
+        <summary><span class="k">Когда слушает</span><span class="v">Только пока активно окно игры.</span></summary>
+        <div class="w"><kbd>F7</kbd> — и в окне самой программы. Как только активно другое окно, клавиши освобождаются: в других программах они работают как обычно. Если одну из них занимает сама игра, программа берёт следующую свободную из F2, F3, F7, F6, F9, F10, F11. F4 не берётся никогда.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Остальные клавиши</span><span class="v">Перехватчика клавиатуры нет: их программа не видит.</span></summary>
+        <div class="w">Что ещё вы нажимаете, программа не видит. Исключение одно — <kbd>Alt</kbd>: пока включены окна поверх игры, программа спрашивает у Windows, зажат ли он.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="sends">
+    <h2>Что посылает игре</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd></span><span class="v">Один раз на каждое ваше нажатие <kbd>F2</kbd>.</span></summary>
+        <div class="w">Только пока активно окно игры. Это клавиши самой игры — «скопировать предмет с подробным описанием». Если подробное описание в игре привязано не к Alt, вместо Alt нажимается та клавиша.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Больше ничего</span><span class="v">Ни чата, ни команд, ни мыши, ничего по таймеру.</span></summary>
+        <div class="w">Ни сообщений и команд в чат, ни нажатий мыши, ничего по таймеру, ничего в ответ на лог или экран. «Надеть» и ваши отметки меняют только записи самой программы.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="overlay">
+    <h2>Окна поверх игры</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">Три небольших окна</span><span class="v">Список шага, ответ на копию предмета, подсказка по дереву.</span></summary>
+        <div class="w">Они стоят над окном игры. Фокус они не забирают никогда, мышь проходит сквозь них в игру — кроме случая, когда зажат <kbd>Alt</kbd> и курсор над окном, и кроме кнопок ответа.</div>
+      </details></li>
+      <li><div class="row"><span class="k">Что им нужно</span><span class="v">Игра в окне или в оконном полноэкранном режиме.</span></div></li>
+      <li><div class="row"><span class="k">Как выключить</span><span class="v">Одним переключателем в «Настройках».</span></div></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="disk">
+    <h2>Что пишет на диск</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">Всё, что программа пишет во время работы.</span></summary>
+        <div class="w">
+          <ul class="files">
+            <li><code>plans\</code><span>ваши планы и планы, поставленные из каталога; план, который идёт с программой, кладётся сюда при первом запуске</span></li>
+            <li><code>runs\</code><span>по файлу на героя: события из лога, ваши отметки, предметы, которые вы записали надетыми</span></li>
+            <li><code>filters\</code><span>копии версий фильтра, которые загружала игра</span></li>
+            <li><code>backup\</code><span>прежние версии плана — перед каждой правкой; убранные планы</span></li>
+            <li><code>export\</code><span>файлы планов, которые вы сохранили, чтобы поделиться</span></li>
+            <li><code>update\</code><span>установщик новой версии — после «Обновить»; после установки убирается</span></li>
+            <li><code>settings.json</code><span>папка игры, размер и место окна, ваш выбор в «Настройках»</span></li>
+            <li><code>program.log</code><span>что программа делала в этот запуск; пять запусков до него тоже хранятся</span></li>
+            <li><code>webview\</code><span>хранилище движка окна: собственные настройки страниц и кеш</span></li>
+          </ul>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">Сама программа. Сюда пишет только установщик.</span></summary>
+        <div class="w">Права администратора при этом не спрашиваются.</div>
+      </details></li>
+      <li><div class="row"><span class="k">Папка «Загрузки»</span><span class="v">Файл плана — когда вы нажимаете «Скачать файл плана».</span></div></li>
+      <li><details>
+        <summary><span class="k">Папки игры</span><span class="v">В них не пишется ничего.</span></summary>
+        <div class="w">Ни в папку игры, ни в <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">После удаления</span><span class="v">Ваши планы и герои остаются.</span></summary>
+        <div class="w">Удаление программы оставляет <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> на месте — там ваши планы и герои. Не нужны — удалите папку сами.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="network">
+    <h2>Сеть</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">О вас</span><span class="v">Программа никуда не отправляет ничего о вас и вашей игре.</span></summary>
+        <div class="w">У неё нет ни аккаунта, ни статистики, ни отчётов об ошибках.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Обновления и каталог планов</span><span class="v">При запуске и раз в 6 часов — четыре файла с этого сайта.</span></summary>
+        <div class="w">
+          <p>Файлы небольшие: файл обновления <code>update/latest.json</code> и каталог планов <code>plans/index.json</code>, каждый со своей подписью (<code>.sig</code>). Если сайт не ответил — или игра уже новее программы, а новой сборки ещё нет, — программа спрашивает снова через полчаса. Выключается в «Настройках»: «Проверять обновления».</p>
+          <p>Каталог планов программа запрашивает ещё и тогда, когда вы открываете список планов в «Редакторе», — не чаще раза в минуту. Если «Проверять обновления» выключено, программа сама к этому сайту не обращается: каталог запрашивается только по кнопке «Спросить каталог».</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Что в запросе</span><span class="v">Версия программы и больше ничего.</span></summary>
+        <div class="w">В каждом таком запросе — версия программы (<code>User-Agent: PoE2Runbook/&lt;версия&gt;</code>): ни cookies, ни имени, ничего о вашей игре. Хостинг, как при любом запросе, видит ваш IP-адрес.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Подписи</span><span class="v">Оба файла программа проверяет сама — и только потом читает.</span></summary>
+        <div class="w">Проверяет ключом, вписанным в неё. Обновление принимается, только если его версия новее своей.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Скачивание</span><span class="v">Только после вашего нажатия «Обновить» или «Поставить».</span></summary>
+        <div class="w">
+          <p>Пока вы не нажали «Обновить» или «Поставить», ничего не качается и не ставится.</p>
+          <p>«Обновить» в шапке: программа скачивает установщик по адресу из подписанного файла, сверяет его размер и SHA-256, запускает его и закрывается; установщик ставит новую версию и открывает её.</p>
+          <p>«Поставить» или «Обновить» в каталоге: программа скачивает файл плана по адресу из подписанного каталога, сверяет его размер и SHA-256 и кладёт план в свою библиотеку.</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Страницы окна</span><span class="v">Отдаются с вашего же компьютера и отвечают только ему.</span></summary>
+        <div class="w">Адрес — 127.0.0.1: страницы своего окна программа отдаёт себе сама.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Движок окна</span><span class="v">Microsoft Edge WebView2 — компонент Windows.</span></summary>
+        <div class="w">Окно рисует он. Он принадлежит Microsoft и может сам обращаться к её серверам, как это делает браузер Edge.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Браузер</span><span class="v">Открывается только по вашему нажатию.</span></summary>
+        <div class="w">Этот сайт — из окна «О программе»; страница автора плана — из каталога; страница фильтра предметов на pathofexile2.com; страница загрузки WebView2 у Microsoft, если этого компонента нет.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="rules">
+    <h2>Правила Grinding Gear Games, которым она следует</h2>
+    <dl class="rules">
+      <div class="rule">
+        <dt><span class="ttl">Правило GGG</span>Программа, которая работает отдельно от игры, разрешена; та, что меняет игру или её файлы, — нет.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>PoE2 Runbook — отдельная программа: читает лог и свои файлы, в игре ничего не меняет.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">Правило GGG</span>Клавишу, которая действует в игре, нажимаете вы; она делает одно определённое дело и одно действие в игре.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span><kbd>F2</kbd> делает одну копию на одно нажатие. По таймеру, по логу и по экрану не запускается ничего.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">Правило GGG</span>Лог, буфер обмена и экран можно читать, когда вы знаете, что с ними делается; буфер и экран — один раз на одно ваше нажатие клавиши.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>Эта страница и есть такой перечень. Буфер читается один раз на копию; экран не читается.</dd>
+      </div>
+    </dl>
+    <p class="quiet">Правила пересказаны своими словами. Источник — <a href="https://www.pathofexile.com/developer/docs/index" rel="noopener noreferrer">документация Path of Exile для разработчиков</a> (на английском). GGG не одобряет программы по одной; правила — её, и она может их менять.</p>
+    <blockquote>
+      <p lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+      <p class="quiet">По-русски: программа не связана с Grinding Gear Games и не одобрена ею.</p>
+    </blockquote>
+  </section>

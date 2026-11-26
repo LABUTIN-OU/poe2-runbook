@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="th" data-locale="th-TH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>โปรแกรมอ่านอะไรบ้าง — PoE2 Runbook</title>
+<meta name="description" content="รายการที่ตรงตามโค้ดของโปรแกรม: อ่านไฟล์เกมไฟล์ไหน เปิดคลิปบอร์ดเมื่อไร รอรับปุ่มไหนและส่งอะไรให้เกม เขียนอะไรลงดิสก์ และขออะไรผ่านเครือข่าย">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://poe2.labutin.gg/th/safety/">
+<link rel="alternate" hreflang="en" href="https://poe2.labutin.gg/safety/">
+<link rel="alternate" hreflang="ru" href="https://poe2.labutin.gg/ru/safety/">
+<link rel="alternate" hreflang="de" href="https://poe2.labutin.gg/de/safety/">
+<link rel="alternate" hreflang="es" href="https://poe2.labutin.gg/es/safety/">
+<link rel="alternate" hreflang="fr" href="https://poe2.labutin.gg/fr/safety/">
+<link rel="alternate" hreflang="ja" href="https://poe2.labutin.gg/ja/safety/">
+<link rel="alternate" hreflang="ko" href="https://poe2.labutin.gg/ko/safety/">
+<link rel="alternate" hreflang="pt-BR" href="https://poe2.labutin.gg/pt/safety/">
+<link rel="alternate" hreflang="th" href="https://poe2.labutin.gg/th/safety/">
+<link rel="alternate" hreflang="x-default" href="https://poe2.labutin.gg/safety/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PoE2 Runbook">
+<meta property="og:title" content="PoE2 Runbook: โปรแกรมอ่านอะไร รับปุ่มไหน กดอะไร">
+<meta property="og:description" content="รายการที่ตรงตามโค้ดของโปรแกรม: อ่านไฟล์เกมไฟล์ไหน เปิดคลิปบอร์ดเมื่อไร รอรับปุ่มไหนและส่งอะไรให้เกม เขียนอะไรลงดิสก์ และขออะไรผ่านเครือข่าย">
+<meta property="og:url" content="https://poe2.labutin.gg/th/safety/">
+<meta property="og:image" content="https://poe2.labutin.gg/assets/og-th.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="รายการของด่าน “แดนนักล่า”: 2 สกิล บอสที่ให้รางวัล 2 แต้ม และเวย์พอยน์ 2 จุด ใช้เวลาในด่านไป 1:26 จาก 7:00">
+<meta property="og:locale" content="th_TH">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../assets/site.css">
+<script src="../../assets/lang.js"></script>
+<script src="../../assets/config.js" defer></script>
+<script src="../../assets/site.js" defer></script>
+</head>
+<body class="p-safety">
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="../"><img src="../../assets/icon.png" width="28" height="28" alt="">PoE2 Runbook</a>
+    <nav class="bar-nav" aria-label="ภาษาและการดาวน์โหลด">
+      <details class="langs">
+        <summary class="lang"><span class="ln">ไทย</span><span class="lc">TH</span><span aria-hidden="true"> ▾</span></summary>
+        <div class="langs-menu"><a href="../../safety/?lang=en" lang="en" hreflang="en" data-lang="en">English</a><a href="../../ru/safety/" lang="ru" hreflang="ru" data-lang="ru">Русский</a><a href="../../de/safety/" lang="de" hreflang="de" data-lang="de">Deutsch</a><a href="../../es/safety/" lang="es" hreflang="es" data-lang="es">Español</a><a href="../../fr/safety/" lang="fr" hreflang="fr" data-lang="fr">Français</a><a href="../../ja/safety/" lang="ja" hreflang="ja" data-lang="ja">日本語</a><a href="../../ko/safety/" lang="ko" hreflang="ko" data-lang="ko">한국어</a><a href="../../pt/safety/" lang="pt-BR" hreflang="pt-BR" data-lang="pt">Português (Brasil)</a><span class="here" lang="th" aria-current="true">ไทย</span></div>
+      </details>
+      <a class="btn btn-s" href="../install/#download" data-dl-link>ดาวน์โหลด</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap page">
+  <div class="page-h">
+    <h1>โปรแกรมอ่านอะไร รับปุ่มไหน กดอะไร</h1>
+    <p class="lead">เป็นหน้าต่างแยกที่อยู่ข้างเกม: อ่านไฟล์ล็อกและการตั้งค่าของเกม รอรับปุ่ม 3 ปุ่ม และส่งคำสั่งคัดลอกไอเทมให้เกม 1 ครั้งต่อการกด <kbd>F2</kbd> ของคุณ 1 ครั้ง ไม่เปลี่ยนอะไรในตัวเกมเลย ทั้งไฟล์และหน่วยความจำ</p>
+    <div class="tocrow">
+      <p class="quiet">ทุกบรรทัดด้านล่างนำมาจากโค้ดของโปรแกรม บรรทัดที่มีลูกศรกดเปิดดูได้</p>
+      <button class="mini" type="button" data-open-all data-on="ย่อทั้งหมด" hidden>ขยายทั้งหมด</button>
+    </div>
+    <ul class="toc" aria-label="หัวข้อของรายการ">
+      <li><a href="#files">ไฟล์เกม</a></li>
+      <li><a href="#windows">Windows</a></li>
+      <li><a href="#clipboard">คลิปบอร์ด</a></li>
+      <li><a href="#keys">ปุ่ม</a></li>
+      <li><a href="#sends">สิ่งที่ส่งให้เกม</a></li>
+      <li><a href="#overlay">หน้าต่างซ้อนบนเกม</a></li>
+      <li><a href="#disk">ดิสก์</a></li>
+      <li><a href="#network">เครือข่าย</a></li>
+      <li><a href="#rules">กฎของ GGG</a></li>
+    </ul>
+  </div>
+
+  <section class="blk" id="files">
+    <h2>อ่าน: ไฟล์เกม</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>logs\Client.txt</code></span><span class="v">ไฟล์ล็อกของเกม อ่านอย่างเดียว: ด่าน เลเวลฮีโร่ รางวัล</span></summary>
+        <div class="w">อยู่ในโฟลเดอร์เกม ตอนเปิดโปรแกรมจะอ่านล็อกทั้งไฟล์ จากนั้นอ่านบรรทัดใหม่วินาทีละ 2 ครั้ง สิ่งที่นำมาใช้: การเปิดและปิดเกม, ด่านที่คุณเข้า, เลเวลฮีโร่ (จากบรรทัดเหล่านี้จะรู้ชื่อและคลาสของฮีโร่), รางวัลเควสต์, การตายของฮีโร่, ไอเทมฟิลเตอร์ที่เกมโหลด, การคลิกของคุณในตารางพาสซีฟ และเวอร์ชันเกม จากทุกอย่างที่พูดในแชท โปรแกรมสนใจเฉพาะบทพูดของ NPC ที่แผนของคุณรออยู่ ที่เหลือไม่เก็บไว้</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>poe2_production_Config.ini</code></span><span class="v">การตั้งค่าของเกม อ่านอย่างเดียว: ฟิลเตอร์ ภาษา ปุ่มของเกม</span></summary>
+        <div class="w">อยู่ใน <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code> และจะอ่านใหม่เมื่อไฟล์เปลี่ยน สิ่งที่นำมาใช้: ไอเทมฟิลเตอร์ที่เลือกอยู่ ภาษาของตัวเกม และปุ่มที่ตั้งไว้ในเกม เพื่อไม่ให้ปุ่มของโปรแกรมไปทับปุ่มที่เกมใช้อยู่</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>OnlineFilters\</code></span><span class="v">ไอเทมฟิลเตอร์จากบัญชีของคุณ อ่านอย่างเดียว</span></summary>
+        <div class="w">โฟลเดอร์ใน <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>: ฟิลเตอร์ที่เกมดาวน์โหลดมาจากบัญชีของคุณ โปรแกรมอ่านชื่อและกฎของแต่ละฟิลเตอร์ เพื่อเรียกฟิลเตอร์ด้วยชื่อ และเตือนเมื่อฟิลเตอร์ที่เลือกอยู่ซ่อนไอเทมที่แผนกำลังหา สำเนาของฟิลเตอร์ทุกเวอร์ชันที่เกมโหลดจะเก็บไว้ในโฟลเดอร์ของโปรแกรมเอง</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ไฟล์ของ Steam และรีจิสทรีของ Windows</span><span class="v">อ่านอย่างเดียว เพื่อหาว่าเกมติดตั้งอยู่ที่ไหน</span></summary>
+        <div class="w"><code>libraryfolders.vdf</code>, <code>appmanifest_2694490.acf</code> ส่วนในรีจิสทรีคือโฟลเดอร์ของ Steam และรายการ “Path of Exile 2” ในรายชื่อโปรแกรมที่ติดตั้งไว้ ถ้าหาเกมไม่เจอ คุณเลือกโฟลเดอร์เอง</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="windows">
+    <h2>สิ่งที่ถามจาก Windows</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">หน้าต่างที่ใช้งานอยู่</span><span class="v">หน้าต่างไหนอยู่หน้าสุดและเป็นของโปรแกรมใด ไม่อ่านหน่วยความจำของเกม</span></summary>
+        <div class="w">ตอนนี้หน้าต่างไหนอยู่หน้าสุดและเป็นของโปรแกรมใด เพื่อให้รู้ว่านั่นคือเกม</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">หน้าต่างเกม เคอร์เซอร์ <kbd>Alt</kbd></span><span class="v">ตอนนี้อยู่ตรงไหน ไม่อ่านอะไรจากหน้าจอ</span></summary>
+        <div class="w">หน้าต่างเกมอยู่ตรงไหน เคอร์เซอร์เมาส์อยู่ตรงไหน และมีการกด <kbd>Alt</kbd> ค้างไว้หรือไม่ เพื่อวางหน้าต่างของโปรแกรมซ้อนบนเกมและให้คุณคลิกหน้าต่างเหล่านั้นได้</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="clipboard">
+    <h2>คลิปบอร์ด</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">สิ่งที่เฝ้าดู</span><span class="v">เฉพาะตัวนับการเปลี่ยนแปลงของคลิปบอร์ด ไม่อ่านเนื้อหา</span></summary>
+        <div class="w">ตัวนับคือตัวเลขที่ Windows ดูแลเอง: เปลี่ยนทุกครั้งที่มีการคัดลอก</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">อ่านเนื้อหาเมื่อไร</span><span class="v">ครั้งเดียว หลังจากคุณคัดลอกไอเทมในเกม</span></summary>
+        <div class="w">เมื่อตัวนับเปลี่ยนขณะที่หน้าต่างเกมใช้งานอยู่: นั่นคือตอนที่คุณกด <kbd>Ctrl</kbd>+<kbd>C</kbd> หรือ <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd> ขณะชี้ที่ไอเทม ในหน้าต่างอื่น โปรแกรมไม่เปิดคลิปบอร์ดเลย สิ่งที่อยู่ในคลิปบอร์ดก่อนเปิดโปรแกรมจะไม่ถูกอ่าน</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">สิ่งที่เก็บไว้</span><span class="v">เฉพาะข้อความของไอเทม และเก็บในหน่วยความจำของโปรแกรมเท่านั้น</span></summary>
+        <div class="w">เฉพาะข้อความ ไม่เกิน 200,000 ไบต์ ข้อความที่ไม่ได้ขึ้นต้นด้วยบรรทัด “ชนิดไอเทม” ของเกมจะถูกทิ้งทันที: ไม่เก็บและไม่เขียนลงที่ใด ข้อความของไอเทมอยู่ในหน่วยความจำเท่านั้น เมื่อคุณกด “ใส่” ไอเทมจะถูกบันทึกลงไฟล์ของฮีโร่ว่าใส่อยู่</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">คัดลอกด้วย <kbd>F2</kbd></span><span class="v">เนื้อหาเดิมของคลิปบอร์ดจะถูกคืนกลับที่เดิม</span></summary>
+        <div class="w">โปรแกรมจำคลิปบอร์ดไว้ทั้งหมด (ไม่เกิน 32 MB) กดปุ่มคัดลอกในเกม อ่านไอเทม 1 ครั้ง แล้วคืนสิ่งที่เคยอยู่ในคลิปบอร์ดกลับไป โปรแกรมไม่ดูสิ่งที่จำไว้นั้น</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="keys">
+    <h2>ปุ่มที่โปรแกรมรอรับ</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>F2</kbd> เปรียบเทียบ / ใส่</span><span class="v">เปรียบเทียบไอเทมใต้เคอร์เซอร์กับไอเทมที่ใส่อยู่</span></summary>
+        <div class="w">กดอีกครั้งที่ไอเทมเดิม จะบันทึกไอเทมนั้นว่าใส่อยู่ ใช้ได้แม้กด <kbd>Alt</kbd> ค้างไว้</div>
+      </details></li>
+      <li><div class="row"><span class="k"><kbd>F3</kbd> ปิด</span><span class="v">ปิดหน้าต่างบนสุดของโปรแกรมที่ซ้อนอยู่บนเกม</span></div></li>
+      <li><div class="row"><span class="k"><kbd>F7</kbd> โปรแกรม ↔ เกม</span><span class="v">นำหน้าต่างโปรแกรมขึ้นมาข้างหน้า และกลับไปที่เกม</span></div></li>
+      <li><details>
+        <summary><span class="k">รอรับเมื่อไร</span><span class="v">เฉพาะขณะที่หน้าต่างเกมใช้งานอยู่</span></summary>
+        <div class="w"><kbd>F7</kbd> ใช้ได้ในหน้าต่างของโปรแกรมเองด้วย ทันทีที่หน้าต่างอื่นใช้งานอยู่ ปุ่มเหล่านี้จะถูกปล่อย: ในโปรแกรมอื่นจะทำงานตามปกติ ถ้าเกมใช้ปุ่มใดปุ่มหนึ่งอยู่แล้ว โปรแกรมจะใช้ปุ่มว่างถัดไปจาก F2, F3, F7, F6, F9, F10, F11 ส่วน F4 จะไม่ถูกใช้เลย</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ปุ่มอื่นๆ</span><span class="v">ไม่มีตัวดักคีย์บอร์ด: โปรแกรมมองไม่เห็นปุ่มเหล่านั้น</span></summary>
+        <div class="w">คุณกดปุ่มอื่นอะไรอีก โปรแกรมมองไม่เห็น มีข้อยกเว้นเดียวคือ <kbd>Alt</kbd>: ขณะที่เปิดหน้าต่างซ้อนบนเกมอยู่ โปรแกรมจะถาม Windows ว่ามีการกดปุ่มนี้ค้างไว้หรือไม่</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="sends">
+    <h2>สิ่งที่ส่งให้เกม</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd></span><span class="v">1 ครั้งต่อการกด <kbd>F2</kbd> ของคุณแต่ละครั้ง</span></summary>
+        <div class="w">เฉพาะขณะที่หน้าต่างเกมใช้งานอยู่ นี่เป็นปุ่มของเกมเอง คือ “คัดลอกไอเทมพร้อมคำบรรยายขั้นสูง” ถ้าในเกมตั้งคำบรรยายขั้นสูงไว้ที่ปุ่มอื่นที่ไม่ใช่ Alt โปรแกรมจะกดปุ่มนั้นแทน Alt</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ไม่มีอย่างอื่น</span><span class="v">ไม่มีแชท ไม่มีคำสั่ง ไม่มีเมาส์ ไม่มีอะไรทำงานแบบตั้งเวลา</span></summary>
+        <div class="w">ไม่ส่งข้อความหรือคำสั่งลงแชท ไม่คลิกเมาส์ ไม่ทำอะไรแบบตั้งเวลา และไม่ทำอะไรเพื่อตอบสนองต่อล็อกหรือหน้าจอ “ใส่” และเครื่องหมายที่คุณติ๊กเปลี่ยนเฉพาะข้อมูลของโปรแกรมเองเท่านั้น</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="overlay">
+    <h2>หน้าต่างซ้อนบนเกม</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">หน้าต่างเล็ก 3 บาน</span><span class="v">รายการของขั้น คำตอบของไอเทมที่คัดลอก คำแนะนำของตารางพาสซีฟ</span></summary>
+        <div class="w">หน้าต่างเหล่านี้อยู่เหนือหน้าต่างเกม ไม่แย่งโฟกัสเลย และเมาส์จะทะลุผ่านไปที่เกม ยกเว้นเมื่อกด <kbd>Alt</kbd> ค้างไว้และเคอร์เซอร์อยู่บนหน้าต่าง และยกเว้นปุ่มของหน้าต่างคำตอบ</div>
+      </details></li>
+      <li><div class="row"><span class="k">สิ่งที่ต้องมี</span><span class="v">เกมอยู่ในโหมด “หน้าต่าง” หรือ “เต็มจอในโหมดหน้าต่าง”</span></div></li>
+      <li><div class="row"><span class="k">วิธีปิด</span><span class="v">ด้วยสวิตช์ตัวเดียวใน “ตั้งค่า”</span></div></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="disk">
+    <h2>สิ่งที่เขียนลงดิสก์</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">ทุกอย่างที่โปรแกรมเขียนระหว่างทำงาน</span></summary>
+        <div class="w">
+          <ul class="files">
+            <li><code>plans\</code><span>แผนของคุณและแผนที่ติดตั้งจากแคตตาล็อก ส่วนแผนที่มากับโปรแกรมจะถูกวางไว้ที่นี่ตอนเปิดครั้งแรก</span></li>
+            <li><code>runs\</code><span>ฮีโร่ละ 1 ไฟล์: เหตุการณ์จากล็อก เครื่องหมายที่คุณติ๊ก และไอเทมที่คุณบันทึกว่าใส่อยู่</span></li>
+            <li><code>filters\</code><span>สำเนาของฟิลเตอร์เวอร์ชันต่างๆ ที่เกมเคยโหลด</span></li>
+            <li><code>backup\</code><span>แผนเวอร์ชันก่อนหน้า ซึ่งเก็บไว้ก่อนการแก้ไขทุกครั้ง และแผนที่ถูกนำออก</span></li>
+            <li><code>export\</code><span>ไฟล์แผนที่คุณบันทึกไว้เพื่อแชร์</span></li>
+            <li><code>update\</code><span>ตัวติดตั้งของเวอร์ชันใหม่ หลังจากกด “อัปเดต” และจะถูกลบหลังติดตั้งเสร็จ</span></li>
+            <li><code>settings.json</code><span>โฟลเดอร์เกม ขนาดและตำแหน่งของหน้าต่าง และสิ่งที่คุณเลือกใน “ตั้งค่า”</span></li>
+            <li><code>program.log</code><span>สิ่งที่โปรแกรมทำในการเปิดครั้งนี้ และเก็บของ 5 ครั้งก่อนหน้าไว้ด้วย</span></li>
+            <li><code>webview\</code><span>ที่เก็บข้อมูลของเอนจินหน้าต่าง: การตั้งค่าของหน้าเว็บเองและแคช</span></li>
+          </ul>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">ตัวโปรแกรมเอง มีแต่ตัวติดตั้งที่เขียนลงที่นี่</span></summary>
+        <div class="w">โดยไม่ขอสิทธิ์ผู้ดูแลระบบ</div>
+      </details></li>
+      <li><div class="row"><span class="k">โฟลเดอร์ “ดาวน์โหลด”</span><span class="v">ไฟล์แผน เมื่อคุณกด “ดาวน์โหลดไฟล์แผน”</span></div></li>
+      <li><details>
+        <summary><span class="k">โฟลเดอร์ของเกม</span><span class="v">ไม่เขียนอะไรลงไปเลย</span></summary>
+        <div class="w">ทั้งโฟลเดอร์เกมและ <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code></div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">หลังถอนการติดตั้ง</span><span class="v">แผนและฮีโร่ของคุณยังอยู่</span></summary>
+        <div class="w">การถอนการติดตั้งโปรแกรมจะคง <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> ไว้ที่เดิม ในนั้นมีแผนและฮีโร่ของคุณ ถ้าไม่ต้องการแล้ว ให้ลบโฟลเดอร์เอง</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="network">
+    <h2>เครือข่าย</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">เกี่ยวกับคุณ</span><span class="v">โปรแกรมไม่ส่งข้อมูลใดๆ เกี่ยวกับคุณและการเล่นของคุณไปที่ไหนเลย</span></summary>
+        <div class="w">โปรแกรมไม่มีทั้งบัญชี สถิติ และรายงานข้อผิดพลาด</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">อัปเดตและแคตตาล็อกแผน</span><span class="v">ตอนเปิดโปรแกรมและทุก 6 ชั่วโมง: 4 ไฟล์จากเว็บไซต์นี้</span></summary>
+        <div class="w">
+          <p>เป็นไฟล์ขนาดเล็ก: ไฟล์อัปเดต <code>update/latest.json</code> และแคตตาล็อกแผน <code>plans/index.json</code> แต่ละไฟล์มีลายเซ็นของตัวเอง (<code>.sig</code>) ถ้าเว็บไซต์ไม่ตอบ หรือเกมใหม่กว่าโปรแกรมแล้วแต่ยังไม่มีเวอร์ชันใหม่ของโปรแกรม โปรแกรมจะถามอีกครั้งในอีกครึ่งชั่วโมง ปิดได้ใน “ตั้งค่า”: “ตรวจหาอัปเดต”</p>
+          <p>โปรแกรมยังขอแคตตาล็อกแผนเมื่อคุณเปิดรายการแผนใน “แก้ไข” ด้วย แต่ไม่เกินนาทีละครั้ง ถ้าปิด “ตรวจหาอัปเดต” ไว้ โปรแกรมจะไม่ติดต่อเว็บไซต์นี้เอง: จะขอแคตตาล็อกเฉพาะเมื่อกดปุ่ม “ขอแคตตาล็อก” เท่านั้น</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ในคำขอมีอะไร</span><span class="v">เวอร์ชันของโปรแกรม และไม่มีอย่างอื่น</span></summary>
+        <div class="w">ในคำขอแต่ละครั้งมีเวอร์ชันของโปรแกรม (<code>User-Agent: PoE2Runbook/&lt;เวอร์ชัน&gt;</code>): ไม่มีคุกกี้ ไม่มีชื่อ ไม่มีอะไรเกี่ยวกับการเล่นของคุณ ผู้ให้บริการโฮสติ้งจะเห็นที่อยู่ IP ของคุณ เหมือนกับคำขอทั่วไป</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ลายเซ็น</span><span class="v">โปรแกรมตรวจทั้งสองไฟล์เองก่อน แล้วจึงอ่าน</span></summary>
+        <div class="w">ตรวจด้วยคีย์ที่ฝังอยู่ในตัวโปรแกรม จะรับอัปเดตก็ต่อเมื่อเวอร์ชันของอัปเดตใหม่กว่าเวอร์ชันของตัวเอง</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">การดาวน์โหลด</span><span class="v">เฉพาะหลังจากคุณกด “อัปเดต” หรือ “ติดตั้ง”</span></summary>
+        <div class="w">
+          <p>ตราบใดที่คุณยังไม่กด “อัปเดต” หรือ “ติดตั้ง” จะไม่มีการดาวน์โหลดหรือติดตั้งอะไรทั้งสิ้น</p>
+          <p>“อัปเดต” ที่แถบบนสุด: โปรแกรมดาวน์โหลดตัวติดตั้งจากที่อยู่ในไฟล์ที่ลงลายเซ็นแล้ว ตรวจขนาดและ SHA-256 ของไฟล์ เปิดตัวติดตั้ง แล้วปิดตัวเอง จากนั้นตัวติดตั้งจะติดตั้งเวอร์ชันใหม่และเปิดขึ้นมา</p>
+          <p>“ติดตั้ง” หรือ “อัปเดต” ในแคตตาล็อก: โปรแกรมดาวน์โหลดไฟล์แผนจากที่อยู่ในแคตตาล็อกที่ลงลายเซ็นแล้ว ตรวจขนาดและ SHA-256 ของไฟล์ แล้วเก็บแผนไว้ในคลังแผนของโปรแกรม</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">หน้าเว็บของหน้าต่าง</span><span class="v">ส่งมาจากคอมพิวเตอร์ของคุณเอง และตอบเฉพาะเครื่องนี้เท่านั้น</span></summary>
+        <div class="w">ที่อยู่คือ 127.0.0.1: โปรแกรมส่งหน้าเว็บของหน้าต่างตัวเองให้ตัวเอง</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">เอนจินของหน้าต่าง</span><span class="v">Microsoft Edge WebView2 ซึ่งเป็นส่วนประกอบของ Windows</span></summary>
+        <div class="w">หน้าต่างถูกวาดโดยเอนจินนี้ เป็นของ Microsoft และอาจติดต่อเซิร์ฟเวอร์ของ Microsoft เองได้ เหมือนที่เบราว์เซอร์ Edge ทำ</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">เบราว์เซอร์</span><span class="v">เปิดเฉพาะเมื่อคุณคลิกเท่านั้น</span></summary>
+        <div class="w">เว็บไซต์นี้ จากหน้าต่าง “เกี่ยวกับโปรแกรม”, หน้าของผู้สร้างแผน จากแคตตาล็อก, หน้าไอเทมฟิลเตอร์บน pathofexile2.com และหน้าดาวน์โหลด WebView2 ของ Microsoft ถ้าเครื่องไม่มีส่วนประกอบนี้</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="rules">
+    <h2>กฎของ Grinding Gear Games ที่โปรแกรมทำตาม</h2>
+    <dl class="rules">
+      <div class="rule">
+        <dt><span class="ttl">กฎของ GGG</span>โปรแกรมที่ทำงานแยกจากเกมนั้นอนุญาต ส่วนโปรแกรมที่แก้ไขเกมหรือไฟล์ของเกมนั้นไม่อนุญาต</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>PoE2 Runbook เป็นโปรแกรมแยกต่างหาก: อ่านล็อกและไฟล์ของตัวเอง ไม่เปลี่ยนอะไรในเกม</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">กฎของ GGG</span>ปุ่มที่ส่งผลในเกมต้องเป็นคุณที่กดเอง ปุ่มนั้นทำหน้าที่อย่างเดียวที่กำหนดไว้ และทำเพียงการกระทำเดียวในเกม</dt>
+        <dd><span class="ttl">PoE2 Runbook</span><kbd>F2</kbd> คัดลอก 1 ครั้งต่อการกด 1 ครั้ง ไม่มีอะไรทำงานแบบตั้งเวลา ตามล็อก หรือตามหน้าจอ</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">กฎของ GGG</span>ล็อก คลิปบอร์ด และหน้าจออ่านได้เมื่อคุณรู้ว่าถูกนำไปทำอะไร ส่วนคลิปบอร์ดและหน้าจออ่านได้ 1 ครั้งต่อการกดปุ่มของคุณ 1 ครั้ง</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>หน้านี้ก็คือรายการดังกล่าว คลิปบอร์ดถูกอ่าน 1 ครั้งต่อการคัดลอก 1 ครั้ง ส่วนหน้าจอไม่ถูกอ่าน</dd>
+      </div>
+    </dl>
+    <p class="quiet">กฎเหล่านี้เล่าใหม่ด้วยคำของเราเอง ที่มา: <a href="https://www.pathofexile.com/developer/docs/index" rel="noopener noreferrer">เอกสารสำหรับนักพัฒนาของ Path of Exile</a> (ภาษาอังกฤษ) GGG ไม่ได้อนุมัติโปรแกรมเป็นรายตัว กฎเป็นของ GGG และ GGG อาจเปลี่ยนกฎได้</p>
+    <blockquote>
+      <p lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+      <p class="quiet">ภาษาไทย: โปรแกรมนี้ไม่เกี่ยวข้องกับ Grinding Gear Games และไม่ได้รับการรับรองจาก Grinding Gear Games</p>
+    </blockquote>
+  </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>© 2026 Sergei Labutin</p>
+    <nav aria-label="หน้าของเว็บไซต์">
+      <a href="../install/">การติดตั้ง</a>
+      <a href="./">โปรแกรมอ่านอะไรบ้าง</a>
+      <a href="../about/#licence" data-repo rel="noopener noreferrer">ซอร์สโค้ด</a>
+      <a href="../about/#licence">สัญญาอนุญาต</a>
+      <a href="../about/#contact" data-contact-row hidden>ติดต่อ</a>
+    </nav>
+    <p class="ggg" lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+  </div>
+</footer>
+
+</body>
+</html>

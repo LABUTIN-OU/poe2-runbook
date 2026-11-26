@@ -1,0 +1,91 @@
+  <div class="page-h">
+    <h1>การติดตั้ง</h1>
+    <p class="lead">ตัวติดตั้งตัวเดียวสำหรับ Windows 10 และ 11 ไม่ขอสิทธิ์ผู้ดูแลระบบ</p>
+  </div>
+
+  <div class="dl" id="download" data-dl-panel data-t-button="ดาวน์โหลด PoE2 Runbook {version}" data-t-mb="{n} MB" data-t-bytes="{n} ไบต์">
+    <p class="dl-wait" id="dl-wait">กำลังตรวจหาเวอร์ชันปัจจุบัน…</p>
+    <div id="dl-ready" hidden>
+      <p class="cta"><a class="btn" id="dl-link" href="#download">ดาวน์โหลดสำหรับ Windows</a></p>
+      <dl class="facts">
+        <div class="row"><dt class="k">ไฟล์</dt><dd class="v" id="dl-file"></dd></div>
+        <div class="row"><dt class="k">เวอร์ชันโปรแกรม</dt><dd class="v" id="dl-version"></dd></div>
+        <div class="row"><dt class="k">เวอร์ชันเกม</dt><dd class="v" id="dl-game"></dd></div>
+        <div class="row"><dt class="k">ขนาด</dt><dd class="v"><span id="dl-size"></span> · <span id="dl-bytes"></span></dd></div>
+        <div class="row"><dt class="k">วันที่เผยแพร่</dt><dd class="v" id="dl-date"></dd></div>
+        <div class="row"><dt class="k">SHA-256</dt><dd class="v sha"><code id="dl-sha"></code><button class="mini" type="button" data-copy="dl-sha" data-done="คัดลอกแล้ว" hidden>คัดลอก</button></dd></div>
+        <div class="row" id="dl-notes" hidden><dt class="k">มีอะไรใหม่</dt><dd class="v" id="dl-notes-text"></dd></div>
+      </dl>
+      <p class="after"><a href="#first-start">วิธีตรวจสอบไฟล์ และสิ่งที่ Windows จะถาม</a></p>
+    </div>
+    <div class="soon" id="dl-soon" hidden>
+      <p><b>เวอร์ชันสาธารณะตัวแรกยังไม่ได้เผยแพร่</b></p>
+      <p class="quiet">เวอร์ชันนั้นจะมาอยู่ที่นี่: โปรแกรมดาวน์โหลดได้จากเว็บไซต์นี้เท่านั้น</p>
+    </div>
+    <noscript>
+      <p>JavaScript ปิดอยู่ หน้านี้จึงแสดงเวอร์ชันปัจจุบันไม่ได้ เวอร์ชัน ที่อยู่ของตัวติดตั้ง และ SHA-256 ของตัวติดตั้งเขียนไว้ในไฟล์ข้อความธรรมดา: <a href="{{root}}update/latest.json">update/latest.json</a></p>
+      <p class="quiet">ไฟล์นี้จะมีพร้อมกับเวอร์ชันสาธารณะตัวแรก</p>
+    </noscript>
+  </div>
+
+  <section class="blk" id="first-start">
+    <h2>การเปิดครั้งแรก</h2>
+    <p class="sub">ตัวติดตั้งยังไม่ได้ลงลายเซ็นดิจิทัล Windows จึงไม่รู้จักผู้เผยแพร่ สิ่งที่ใช้แทนลายเซ็นคือ SHA-256 ข้างปุ่ม “ดาวน์โหลด” ซึ่งแสดงว่าไฟล์ของคุณคือไฟล์เดียวกับที่เผยแพร่ในหน้านี้</p>
+    <div class="troubles">
+      <details id="verify">
+        <summary>ไม่แน่ใจว่าไฟล์เป็นของจริง</summary>
+        <div class="w">
+          <p>ไฟล์ของจริงดูได้จาก SHA-256 เปิดโฟลเดอร์ที่มีไฟล์ที่ดาวน์โหลดมา คลิกที่แถบที่อยู่ของ File Explorer พิมพ์ <code>powershell</code> แล้วกด Enter ในหน้าต่างที่เปิดขึ้นมา ให้รันคำสั่งนี้:</p>
+          <pre><code id="cmd-hash">Get-FileHash "<span data-file>PoE2Runbook-Setup-*.exe</span>"</code></pre>
+          <p>เทียบค่าที่อยู่ใต้คำว่า <b>Hash</b> กับ SHA-256 ข้างปุ่ม “ดาวน์โหลด” ต้องตรงกันครบทั้ง 64 ตัวอักษร ตัวพิมพ์ใหญ่หรือตัวพิมพ์เล็กไม่สำคัญ ถ้าไม่ตรง อย่าเปิดไฟล์: ให้ดาวน์โหลดใหม่จากหน้านี้</p>
+        </div>
+      </details>
+      <details>
+        <summary>Windows ไม่ยอมให้เปิดตัวติดตั้ง</summary>
+        <div class="w">
+          <p>ตัวติดตั้งยังไม่ได้ลงลายเซ็นดิจิทัล Windows จึงไม่รู้จักผู้เผยแพร่ จะมีหน้าต่าง “Windows ปกป้องพีซีของคุณ” (Windows protected your PC) ขึ้นมา ให้กด <b>“ข้อมูลเพิ่มเติม”</b> (More info) แล้วกด <b>“เรียกใช้ต่อไป”</b> (Run anyway)</p>
+          <p>เบราว์เซอร์อาจเตือนก่อนหน้านั้นอีก เพราะไฟล์แบบนี้มีคนดาวน์โหลดไม่บ่อย ให้เลือกเก็บไฟล์ไว้ได้เลย</p>
+          <p>ใน Windows 11 ที่เปิด “การควบคุมแอปอัจฉริยะ” (Smart App Control) ไว้ จะไม่มีปุ่ม “เรียกใช้ต่อไป”: การป้องกันนี้บล็อกตัวติดตั้งโดยสิ้นเชิง</p>
+        </div>
+      </details>
+      <details>
+        <summary>ไม่มีสิทธิ์ผู้ดูแลระบบ</summary>
+        <div class="w">
+          <p>ไม่จำเป็นต้องมี ตัวติดตั้งจะติดตั้งโปรแกรมให้คุณคนเดียว ลงในโฟลเดอร์ <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code></p>
+        </div>
+      </details>
+      <details>
+        <summary>โปรแกรมหาเกมไม่เจอ</summary>
+        <div class="w">
+          <p>โปรแกรมหาเกมเอง: ทั้ง Steam และไคลเอนต์จากเว็บไซต์ของเกม ในไดรฟ์ใดก็ได้ ถ้าหาไม่เจอ โปรแกรมจะแจ้งและให้คุณเลือกโฟลเดอร์เกมเอง</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="blk" id="needs">
+    <h2>สิ่งที่ต้องมี</h2>
+    <ul class="plain">
+      <li>Windows 10 หรือ Windows 11 แบบ 64 บิต</li>
+      <li>Microsoft Edge WebView2: Windows 11 มีมาให้แล้ว ส่วน Windows 10 จะติดตั้งให้ผ่าน Windows Update ถ้าเครื่องไม่มี โปรแกรมจะแจ้งและเสนอหน้าดาวน์โหลดของ Microsoft</li>
+      <li>Path of Exile 2 โปรแกรมแต่ละเวอร์ชันทำมาสำหรับเกมเวอร์ชันเดียว ซึ่งระบุไว้ข้างปุ่ม “ดาวน์โหลด”</li>
+      <li>เกมอยู่ในโหมด “หน้าต่าง” หรือ “เต็มจอในโหมดหน้าต่าง” สำหรับหน้าต่างซ้อนบนเกม</li>
+    </ul>
+  </section>
+
+  <section class="blk" id="update">
+    <h2>การอัปเดต</h2>
+    <p>เมื่อมีเวอร์ชันใหม่ โปรแกรมจะแจ้งเอง และติดตั้งให้เมื่อกดปุ่ม “{{ui Обновить}}” เวอร์ชันใหม่จะติดตั้งทับเวอร์ชันเดิม: แผนและฮีโร่ของคุณยังอยู่</p>
+  </section>
+
+  <section class="blk" id="langs">
+    <h2>ภาษาของโปรแกรม</h2>
+    <p class="langs">{{program_langs}}</p>
+    <p class="quiet">โปรแกรมอ่านล็อกเกมได้ ไม่ว่าตัวเกมจะใช้ภาษาใดในรายการนี้</p>
+  </section>
+
+  <section class="blk" id="remove">
+    <h2>การถอนการติดตั้ง</h2>
+    <p>ใน “การตั้งค่า” ของ Windows: “แอป” → PoE2 Runbook → “ถอนการติดตั้ง”</p>
+    <p class="quiet">โฟลเดอร์ที่มีแผนและฮีโร่ของคุณ (<code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code>) จะยังอยู่ที่เดิม ถ้าไม่ต้องการแล้ว ให้ลบเอง</p>
+  </section>

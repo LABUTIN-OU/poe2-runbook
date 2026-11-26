@@ -1,0 +1,226 @@
+  <div class="page-h">
+    <h1>Was das Programm liest, worauf es hört und was es drückt</h1>
+    <p class="lead">Ein separates Fenster neben dem Spiel: Es liest das Log und die Einstellungen des Spiels, hört auf drei Tasten und sendet dem Spiel für jeden deiner Tastendrücke auf <kbd>F2</kbd> genau eine Gegenstandskopie. Am Spiel selbst ändert es nichts – weder Dateien noch Speicher.</p>
+    <div class="tocrow">
+      <p class="quiet">Jede Zeile unten stammt aus dem Code des Programms. Eine Zeile mit Pfeil lässt sich aufklappen.</p>
+      <button class="mini" type="button" data-open-all data-on="Alles einklappen" hidden>Alles aufklappen</button>
+    </div>
+    <ul class="toc" aria-label="Abschnitte der Aufstellung">
+      <li><a href="#files">Spieldateien</a></li>
+      <li><a href="#windows">Windows</a></li>
+      <li><a href="#clipboard">Zwischenablage</a></li>
+      <li><a href="#keys">Tasten</a></li>
+      <li><a href="#sends">Was es an das Spiel sendet</a></li>
+      <li><a href="#overlay">{{ui Окна поверх игры}}</a></li>
+      <li><a href="#disk">Festplatte</a></li>
+      <li><a href="#network">Netzwerk</a></li>
+      <li><a href="#rules">Regeln von GGG</a></li>
+    </ul>
+  </div>
+
+  <section class="blk" id="files">
+    <h2>Liest: Spieldateien</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>logs\Client.txt</code></span><span class="v">Das Spiel-Log. Nur Lesezugriff: Gebiet, Heldenstufe, Belohnungen.</span></summary>
+        <div class="w">Liegt im Spielordner. Beim Start wird das ganze Log gelesen, danach zweimal pro Sekunde die neuen Zeilen. Daraus entnimmt das Programm: Start und Beenden des Spiels; das Gebiet, das du betreten hast; die Heldenstufe – aus diesen Zeilen sind Name und Klasse des Helden bekannt; Questbelohnungen; den Tod des Helden; welchen Gegenstandsfilter das Spiel geladen hat; deine Klicks im Passive-Fertigkeiten-Baum; die Version des Spiels. Von allem, was im Chat gesagt wird, beachtet es nur die NSC-Sätze, auf die dein Plan wartet; alles andere wird nicht gespeichert.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>poe2_production_Config.ini</code></span><span class="v">Die Einstellungen des Spiels. Nur Lesezugriff: Filter, Sprache, Tastenbelegung des Spiels.</span></summary>
+        <div class="w">Liegt in <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>; wird neu gelesen, wenn sich die Datei ändert. Daraus entnimmt das Programm: welcher Gegenstandsfilter gewählt ist, die Sprache des Clients und die im Spiel belegten Tasten – damit die Tasten des Programms keine Taste belegen, die das Spiel nutzt.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>OnlineFilters\</code></span><span class="v">Gegenstandsfilter aus deinem Konto. Nur Lesezugriff.</span></summary>
+        <div class="w">Ein Ordner in <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>: die Filter, die das Spiel aus deinem Konto heruntergeladen hat. Gelesen werden Name und Regeln jedes Filters – um den Filter beim Namen zu nennen und zu warnen, wenn der gewählte Filter einen Gegenstand ausblendet, den der Plan sucht. Eine Kopie jeder Filterversion, die das Spiel geladen hat, bleibt im Ordner des Programms selbst.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Steam-Dateien und Windows-Registrierung</span><span class="v">Nur Lesezugriff – um zu finden, wo das Spiel installiert ist.</span></summary>
+        <div class="w"><code>libraryfolders.vdf</code>, <code>appmanifest_2694490.acf</code>; in der Registrierung – der Steam-Ordner und der Eintrag „Path of Exile 2“ unter den installierten Programmen. Wird das Spiel nicht gefunden, gibst du den Ordner selbst an.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="windows">
+    <h2>Fragt bei Windows ab</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">Aktives Fenster</span><span class="v">Welches Fenster vorn ist und wem es gehört. Der Speicher des Spiels wird nicht gelesen.</span></summary>
+        <div class="w">Welches Fenster gerade vorn ist und zu welchem Programm es gehört – um zu wissen, dass es das Spiel ist.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Spielfenster, Mauszeiger, <kbd>Alt</kbd></span><span class="v">Wo sie gerade sind. Vom Bildschirm wird nichts gelesen.</span></summary>
+        <div class="w">Wo das Spielfenster steht, wo der Mauszeiger ist und ob <kbd>Alt</kbd> gehalten wird – um die Fenster des Programms über das Spiel zu legen und sie anklickbar zu machen.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="clipboard">
+    <h2>Zwischenablage</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">Was es beobachtet</span><span class="v">Nur den Änderungszähler der Zwischenablage. Der Inhalt wird nicht gelesen.</span></summary>
+        <div class="w">Der Zähler ist eine Zahl, die Windows führt: Sie ändert sich bei jedem Kopieren.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Wann es den Inhalt liest</span><span class="v">Einmal – nachdem du im Spiel einen Gegenstand kopiert hast.</span></summary>
+        <div class="w">Wenn sich der Zähler bei aktivem Spielfenster geändert hat: Das ist dein <kbd>Ctrl</kbd>+<kbd>C</kbd> oder <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd> über einem Gegenstand. In jedem anderen Fenster wird die Zwischenablage gar nicht erst geöffnet. Was vor dem Start des Programms in der Zwischenablage lag, wird nicht gelesen.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Was bleibt</span><span class="v">Nur der Text des Gegenstands, und nur im Speicher des Programms.</span></summary>
+        <div class="w">Nur Text, höchstens 200.000 Bytes. Text, der nicht mit der Spielzeile „Gegenstandsklasse“ beginnt, wird sofort verworfen: nicht gespeichert und nirgendwohin geschrieben. Der Text des Gegenstands lebt nur im Speicher; wenn du auf „{{ui Надеть}}“ klickst, wird der Gegenstand in der Datei des Helden als ausgerüstet eingetragen.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Kopie per <kbd>F2</kbd></span><span class="v">Der vorherige Inhalt der Zwischenablage kommt an seinen Platz zurück.</span></summary>
+        <div class="w">Das Programm merkt sich die Zwischenablage vollständig (bis 32 MB), drückt im Spiel die Kopiertasten, liest den Gegenstand einmal und legt in die Zwischenablage zurück, was darin lag. In das, was es sich gemerkt hat, schaut es nicht hinein.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="keys">
+    <h2>Tasten, auf die es hört</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>F2</kbd> Vergleichen / {{ui Надеть}}</span><span class="v">Vergleicht den Gegenstand unter dem Mauszeiger mit dem ausgerüsteten.</span></summary>
+        <div class="w">Noch einmal über demselben Gegenstand gedrückt – trägt ihn als ausgerüstet ein. Funktioniert auch mit gehaltenem <kbd>Alt</kbd>.</div>
+      </details></li>
+      <li><div class="row"><span class="k"><kbd>F3</kbd> {{ui Закрыть}}</span><span class="v">Schließt das oberste Fenster des Programms über dem Spiel.</span></div></li>
+      <li><div class="row"><span class="k"><kbd>F7</kbd> {{ui программа ↔ игра}}</span><span class="v">Holt das Programmfenster nach vorn und führt zurück ins Spiel.</span></div></li>
+      <li><details>
+        <summary><span class="k">Wann es auf sie hört</span><span class="v">Nur solange das Spielfenster aktiv ist.</span></summary>
+        <div class="w"><kbd>F7</kbd> – auch im Fenster des Programms selbst. Sobald ein anderes Fenster aktiv ist, werden die Tasten freigegeben: In anderen Programmen funktionieren sie wie gewohnt. Belegt das Spiel selbst eine von ihnen, nimmt das Programm die nächste freie aus F2, F3, F7, F6, F9, F10, F11. F4 wird nie genommen.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Die übrigen Tasten</span><span class="v">Es gibt keinen Tastatur-Hook: Das Programm sieht sie nicht.</span></summary>
+        <div class="w">Was du sonst noch drückst, sieht das Programm nicht. Die einzige Ausnahme ist <kbd>Alt</kbd>: Solange die Fenster über dem Spiel eingeschaltet sind, fragt das Programm bei Windows ab, ob die Taste gehalten wird.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="sends">
+    <h2>Was es an das Spiel sendet</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd></span><span class="v">Einmal für jeden deiner Tastendrücke auf <kbd>F2</kbd>.</span></summary>
+        <div class="w">Nur solange das Spielfenster aktiv ist. Das sind die Tasten des Spiels selbst – „Gegenstand mit ausführlicher Beschreibung kopieren“. Liegt die ausführliche Beschreibung im Spiel nicht auf Alt, wird statt Alt jene Taste gedrückt.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Sonst nichts</span><span class="v">Kein Chat, keine Befehle, keine Maus, nichts per Timer.</span></summary>
+        <div class="w">Keine Nachrichten oder Befehle im Chat, keine Mausklicks, nichts per Timer, nichts als Reaktion auf das Log oder den Bildschirm. „{{ui Надеть}}“ und deine Markierungen ändern nur die Aufzeichnungen des Programms selbst.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="overlay">
+    <h2>{{ui Окна поверх игры}}</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">Drei kleine Fenster</span><span class="v">Die Schrittliste, die Antwort auf eine Gegenstandskopie, der Hinweis zum Fertigkeitenbaum.</span></summary>
+        <div class="w">Sie stehen über dem Spielfenster. Den Fokus übernehmen sie nie, die Maus geht durch sie hindurch ins Spiel – außer wenn <kbd>Alt</kbd> gehalten wird und der Mauszeiger über einem Fenster steht, und außer bei den Schaltflächen der Antwort.</div>
+      </details></li>
+      <li><div class="row"><span class="k">Was sie brauchen</span><span class="v">Das Spiel im Modus „Fenster“ oder „Vollbild-Fenster“.</span></div></li>
+      <li><div class="row"><span class="k">Ausschalten</span><span class="v">Mit einem Schalter unter „{{ui Настройки}}“.</span></div></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="disk">
+    <h2>Was es auf die Festplatte schreibt</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">Alles, was das Programm schreibt, während es läuft.</span></summary>
+        <div class="w">
+          <ul class="files">
+            <li><code>plans\</code><span>deine Pläne und die aus dem Katalog installierten Pläne; der Plan, der mit dem Programm kommt, wird beim ersten Start hier abgelegt</span></li>
+            <li><code>runs\</code><span>eine Datei pro Held: Ereignisse aus dem Log, deine Markierungen, die Gegenstände, die du als ausgerüstet eingetragen hast</span></li>
+            <li><code>filters\</code><span>Kopien der Filterversionen, die das Spiel geladen hat</span></li>
+            <li><code>backup\</code><span>frühere Versionen eines Plans – vor jeder Änderung; entfernte Pläne</span></li>
+            <li><code>export\</code><span>Plandateien, die du zum Teilen gespeichert hast</span></li>
+            <li><code>update\</code><span>das Installationsprogramm einer neuen Version – nach „{{ui Обновить}}“; nach der Installation wird es entfernt</span></li>
+            <li><code>settings.json</code><span>der Spielordner, Größe und Position des Fensters, deine Auswahl unter „{{ui Настройки}}“</span></li>
+            <li><code>program.log</code><span>was das Programm bei diesem Start getan hat; die fünf Starts davor werden ebenfalls aufbewahrt</span></li>
+            <li><code>webview\</code><span>Speicher der Fenster-Engine: eigene Einstellungen der Seiten und Cache</span></li>
+          </ul>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">Das Programm selbst. Hierhin schreibt nur das Installationsprogramm.</span></summary>
+        <div class="w">Administratorrechte werden dabei nicht verlangt.</div>
+      </details></li>
+      <li><div class="row"><span class="k">Ordner „Downloads“</span><span class="v">Eine Plandatei – wenn du auf „{{ui Скачать файл плана}}“ klickst.</span></div></li>
+      <li><details>
+        <summary><span class="k">Ordner des Spiels</span><span class="v">In sie wird nichts geschrieben.</span></summary>
+        <div class="w">Weder in den Spielordner noch in <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code>.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Nach dem Deinstallieren</span><span class="v">Deine Pläne und Helden bleiben.</span></summary>
+        <div class="w">Beim Deinstallieren des Programms bleibt <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> an seinem Platz – dort liegen deine Pläne und Helden. Brauchst du sie nicht mehr, lösche den Ordner selbst.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="network">
+    <h2>Netzwerk</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">Über dich</span><span class="v">Das Programm sendet nichts über dich und dein Spiel – nirgendwohin.</span></summary>
+        <div class="w">Es hat kein Konto, keine Statistik, keine Fehlerberichte.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Updates und Plankatalog</span><span class="v">Beim Start und alle 6 Stunden – vier Dateien von dieser Website.</span></summary>
+        <div class="w">
+          <p>Die Dateien sind klein: die Update-Datei <code>update/latest.json</code> und der Plankatalog <code>plans/index.json</code>, jede mit ihrer Signatur (<code>.sig</code>). Wenn die Website nicht antwortet oder das Spiel schon neuer ist als das Programm, eine neue Version aber noch fehlt, fragt das Programm nach einer halben Stunde erneut. Ausschalten lässt sich das unter „{{ui Настройки}}“: „{{ui Проверять обновления}}“.</p>
+          <p>Den Plankatalog fragt das Programm außerdem ab, wenn du unter „{{ui Редактор}}“ die Liste der Pläne öffnest – höchstens einmal pro Minute. Ist „{{ui Проверять обновления}}“ ausgeschaltet, wendet sich das Programm nicht von selbst an diese Website: Der Katalog wird nur über die Schaltfläche „{{ui Спросить каталог}}“ angefordert.</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Was in der Anfrage steht</span><span class="v">Die Version des Programms und sonst nichts.</span></summary>
+        <div class="w">In jeder solchen Anfrage steht die Version des Programms (<code>User-Agent: PoE2Runbook/&lt;Version&gt;</code>): keine Cookies, kein Name, nichts über dein Spiel. Der Hosting-Anbieter sieht, wie bei jeder Anfrage, deine IP-Adresse.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Signaturen</span><span class="v">Beide Dateien prüft das Programm selbst – und liest sie erst danach.</span></summary>
+        <div class="w">Es prüft mit einem Schlüssel, der in das Programm eingebaut ist. Ein Update wird nur angenommen, wenn seine Version neuer ist als die eigene.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Herunterladen</span><span class="v">Nur nach deinem Klick auf „{{ui Обновить}}“ oder „{{ui Поставить}}“.</span></summary>
+        <div class="w">
+          <p>Solange du nicht auf „{{ui Обновить}}“ oder „{{ui Поставить}}“ geklickt hast, wird nichts heruntergeladen und nichts installiert.</p>
+          <p>„{{ui Обновить}}“ in der Kopfzeile: Das Programm lädt das Installationsprogramm von der Adresse aus der signierten Datei herunter, prüft seine Größe und seinen SHA-256, startet es und beendet sich; das Installationsprogramm installiert die neue Version und öffnet sie.</p>
+          <p>„{{ui Поставить}}“ oder „{{ui Обновить}}“ im Katalog: Das Programm lädt die Plandatei von der Adresse aus dem signierten Katalog herunter, prüft ihre Größe und ihren SHA-256 und legt den Plan in seine Bibliothek.</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Seiten des Fensters</span><span class="v">Sie kommen von deinem eigenen Computer und antworten nur ihm.</span></summary>
+        <div class="w">Die Adresse ist 127.0.0.1: Die Seiten seines Fensters liefert das Programm sich selbst.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Engine des Fensters</span><span class="v">Microsoft Edge WebView2 – eine Komponente von Windows.</span></summary>
+        <div class="w">Sie zeichnet das Fenster. Sie gehört Microsoft und kann sich von selbst an Microsoft-Server wenden, wie es der Browser Edge tut.</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Browser</span><span class="v">Wird nur auf deinen Klick hin geöffnet.</span></summary>
+        <div class="w">Diese Website – aus dem Fenster „{{ui О программе}}“; die Seite eines Planautors – aus dem Katalog; die Seite eines Gegenstandsfilters auf pathofexile2.com; die Download-Seite für WebView2 bei Microsoft, falls diese Komponente fehlt.</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="rules">
+    <h2>Die Regeln von Grinding Gear Games, an die es sich hält</h2>
+    <dl class="rules">
+      <div class="rule">
+        <dt><span class="ttl">Regel von GGG</span>Ein Programm, das getrennt vom Spiel läuft, ist erlaubt; eines, das das Spiel oder seine Dateien verändert, nicht.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>PoE2 Runbook ist ein eigenständiges Programm: Es liest das Log und seine eigenen Dateien, am Spiel ändert es nichts.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">Regel von GGG</span>Eine Taste, die im Spiel etwas bewirkt, drückst du selbst; sie erledigt eine bestimmte Sache und löst eine einzige Aktion im Spiel aus.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span><kbd>F2</kbd> macht eine Kopie pro Tastendruck. Per Timer, durch das Log oder durch den Bildschirm wird nichts ausgelöst.</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">Regel von GGG</span>Log, Zwischenablage und Bildschirm dürfen gelesen werden, wenn du weißt, was mit ihnen geschieht; Zwischenablage und Bildschirm – einmal pro Tastendruck von dir.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>Diese Seite ist genau diese Aufstellung. Die Zwischenablage wird einmal pro Kopie gelesen; der Bildschirm wird nicht gelesen.</dd>
+      </div>
+    </dl>
+    <p class="quiet">Die Regeln sind hier in eigenen Worten wiedergegeben. Quelle: die <a href="https://www.pathofexile.com/developer/docs/index" rel="noopener noreferrer">Entwicklerdokumentation von Path of Exile</a> (auf Englisch). GGG genehmigt Programme nicht einzeln; die Regeln gehören GGG, und GGG kann sie ändern.</p>
+    <blockquote>
+      <p lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+      <p class="quiet">Auf Deutsch: Das Programm ist weder mit Grinding Gear Games verbunden noch von Grinding Gear Games gebilligt.</p>
+    </blockquote>
+  </section>

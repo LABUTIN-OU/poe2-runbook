@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ja" data-locale="ja-JP">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>プログラムが読み取るもの - PoE2 Runbook</title>
+<meta name="description" content="プログラムのコードに基づく正確な一覧：ゲームのどのファイルを読むか、いつクリップボードを開くか、どのキーを受け付け、ゲームに何を送るか、ディスクに何を書き込み、ネットワークに何を問い合わせるか。">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://poe2.labutin.gg/ja/safety/">
+<link rel="alternate" hreflang="en" href="https://poe2.labutin.gg/safety/">
+<link rel="alternate" hreflang="ru" href="https://poe2.labutin.gg/ru/safety/">
+<link rel="alternate" hreflang="de" href="https://poe2.labutin.gg/de/safety/">
+<link rel="alternate" hreflang="es" href="https://poe2.labutin.gg/es/safety/">
+<link rel="alternate" hreflang="fr" href="https://poe2.labutin.gg/fr/safety/">
+<link rel="alternate" hreflang="ja" href="https://poe2.labutin.gg/ja/safety/">
+<link rel="alternate" hreflang="ko" href="https://poe2.labutin.gg/ko/safety/">
+<link rel="alternate" hreflang="pt-BR" href="https://poe2.labutin.gg/pt/safety/">
+<link rel="alternate" hreflang="th" href="https://poe2.labutin.gg/th/safety/">
+<link rel="alternate" hreflang="x-default" href="https://poe2.labutin.gg/safety/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PoE2 Runbook">
+<meta property="og:title" content="PoE2 Runbook：プログラムが読み取るもの、受け付けるキー、押すキー">
+<meta property="og:description" content="プログラムのコードに基づく正確な一覧：ゲームのどのファイルを読むか、いつクリップボードを開くか、どのキーを受け付け、ゲームに何を送るか、ディスクに何を書き込み、ネットワークに何を問い合わせるか。">
+<meta property="og:url" content="https://poe2.labutin.gg/ja/safety/">
+<meta property="og:image" content="https://poe2.labutin.gg/assets/og-ja.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="エリア「狩場」のリスト：スキル2つ、報酬2ポイントのボス、ウェイポイント2つ。このエリアに使った時間は 7:00 のうち 1:26。">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:locale:alternate" content="ru_RU">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:locale:alternate" content="fr_FR">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:locale:alternate" content="th_TH">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../assets/icon.png">
+<link rel="stylesheet" href="../../assets/site.css">
+<script src="../../assets/lang.js"></script>
+<script src="../../assets/config.js" defer></script>
+<script src="../../assets/site.js" defer></script>
+</head>
+<body class="p-safety">
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="../"><img src="../../assets/icon.png" width="28" height="28" alt="">PoE2 Runbook</a>
+    <nav class="bar-nav" aria-label="言語とダウンロード">
+      <details class="langs">
+        <summary class="lang"><span class="ln">日本語</span><span class="lc">JA</span><span aria-hidden="true"> ▾</span></summary>
+        <div class="langs-menu"><a href="../../safety/?lang=en" lang="en" hreflang="en" data-lang="en">English</a><a href="../../ru/safety/" lang="ru" hreflang="ru" data-lang="ru">Русский</a><a href="../../de/safety/" lang="de" hreflang="de" data-lang="de">Deutsch</a><a href="../../es/safety/" lang="es" hreflang="es" data-lang="es">Español</a><a href="../../fr/safety/" lang="fr" hreflang="fr" data-lang="fr">Français</a><span class="here" lang="ja" aria-current="true">日本語</span><a href="../../ko/safety/" lang="ko" hreflang="ko" data-lang="ko">한국어</a><a href="../../pt/safety/" lang="pt-BR" hreflang="pt-BR" data-lang="pt">Português (Brasil)</a><a href="../../th/safety/" lang="th" hreflang="th" data-lang="th">ไทย</a></div>
+      </details>
+      <a class="btn btn-s" href="../install/#download" data-dl-link>ダウンロード</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="wrap page">
+  <div class="page-h">
+    <h1>プログラムが読み取るもの、受け付けるキー、押すキー</h1>
+    <p class="lead">ゲームの横で動く独立したウィンドウです。ゲームのログと設定を読み、3つのキーを受け付け、あなたが <kbd>F2</kbd> を1回押すたびに、アイテムのコピー操作を1回だけゲームに送ります。ゲーム自体には、ファイルにもメモリにも、一切変更を加えません。</p>
+    <div class="tocrow">
+      <p class="quiet">以下の各行は、プログラムのコードから書き出したものです。矢印のある行は開きます。</p>
+      <button class="mini" type="button" data-open-all data-on="すべて閉じる" hidden>すべて開く</button>
+    </div>
+    <ul class="toc" aria-label="一覧のセクション">
+      <li><a href="#files">ゲームのファイル</a></li>
+      <li><a href="#windows">Windows</a></li>
+      <li><a href="#clipboard">クリップボード</a></li>
+      <li><a href="#keys">キー</a></li>
+      <li><a href="#sends">ゲームに送るもの</a></li>
+      <li><a href="#overlay">ゲームの上のウィンドウ</a></li>
+      <li><a href="#disk">ディスク</a></li>
+      <li><a href="#network">通信</a></li>
+      <li><a href="#rules">GGG のルール</a></li>
+    </ul>
+  </div>
+
+  <section class="blk" id="files">
+    <h2>読むもの：ゲームのファイル</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>logs\Client.txt</code></span><span class="v">ゲームのログ。読み取りのみ：エリア、ヒーローのレベル、報酬。</span></summary>
+        <div class="w">ゲームのフォルダーにあります。プログラムの起動時にログ全体を読み、その後は新しい行を1秒に2回読みます。ここから取り出すもの：ゲームの起動と終了、入ったエリア、ヒーローのレベル（その行から、ヒーローの名前とクラスもわかります）、クエストの報酬、ヒーローの死亡、ゲームが読み込んだアイテムフィルター、パッシブスキルツリーでのクリック、ゲームのバージョン。チャットに流れる発言のうち、拾うのはプランが待っている NPC のセリフだけです。それ以外は保存しません。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>poe2_production_Config.ini</code></span><span class="v">ゲームの設定。読み取りのみ：フィルター、言語、ゲームのキー設定。</span></summary>
+        <div class="w"><code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code> にあります。ファイルが変わるたびに読み直します。ここから取り出すもの：選択中のアイテムフィルター、クライアントの言語、ゲームで割り当てられているキー。プログラムのキーが、ゲームの使っているキーと重ならないようにするためです。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>OnlineFilters\</code></span><span class="v">あなたのアカウントのアイテムフィルター。読み取りのみ。</span></summary>
+        <div class="w"><code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code> の中のフォルダーです。ゲームがあなたのアカウントからダウンロードしたフィルターが入っています。読むのは、各フィルターの名前とルールです。フィルターを名前で表示し、選択中のフィルターがプランの探しているアイテムを隠しているときに警告するためです。ゲームが読み込んだフィルターは、バージョンごとのコピーがプログラム自身のフォルダーに残ります。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">Steam のファイルとレジストリ</span><span class="v">読み取りのみ。ゲームのインストール先を見つけるためです。</span></summary>
+        <div class="w"><code>libraryfolders.vdf</code>、<code>appmanifest_2694490.acf</code>。レジストリでは、Steam のフォルダーと、インストール済みプログラムの中の「Path of Exile 2」の項目。ゲームが見つからなければ、フォルダーは自分で指定します。</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="windows">
+    <h2>Windows に尋ねること</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">アクティブなウィンドウ</span><span class="v">前面にあるウィンドウと、その持ち主。ゲームのメモリは読みません。</span></summary>
+        <div class="w">今どのウィンドウが前面にあり、どのプログラムのものか。それがゲームだと知るためです。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ゲームのウィンドウ、カーソル、<kbd>Alt</kbd></span><span class="v">今どこにあるか。画面からは何も読み取りません。</span></summary>
+        <div class="w">ゲームのウィンドウの位置、マウスカーソルの位置、<kbd>Alt</kbd> が押されているかどうか。プログラムのウィンドウをゲームの上に置き、クリックできるようにするためです。</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="clipboard">
+    <h2>クリップボード</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">見ているもの</span><span class="v">クリップボードの変更カウンターだけ。中身は読みません。</span></summary>
+        <div class="w">カウンターは Windows が管理している数値で、コピーのたびに変わります。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">中身を読むとき</span><span class="v">1回だけ。あなたがゲーム内でアイテムをコピーした後です。</span></summary>
+        <div class="w">ゲームのウィンドウがアクティブな間にカウンターが変わったとき。つまり、あなたがアイテムの上で <kbd>Ctrl</kbd>+<kbd>C</kbd> または <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd> を押したときです。ほかのウィンドウでは、クリップボードを開くことすらありません。プログラムの起動前からクリップボードにあったものは読みません。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">残るもの</span><span class="v">アイテムのテキストだけ。それもプログラムのメモリの中だけです。</span></summary>
+        <div class="w">テキストのみ、最大 200,000 バイト。ゲームの「アイテムクラス」の行で始まらないテキストは、すぐに破棄します。保存せず、どこにも書き込みません。アイテムのテキストはメモリの中にだけあります。「装備」を押すと、そのアイテムが装備中としてヒーローのファイルに記録されます。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><kbd>F2</kbd> によるコピー</span><span class="v">クリップボードの元の中身は、元どおりに戻ります。</span></summary>
+        <div class="w">プログラムはクリップボード全体を覚えておき（最大 32 MB）、ゲーム内でコピーのキーを押し、アイテムを1回読み取ってから、元の中身をクリップボードに戻します。覚えておいた中身をのぞくことはありません。</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="keys">
+    <h2>受け付けるキー</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>F2</kbd> 比較 / 装備</span><span class="v">カーソルの下のアイテムを、装備中のものと比較します。</span></summary>
+        <div class="w">同じアイテムの上でもう一度押すと、そのアイテムを装備中として記録します。<kbd>Alt</kbd> を押したままでも使えます。</div>
+      </details></li>
+      <li><div class="row"><span class="k"><kbd>F3</kbd> 閉じる</span><span class="v">ゲームの上の、プログラムの一番手前のウィンドウを閉じます。</span></div></li>
+      <li><div class="row"><span class="k"><kbd>F7</kbd> プログラム ↔ ゲーム</span><span class="v">プログラムのウィンドウを前面に出し、またゲームに戻します。</span></div></li>
+      <li><details>
+        <summary><span class="k">受け付けるとき</span><span class="v">ゲームのウィンドウがアクティブな間だけ。</span></summary>
+        <div class="w"><kbd>F7</kbd> は、プログラム自身のウィンドウでも受け付けます。別のウィンドウがアクティブになると、キーはすぐに解放されます。ほかのプログラムでは、いつもどおりに使えます。どれかのキーをゲーム自体が使っている場合、プログラムは F2、F3、F7、F6、F9、F10、F11 の中から、次に空いているキーを使います。F4 は決して使いません。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">そのほかのキー</span><span class="v">キーボードフックはありません。プログラムには見えません。</span></summary>
+        <div class="w">ほかに何を押しているかは、プログラムには見えません。例外は <kbd>Alt</kbd> だけです。「ゲームの上のウィンドウ」がオンの間、プログラムは Alt が押されているかどうかを Windows に尋ねます。</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="sends">
+    <h2>ゲームに送るもの</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd></span><span class="v">あなたが <kbd>F2</kbd> を1回押すごとに1回。</span></summary>
+        <div class="w">ゲームのウィンドウがアクティブな間だけ。これはゲーム自体のキー操作で、「アイテムを詳細な説明つきでコピーする」ものです。ゲーム内で詳細な説明が Alt 以外のキーに割り当てられている場合は、Alt の代わりにそのキーを押します。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">それ以外は何も</span><span class="v">チャットも、コマンドも、マウス操作も、タイマーによる操作もありません。</span></summary>
+        <div class="w">チャットへのメッセージやコマンドも、マウスのクリックも、タイマーによる操作も、ログや画面に反応した操作も送りません。「装備」とあなたのチェックが変えるのは、プログラム自身の記録だけです。</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="overlay">
+    <h2>ゲームの上のウィンドウ</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">3つの小さなウィンドウ</span><span class="v">ステップのリスト、アイテムのコピーへの回答、ツリーのヒント。</span></summary>
+        <div class="w">ゲームのウィンドウの上に表示されます。フォーカスを奪うことは決してなく、マウスの操作はウィンドウを通り抜けてゲームに届きます。例外は、<kbd>Alt</kbd> を押したままカーソルをウィンドウに重ねているときと、回答のボタンです。</div>
+      </details></li>
+      <li><div class="row"><span class="k">必要な条件</span><span class="v">ゲームがウィンドウモードか、ウィンドウフルスクリーンモードであること。</span></div></li>
+      <li><div class="row"><span class="k">オフにする方法</span><span class="v">「設定」のスイッチ1つで。</span></div></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="disk">
+    <h2>ディスクに書き込むもの</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k"><code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">プログラムが動作中に書き込むものすべて。</span></summary>
+        <div class="w">
+          <ul class="files">
+            <li><code>plans\</code><span>あなたのプランと、カタログから追加したプラン。プログラムに付属するプランは、初回起動時にここに置かれます</span></li>
+            <li><code>runs\</code><span>ヒーローごとに1ファイル：ログのイベント、あなたのチェック、装備中として記録したアイテム</span></li>
+            <li><code>filters\</code><span>ゲームが読み込んだフィルターの、バージョンごとのコピー</span></li>
+            <li><code>backup\</code><span>プランの以前のバージョン（編集のたびに保存）。削除したプラン</span></li>
+            <li><code>export\</code><span>共有するために保存したプランファイル</span></li>
+            <li><code>update\</code><span>新しいバージョンのインストーラー（「更新」を押した後）。インストールが済むと削除されます</span></li>
+            <li><code>settings.json</code><span>ゲームフォルダー、ウィンドウのサイズと位置、「設定」で選んだ内容</span></li>
+            <li><code>program.log</code><span>今回の起動でプログラムが行ったこと。その前の5回分も残ります</span></li>
+            <li><code>webview\</code><span>ウィンドウのエンジンの保存領域：ページ自体の設定とキャッシュ</span></li>
+          </ul>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k"><code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span>\</code></span><span class="v">プログラム本体。ここに書き込むのはインストーラーだけです。</span></summary>
+        <div class="w">その際、管理者権限は求められません。</div>
+      </details></li>
+      <li><div class="row"><span class="k">「ダウンロード」フォルダー</span><span class="v">プランファイル。「プランファイルをダウンロード」を押したとき。</span></div></li>
+      <li><details>
+        <summary><span class="k">ゲームのフォルダー</span><span class="v">何も書き込みません。</span></summary>
+        <div class="w">ゲームのフォルダーにも、<code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code> にも書き込みません。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">アンインストール後</span><span class="v">プランとヒーローは残ります。</span></summary>
+        <div class="w">プログラムをアンインストールしても、<code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> はそのまま残ります。あなたのプランとヒーローが入っているためです。不要なら、フォルダーを自分で削除してください。</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="network">
+    <h2>通信</h2>
+    <ul class="facts">
+      <li><details>
+        <summary><span class="k">あなたについて</span><span class="v">あなたやあなたのプレイのことは、どこにも一切送信しません。</span></summary>
+        <div class="w">アカウントも、統計の収集も、エラーレポートもありません。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">更新とプランのカタログ</span><span class="v">起動時と6時間ごとに、このサイトから4つのファイルを取得します。</span></summary>
+        <div class="w">
+          <p>どれも小さなファイルです。更新ファイル <code>update/latest.json</code> とプランのカタログ <code>plans/index.json</code>、そしてそれぞれの署名（<code>.sig</code>）。サイトが応答しない場合や、ゲームがすでにプログラムより新しいのに新しいビルドがまだない場合、プログラムは30分後にもう一度問い合わせます。「設定」の「更新を確認」でオフにできます。</p>
+          <p>プランのカタログは、「編集」でプランのリストを開いたときにも問い合わせます（多くても1分に1回）。「更新を確認」がオフの場合、プログラムが自分からこのサイトにアクセスすることはありません。カタログを問い合わせるのは、「カタログを問い合わせる」ボタンを押したときだけです。</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">リクエストの内容</span><span class="v">プログラムのバージョンだけ。ほかには何もありません。</span></summary>
+        <div class="w">こうしたリクエストに含まれるのは、プログラムのバージョン（<code>User-Agent: PoE2Runbook/&lt;バージョン&gt;</code>）だけです。Cookie も、名前も、あなたのプレイに関する情報も含まれません。ホスティング側には、どんなリクエストでもそうであるように、あなたの IP アドレスが見えます。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">署名</span><span class="v">どちらのファイルも、プログラムが自分で検証し、その後で初めて読みます。</span></summary>
+        <div class="w">検証には、プログラムに組み込まれた鍵を使います。更新を受け入れるのは、そのバージョンが自分のバージョンより新しい場合だけです。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ダウンロード</span><span class="v">あなたが「更新」または「追加」を押した後だけ。</span></summary>
+        <div class="w">
+          <p>「更新」または「追加」を押すまで、何もダウンロードされず、何もインストールされません。</p>
+          <p>プログラム上部のバーにある「更新」：プログラムは、署名済みファイルに書かれたアドレスからインストーラーをダウンロードし、サイズと SHA-256 を照合してから、インストーラーを起動して自分は終了します。インストーラーが新しいバージョンをインストールし、それを開きます。</p>
+          <p>カタログの「追加」または「更新」：プログラムは、署名済みカタログに書かれたアドレスからプランファイルをダウンロードし、サイズと SHA-256 を照合して、プランを自分のライブラリに入れます。</p>
+        </div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ウィンドウのページ</span><span class="v">あなた自身の PC から配信され、その PC にしか応答しません。</span></summary>
+        <div class="w">アドレスは 127.0.0.1 です。プログラムは、自分のウィンドウのページを自分自身に配信しています。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ウィンドウのエンジン</span><span class="v">Microsoft Edge WebView2。Windows のコンポーネントです。</span></summary>
+        <div class="w">ウィンドウを描画しているのは、このエンジンです。Microsoft のもので、Edge ブラウザーと同じように、自分から Microsoft のサーバーにアクセスすることがあります。</div>
+      </details></li>
+      <li><details>
+        <summary><span class="k">ブラウザー</span><span class="v">あなたがクリックしたときだけ開きます。</span></summary>
+        <div class="w">このサイト（「このプログラムについて」ウィンドウから）。プラン作者のページ（カタログから）。pathofexile2.com のアイテムフィルターのページ。WebView2 が入っていない場合は、Microsoft の WebView2 ダウンロードページ。</div>
+      </details></li>
+    </ul>
+  </section>
+
+  <section class="blk" id="rules">
+    <h2>プログラムが従う Grinding Gear Games のルール</h2>
+    <dl class="rules">
+      <div class="rule">
+        <dt><span class="ttl">GGG のルール</span>ゲームとは別に動くプログラムは認められています。ゲームやそのファイルを変更するものは認められていません。</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>PoE2 Runbook は独立したプログラムです。ログと自分のファイルを読み、ゲームには何も変更を加えません。</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">GGG のルール</span>ゲーム内で作用するキーは、あなた自身が押します。そのキーは決まった1つのことだけを行い、ゲーム内で1つの操作だけを実行します。</dt>
+        <dd><span class="ttl">PoE2 Runbook</span><kbd>F2</kbd> は、1回押すごとにコピーを1回行います。タイマー、ログ、画面をきっかけに実行されるものは何もありません。</dd>
+      </div>
+      <div class="rule">
+        <dt><span class="ttl">GGG のルール</span>ログ、クリップボード、画面は、それらがどう扱われるかをあなたが知っている場合に読み取ることができます。クリップボードと画面は、あなたがキーを1回押すごとに1回だけです。</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>このページが、まさにその一覧です。クリップボードは、コピー1回につき1回だけ読み取ります。画面は読み取りません。</dd>
+      </div>
+    </dl>
+    <p class="quiet">ルールは自分たちの言葉で言い換えたものです。出典は <a href="https://www.pathofexile.com/developer/docs/index" rel="noopener noreferrer">Path of Exile の開発者向けドキュメント</a>（英語）です。GGG は個々のプログラムを承認していません。ルールは GGG のものであり、GGG が変更することがあります。</p>
+    <blockquote>
+      <p lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+      <p class="quiet">日本語では：このプログラムは Grinding Gear Games とは一切関係がなく、同社の承認も受けていません。</p>
+    </blockquote>
+  </section>
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>© 2026 Sergei Labutin</p>
+    <nav aria-label="ページ">
+      <a href="../install/">インストール</a>
+      <a href="./">プログラムが読み取るもの</a>
+      <a href="../about/#licence" data-repo rel="noopener noreferrer">ソースコード</a>
+      <a href="../about/#licence">ライセンス</a>
+      <a href="../about/#contact" data-contact-row hidden>お問い合わせ</a>
+    </nav>
+    <p class="ggg" lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+  </div>
+</footer>
+
+</body>
+</html>
