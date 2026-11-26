@@ -1,0 +1,16 @@
+{
+ "format": "poe2-runbook-update",
+ "v": 1,
+ "version": "0.5.5.23",
+ "game": "0.5.5",
+ "published": "2026-11-26",
+ "installer": {
+  "url": "https://github.com/LABUTIN-OU/poe2-runbook/releases/download/v0.5.5.23/PoE2Runbook-Setup-0.5.5.23.exe",
+  "size": 41332816,
+  "sha256": "7eec147d72cb0088ba0622d721f27ae4dca43c7f8452cd040a560ddaffe10c50"
+ },
+ "notes": {
+  "ru": "Первая публичная сборка.",
+  "en": "The first public build."
+ }
+}
