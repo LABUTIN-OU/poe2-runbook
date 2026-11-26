@@ -1,0 +1,16 @@
+{
+ "format": "poe2-runbook-update",
+ "v": 1,
+ "version": "0.5.5.18",
+ "game": "0.5.5",
+ "published": "2026-11-26",
+ "installer": {
+  "url": "https://example.com/PoE2Runbook-Setup-0.5.5.18.exe",
+  "size": 40897806,
+  "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+ },
+ "notes": {
+  "ru": "Первая публичная сборка.",
+  "en": "The first public build."
+ }
+}

@@ -1,0 +1,959 @@
+{
+  "version": 2,
+  "id": "campaign-0.5",
+  "steps": [
+    {
+      "id": "riverbank",
+      "zone": "G1_1",
+      "name": "Берег реки",
+      "target": "2:00",
+      "filter": "none"
+    },
+    {
+      "id": "clearfell-encampment",
+      "zone": "G1_town",
+      "name": "Лагерь Клирфелл",
+      "target": "1:30"
+    },
+    {
+      "id": "clearfell",
+      "zone": "G1_2",
+      "name": "Клирфелл",
+      "target": "3:30"
+    },
+    {
+      "id": "grelwood-1",
+      "zone": "G1_4",
+      "name": "Грельвуд",
+      "target": "2:00",
+      "touch": [
+        {
+          "zone": "G1_5"
+        }
+      ]
+    },
+    {
+      "id": "redvale",
+      "zone": "G1_5",
+      "name": "Красная Долина",
+      "target": "12:00"
+    },
+    {
+      "id": "grelwood-2",
+      "zone": "G1_4",
+      "name": "Грельвуд · дерево",
+      "target": "2:00",
+      "filter": "xzvExXt6",
+      "filterName": "Sergei DoV Act1",
+      "touch": [
+        {
+          "zone": "G1_6"
+        }
+      ]
+    },
+    {
+      "id": "tangle",
+      "zone": "G1_6",
+      "name": "Мрачные заросли",
+      "target": "12:00",
+      "touch": [
+        {
+          "zone": "G1_7"
+        }
+      ]
+    },
+    {
+      "id": "cemetery",
+      "zone": "G1_7",
+      "name": "Кладбище Вечных",
+      "target": "2:00",
+      "touch": [
+        {
+          "zone": "G1_8"
+        },
+        {
+          "zone": "G1_9"
+        }
+      ]
+    },
+    {
+      "id": "mausoleum",
+      "zone": "G1_8",
+      "also": [
+        "G1_7"
+      ],
+      "name": "Мавзолей претора",
+      "target": "10:00"
+    },
+    {
+      "id": "tomb",
+      "zone": "G1_9",
+      "name": "Супружеская гробница",
+      "target": "6:30"
+    },
+    {
+      "id": "cemetery-of-the-eternals",
+      "zone": "G1_7",
+      "name": "Кладбище Вечных · Лакланн",
+      "target": "3:00"
+    },
+    {
+      "id": "hunting",
+      "zone": "G1_11",
+      "name": "Охотничьи угодья",
+      "target": "7:00",
+      "touch": [
+        {
+          "zone": "G1_13_1"
+        },
+        {
+          "zone": "G1_12"
+        }
+      ]
+    },
+    {
+      "id": "farmlands",
+      "zone": "G1_13_1",
+      "name": "Фермерские земли Огама",
+      "target": "5:00",
+      "touch": [
+        {
+          "zone": "G1_13_2"
+        }
+      ]
+    },
+    {
+      "id": "village",
+      "zone": "G1_13_2",
+      "name": "Деревня Огам",
+      "target": "6:00"
+    },
+    {
+      "id": "ramparts",
+      "zone": "G1_14",
+      "name": "Стены замка",
+      "target": "7:00",
+      "touch": [
+        {
+          "zone": "G1_15"
+        }
+      ]
+    },
+    {
+      "id": "freythorn",
+      "zone": "G1_12",
+      "name": "Фрейторн",
+      "target": "10:00"
+    },
+    {
+      "id": "manor",
+      "zone": "G1_15",
+      "name": "Замок Огам",
+      "target": "30:00"
+    },
+    {
+      "id": "vastiri",
+      "zone": "G2_1",
+      "name": "Окраины Вастири",
+      "target": "8:00"
+    },
+    {
+      "id": "quarry",
+      "zone": "G2_10_1",
+      "name": "Каменоломня Маудун",
+      "target": "6:00",
+      "touch": [
+        {
+          "zone": "G2_10_2"
+        }
+      ]
+    },
+    {
+      "id": "mine",
+      "zone": "G2_10_2",
+      "name": "Шахта Маудун",
+      "target": "8:00"
+    },
+    {
+      "id": "passage",
+      "zone": "G2_2",
+      "name": "Тропа Изменницы",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "G2_3"
+        }
+      ]
+    },
+    {
+      "id": "gates",
+      "zone": "G2_3",
+      "name": "Ворота Халани",
+      "target": "10:00"
+    },
+    {
+      "id": "ascension",
+      "zone": "G2_13",
+      "also": [
+        "Sanctum_1_Foyer_1"
+      ],
+      "name": "Испытание Сехем",
+      "target": "20:00"
+    },
+    {
+      "id": "after-ascension",
+      "event": "ascend",
+      "name": "После восхождения",
+      "target": "10:00",
+      "filter": "NPr0MBsV",
+      "filterName": "Sergei DoV Company"
+    },
+    {
+      "id": "badlands",
+      "zone": "G2_5_1",
+      "name": "Бесплодные земли мастодонтов",
+      "target": "7:00",
+      "touch": [
+        {
+          "zone": "Abyss_Intro"
+        },
+        {
+          "zone": "G2_5_2"
+        }
+      ]
+    },
+    {
+      "id": "bonepits",
+      "zone": "G2_5_2",
+      "name": "Костяные ямы",
+      "target": "6:00"
+    },
+    {
+      "id": "keth",
+      "zone": "G2_4_1",
+      "name": "Кет",
+      "target": "6:00",
+      "touch": [
+        {
+          "zone": "G2_4_2"
+        }
+      ]
+    },
+    {
+      "id": "lostcity",
+      "zone": "G2_4_2",
+      "name": "Затерянный город",
+      "target": "7:00",
+      "touch": [
+        {
+          "zone": "G2_4_3"
+        }
+      ]
+    },
+    {
+      "id": "shrines",
+      "zone": "G2_4_3",
+      "name": "Захоронённые святилища",
+      "target": "10:00"
+    },
+    {
+      "id": "titans",
+      "zone": "G2_6",
+      "name": "Долина Титанов",
+      "target": "6:00",
+      "touch": [
+        {
+          "zone": "G2_7"
+        }
+      ]
+    },
+    {
+      "id": "grotto",
+      "zone": "G2_7",
+      "name": "Грот Титанов",
+      "target": "6:00"
+    },
+    {
+      "id": "deshar",
+      "zone": "G2_8",
+      "name": "Дешар",
+      "target": "9:00",
+      "touch": [
+        {
+          "zone": "G2_9_1"
+        }
+      ]
+    },
+    {
+      "id": "mourning",
+      "zone": "G2_9_1",
+      "name": "Путь скорби",
+      "target": "3:00",
+      "touch": [
+        {
+          "zone": "G2_9_2"
+        }
+      ]
+    },
+    {
+      "id": "spires",
+      "zone": "G2_9_2",
+      "name": "Шпили Дешара",
+      "target": "7:00"
+    },
+    {
+      "id": "dreadnought",
+      "zone": "G2_12",
+      "name": "Дредноут",
+      "target": "15:00"
+    },
+    {
+      "id": "marsh",
+      "zone": "G3_1",
+      "name": "Занесённое песком болото",
+      "target": "15:00",
+      "touch": [
+        {
+          "zone": "G3_town"
+        }
+      ]
+    },
+    {
+      "id": "jungle",
+      "zone": "G3_3",
+      "name": "Развалины в джунглях",
+      "target": "15:00",
+      "touch": [
+        {
+          "zone": "G3_4"
+        },
+        {
+          "zone": "G3_2_1"
+        }
+      ]
+    },
+    {
+      "id": "crypts",
+      "zone": "G3_4",
+      "name": "Ядовитые крипты",
+      "target": "8:00"
+    },
+    {
+      "id": "barrens",
+      "zone": "G3_2_1",
+      "name": "Заражённые земли",
+      "target": "2:30",
+      "touch": [
+        {
+          "zone": "G3_5"
+        }
+      ]
+    },
+    {
+      "id": "wetlands",
+      "zone": "G3_5",
+      "name": "Топи химеридов",
+      "target": "7:30",
+      "touch": [
+        {
+          "zone": "G3_10_Airlock"
+        },
+        {
+          "zone": "G3_6_1"
+        }
+      ]
+    },
+    {
+      "id": "machinarium",
+      "zone": "G3_6_1",
+      "name": "Машинариум Джиквани",
+      "target": "9:00",
+      "touch": [
+        {
+          "zone": "G3_6_2"
+        }
+      ]
+    },
+    {
+      "id": "sanctum",
+      "zone": "G3_6_2",
+      "name": "Святилище Джиквани",
+      "target": "20:00"
+    },
+    {
+      "id": "chaos",
+      "zone": "G3_10_Airlock",
+      "also": [
+        "G3_10"
+      ],
+      "name": "Испытание Хаоса",
+      "target": "10:00"
+    },
+    {
+      "id": "after-chaos",
+      "event": "ascend2",
+      "name": "После испытания Хаоса",
+      "target": "5:00"
+    },
+    {
+      "id": "waterways",
+      "zone": "G3_2_2",
+      "name": "Водотоки Матлан",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "G3_7"
+        }
+      ]
+    },
+    {
+      "id": "azak",
+      "zone": "G3_7",
+      "name": "Болото Азак",
+      "target": "7:00"
+    },
+    {
+      "id": "drowned",
+      "zone": "G3_8",
+      "name": "Затопленный город",
+      "target": "3:00",
+      "touch": [
+        {
+          "zone": "G3_11"
+        }
+      ]
+    },
+    {
+      "id": "apex",
+      "zone": "G3_11",
+      "name": "Вершина мерзости",
+      "target": "8:00"
+    },
+    {
+      "id": "kopec",
+      "zone": "G3_12",
+      "name": "Храм Копека",
+      "target": "8:00"
+    },
+    {
+      "id": "utzaal",
+      "zone": "G3_14",
+      "name": "Утцааль",
+      "target": "12:00",
+      "touch": [
+        {
+          "zone": "G3_16"
+        }
+      ]
+    },
+    {
+      "id": "aggorat",
+      "zone": "G3_16",
+      "name": "Аггорат",
+      "target": "6:00",
+      "touch": [
+        {
+          "zone": "G3_17"
+        }
+      ]
+    },
+    {
+      "id": "chambers",
+      "zone": "G3_17",
+      "name": "Чёрные залы",
+      "target": "10:00"
+    },
+    {
+      "id": "whakapanu",
+      "zone": "G4_3_1",
+      "name": "Остров Вакапану",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "G4_3_2"
+        }
+      ]
+    },
+    {
+      "id": "caverns",
+      "zone": "G4_3_2",
+      "name": "Поющие пещеры",
+      "target": "10:00"
+    },
+    {
+      "id": "ngakanu-fin",
+      "zone": "G4_11_1a",
+      "name": "Нгакану: плавник",
+      "target": "2:00"
+    },
+    {
+      "id": "eye",
+      "zone": "G4_4_1",
+      "name": "Глаз Хинекоры",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "G4_4_2"
+        }
+      ]
+    },
+    {
+      "id": "halls",
+      "zone": "G4_4_2",
+      "name": "Залы мёртвых",
+      "target": "7:30",
+      "touch": [
+        {
+          "zone": "G4_4_3"
+        }
+      ]
+    },
+    {
+      "id": "trial-ancestors",
+      "zone": "G4_4_3",
+      "name": "Испытание предков",
+      "target": "1:00"
+    },
+    {
+      "id": "prison",
+      "zone": "G4_5_1",
+      "name": "Заброшенная тюрьма",
+      "target": "15:00",
+      "touch": [
+        {
+          "zone": "G4_5_2"
+        }
+      ]
+    },
+    {
+      "id": "solitary",
+      "zone": "G4_5_2",
+      "name": "Одиночные камеры",
+      "target": "10:00"
+    },
+    {
+      "id": "shrike",
+      "zone": "G4_7",
+      "name": "Остров сорокопутов",
+      "target": "9:00"
+    },
+    {
+      "id": "kin",
+      "zone": "G4_1_1",
+      "name": "Остров Рода",
+      "target": "5:30",
+      "touch": [
+        {
+          "zone": "G4_1_2"
+        }
+      ]
+    },
+    {
+      "id": "warrens",
+      "zone": "G4_1_2",
+      "name": "Вулканические лабиринты",
+      "target": "10:00"
+    },
+    {
+      "id": "kedge",
+      "zone": "G4_2_1",
+      "name": "Кеджский залив",
+      "target": "6:30",
+      "touch": [
+        {
+          "zone": "G4_2_2"
+        }
+      ]
+    },
+    {
+      "id": "journey",
+      "zone": "G4_2_2",
+      "name": "Конец странствия",
+      "target": "10:00"
+    },
+    {
+      "id": "arastas",
+      "zone": "G4_8b",
+      "also": [
+        "G4_8a"
+      ],
+      "name": "Арастас",
+      "target": "9:00",
+      "touch": [
+        {
+          "zone": "G4_10"
+        }
+      ]
+    },
+    {
+      "id": "excavation",
+      "zone": "G4_10",
+      "name": "Раскопки",
+      "target": "15:00"
+    },
+    {
+      "id": "ngakanu",
+      "zone": "G4_11_1b",
+      "name": "Нгакану",
+      "target": "12:00",
+      "touch": [
+        {
+          "zone": "G4_11_2"
+        }
+      ]
+    },
+    {
+      "id": "heart",
+      "zone": "G4_11_2",
+      "name": "Сердце племени",
+      "target": "20:00"
+    },
+    {
+      "id": "ashen",
+      "zone": "P3_1",
+      "name": "Пепельный лес",
+      "target": "5:00",
+      "touch": [
+        {
+          "zone": "P3_2"
+        }
+      ]
+    },
+    {
+      "id": "kriar-village",
+      "zone": "P3_2",
+      "name": "Деревня Криар",
+      "target": "13:00",
+      "touch": [
+        {
+          "zone": "P3_3"
+        }
+      ]
+    },
+    {
+      "id": "tarn",
+      "zone": "P3_3",
+      "name": "Ледниковое озеро",
+      "target": "13:00",
+      "touch": [
+        {
+          "zone": "P3_4"
+        },
+        {
+          "zone": "P3_5"
+        }
+      ]
+    },
+    {
+      "id": "howling",
+      "zone": "P3_4",
+      "name": "Воющие пещеры",
+      "target": "6:00"
+    },
+    {
+      "id": "peaks",
+      "zone": "P3_5",
+      "name": "Пики Криар",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "P3_6"
+        }
+      ]
+    },
+    {
+      "id": "ravine",
+      "zone": "P3_6",
+      "name": "Высеченное ущелье",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "P3_7"
+        }
+      ]
+    },
+    {
+      "id": "vault",
+      "zone": "P3_7",
+      "name": "Убежище Куачик",
+      "target": "12:00"
+    },
+    {
+      "id": "crossing",
+      "zone": "P2_1",
+      "name": "Кхарийский перевал",
+      "target": "12:00",
+      "touch": [
+        {
+          "zone": "P2_2"
+        },
+        {
+          "zone": "P2_5"
+        }
+      ]
+    },
+    {
+      "id": "pools",
+      "zone": "P2_2",
+      "name": "Воды Хаталя",
+      "target": "15:00",
+      "touch": [
+        {
+          "zone": "P2_3"
+        }
+      ]
+    },
+    {
+      "id": "sanctuary",
+      "zone": "P2_3",
+      "name": "Храм Селхари",
+      "target": "8:00"
+    },
+    {
+      "id": "ascension-3",
+      "zone": "G2_13",
+      "also": [
+        "Sanctum_1_Foyer_1",
+        "Sanctum_2_Foyer_3",
+        "Sanctum_3_Foyer_3"
+      ],
+      "name": "Испытание Сехем · третье восхождение",
+      "target": "28:00"
+    },
+    {
+      "id": "after-ascension-3",
+      "event": "ascend3",
+      "name": "После третьего восхождения",
+      "target": "2:00"
+    },
+    {
+      "id": "galai",
+      "zone": "P2_5",
+      "name": "Ворота Галаи",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "P2_6"
+        }
+      ]
+    },
+    {
+      "id": "qimah",
+      "zone": "P2_6",
+      "name": "Кима",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "P2_7"
+        }
+      ]
+    },
+    {
+      "id": "reservoir",
+      "zone": "P2_7",
+      "name": "Водохранилище Кима",
+      "target": "10:00"
+    },
+    {
+      "id": "scorched",
+      "zone": "P1_1",
+      "name": "Выжженные фермерские земли",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "P1_2"
+        }
+      ]
+    },
+    {
+      "id": "serle",
+      "zone": "P1_2",
+      "name": "Камни Серли",
+      "target": "10:00"
+    },
+    {
+      "id": "scorched-farmlands",
+      "zone": "P1_1",
+      "name": "Выжженные фермерские земли",
+      "target": "2:00",
+      "touch": [
+        {
+          "zone": "P1_3"
+        }
+      ]
+    },
+    {
+      "id": "blackwood",
+      "zone": "P1_3",
+      "name": "Чернолесье",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "P1_4"
+        }
+      ]
+    },
+    {
+      "id": "holten",
+      "zone": "P1_4",
+      "name": "Холтен",
+      "target": "10:00",
+      "touch": [
+        {
+          "zone": "P1_5"
+        },
+        {
+          "zone": "P1_6"
+        }
+      ]
+    },
+    {
+      "id": "wolvenhold",
+      "zone": "P1_5",
+      "name": "Вольфенхолд",
+      "target": "10:00"
+    },
+    {
+      "id": "estate",
+      "zone": "P1_6",
+      "name": "Поместье Холтен",
+      "target": "10:00"
+    },
+    {
+      "id": "maps",
+      "zone": "G_Endgame_Town",
+      "name": "Выход на карты",
+      "filter": "1mn1EVT1",
+      "filterName": "Sergei Filter 03"
+    },
+    {
+      "id": "maps-65",
+      "level": 65,
+      "name": "Карты 1–5"
+    },
+    {
+      "id": "maps-70",
+      "level": 70,
+      "name": "Карты 6–10"
+    },
+    {
+      "id": "maps-75",
+      "level": 75,
+      "name": "Карты 11–14"
+    },
+    {
+      "id": "maps-79",
+      "level": 79,
+      "name": "Карты 15–16"
+    }
+  ],
+  "goals": [
+    {"id": "hero-7", "group": "Уровень", "title": "7 уровень героя", "reach": 7, "need": "mausoleum"},
+    {"id": "hero-16", "group": "Уровень", "title": "15 уровень героя", "reach": 15, "need": "manor"},
+    {"id": "hero-8", "group": "Уровень", "title": "8 уровень героя", "reach": 8, "need": "tomb"},
+    {"id": "hero-31", "group": "Уровень", "title": "32 уровень героя", "reach": 32, "need": "dreadnought"},
+    {"id": "hero-36", "group": "Уровень", "title": "36 уровень героя", "reach": 36, "need": "chaos"},
+    {"id": "ascendancy-chaos", "ref": "ascendancy", "need": "chaos"},
+    {"id": "hero-41", "group": "Уровень", "title": "41 уровень героя", "reach": 41, "need": "utzaal"},
+    {"id": "hero-60", "group": "Уровень", "title": "60 уровень героя", "reach": 60, "need": "maps"},
+    {"id": "boss-miller", "need": "riverbank"},
+    {"id": "boss-beira", "need": "clearfell"},
+    {"id": "boss-rust-king", "need": "redvale"},
+    {"id": "quest-tree-of-souls", "need": "grelwood-2"},
+    {"id": "boss-rotten-druid", "need": "tangle"},
+    {"id": "cache-ancient-ruin", "need": "cemetery"},
+    {"id": "boss-draven", "need": "mausoleum"},
+    {"id": "boss-asinia", "need": "tomb"},
+    {"id": "cache-embattled-trove", "need": "tomb"},
+    {"id": "boss-lachlann", "need": "cemetery-of-the-eternals"},
+    {"id": "boss-crowbell", "need": "hunting"},
+    {"id": "points-una", "need": "farmlands"},
+    {"id": "boss-executioner", "need": "village"},
+    {"id": "cache-gallows", "need": "ramparts"},
+    {"id": "boss-king-mists", "need": "freythorn"},
+    {"id": "boss-candlemass", "need": "manor"},
+    {"id": "boss-geonor", "need": "manor"},
+    {"id": "boss-rathbreaker", "need": "vastiri"},
+    {"id": "boss-rudja", "need": "mine"},
+    {"id": "boss-balbala", "need": "passage", "grantedBy": "skill-kelari"},
+    {"id": "boss-jamanra", "need": "gates"},
+    {"id": "boss-rattlecage", "need": "ascension"},
+    {"id": "ascendancy-ascension", "ref": "ascendancy", "need": "ascension"},
+    {"id": "abyss-badlands", "ref": "mech-abyss", "need": "badlands"},
+    {"id": "boss-ekbab", "need": "bonepits"},
+    {"id": "relic-sun", "need": "bonepits"},
+    {"id": "boss-kabala", "need": "keth"},
+    {"id": "relic-kabala", "need": "keth"},
+    {"id": "boss-ninth-treasure", "need": "lostcity"},
+    {"id": "boss-azarian", "need": "shrines"},
+    {"id": "cache-elemental-offering", "need": "shrines"},
+    {"id": "boss-zalmarath", "need": "grotto"},
+    {"id": "charms-medallion", "need": "titans", "opt": 1},
+    {"id": "abyss-titans", "ref": "mech-abyss", "need": "titans"},
+    {"id": "points-final-letter", "need": "deshar"},
+    {"id": "res-garukhan", "need": "spires"},
+    {"id": "venom-draught", "need": "crypts", "opt": 1},
+    {"id": "abyss-crypts", "ref": "mech-abyss", "need": "crypts"},
+    {"id": "boss-tor-gul", "need": "spires"},
+    {"id": "boss-rootdredge", "need": "marsh"},
+    {"id": "boss-silverfist", "need": "jungle"},
+    {"id": "boss-xyclucian", "need": "wetlands"},
+    {"id": "boss-blackjaw", "need": "machinarium"},
+    {"id": "boss-zicoatl", "need": "sanctum"},
+    {"id": "boss-ignagduk", "need": "azak"},
+    {"id": "boss-queen-filth", "need": "apex"},
+    {"id": "boss-ketzuli", "need": "kopec"},
+    {"id": "boss-napuatzi", "need": "utzaal"},
+    {"id": "sacrificial-heart", "need": "utzaal"},
+    {"id": "points-blood-sacrifice", "need": "aggorat"},
+    {"id": "boss-doryani", "need": "chambers"},
+    {"id": "boss-great-white", "need": "whakapanu"},
+    {"id": "boss-dread-crab", "need": "whakapanu"},
+    {"id": "boss-diamora", "need": "caverns"},
+    {"id": "bonus-shark-fin", "need": "ngakanu-fin", "opt": 1},
+    {"id": "bonus-justice", "need": "prison", "opt": 2},
+    {"id": "boss-prisoner", "need": "solitary"},
+    {"id": "boss-scourge-skies", "need": "shrike"},
+    {"id": "boss-hartlin", "need": "journey"},
+    {"id": "boss-omniphobia", "need": "journey"},
+    {"id": "bonus-navali", "need": "eye"},
+    {"id": "tattoo-lightning", "need": "halls", "opt": 2},
+    {"id": "tattoo-cold", "need": "halls", "opt": 2},
+    {"id": "tattoo-fire", "need": "halls", "opt": 2},
+    {"id": "boss-yama", "need": "halls"},
+    {"id": "hero-46", "group": "Уровень", "title": "46 уровень героя", "reach": 46, "need": "halls"},
+    {"id": "points-hinekora", "need": "trial-ancestors"},
+    {"id": "boss-krutog", "need": "warrens"},
+    {"id": "boss-torvian", "need": "arastas"},
+    {"id": "boss-benedictus", "need": "excavation"},
+    {"id": "boss-mad-butcher", "need": "ngakanu"},
+    {"id": "abyss-ngakanu", "ref": "mech-abyss", "need": "ngakanu"},
+    {"id": "boss-tavakai", "need": "heart"},
+    {"id": "boss-jamanra-abomination", "need": "dreadnought"},
+    {"id": "cache-grave-findings", "need": "waterways"},
+    {"id": "quest-canal-lever", "need": "waterways"},
+    {"id": "boss-lythara", "need": "kriar-village"},
+    {"id": "abyss-kriar-village", "ref": "mech-abyss", "need": "kriar-village"},
+    {"id": "boss-rakkar", "need": "tarn"},
+    {"id": "boss-yeti", "need": "howling"},
+    {"id": "gift-madox", "need": "peaks"},
+    {"id": "boss-stormgore", "need": "ravine"},
+    {"id": "boss-zolin-zelina", "need": "vault"},
+    {"id": "boss-akthi-anundr", "need": "crossing"},
+    {"id": "bonus-molten-shrine", "need": "crossing"},
+    {"id": "boss-elzarah", "need": "sanctuary"},
+    {"id": "two-wishes", "need": "sanctuary"},
+    {"id": "ascendancy-ascension-3", "ref": "ascendancy", "need": "ascension-3"},
+    {"id": "boss-vornas", "need": "galai"},
+    {"id": "bonus-pillar", "need": "qimah", "opt": 1},
+    {"id": "boss-azmadi", "need": "reservoir"},
+    {"id": "boss-isolde-heldra", "need": "scorched"},
+    {"id": "boss-siora", "need": "serle"},
+    {"id": "boss-oswin", "need": "wolvenhold"},
+    {"id": "boss-wulfric-elswyth", "need": "estate"},
+    {"id": "points-siege", "need": "estate"},
+    {"id": "delirium-maps-75", "ref": "mech-delirium", "need": "maps-75"},
+    {"id": "ascendancy-maps-75", "ref": "ascendancy", "need": "maps-75"},
+    {"id": "hero-100", "group": "Уровень", "title": "100 уровень героя", "reach": 100, "need": "maps-79"}
+  ]
+}

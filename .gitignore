@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[co]
+
+# What the program writes when it runs from source as a page (python planner/server.py)
+/runs/
+/filters/
+/backup/
+/export/
+
+# Downloads: pictures (catalog/fetch_icons.py) and raw game tables (catalog/dat_pack.py, catalog/build.py --fetch)
+/planner/static/icons/
+/catalog/sources/
+
+# Installer build (packaging/build.py)
+/packaging/.venv/
+/packaging/build/
+/packaging/dist/
+/dist/

@@ -1,0 +1,114 @@
+{
+  "note": "Таблицы игры, которые catalog/dat_pack.py кладёт в источники каталога: имя таблицы и нужные столбцы. Это же — список tables для config.json программы pathofexile-dat. files — файлы игры, которые кладутся как есть (описания свойств: из них игра пишет строки наград в лог).",
+  "tables": [
+    {
+      "name": "NPCTextAudio",
+      "columns": [
+        "Id",
+        "Text",
+        "NPCs"
+      ]
+    },
+    {
+      "name": "NPCs",
+      "columns": [
+        "Id",
+        "Name",
+        "ShortName"
+      ]
+    },
+    {
+      "name": "BackendErrors",
+      "columns": [
+        "Id",
+        "Text"
+      ]
+    },
+    {
+      "name": "WorldAreas",
+      "columns": [
+        "Id",
+        "Name",
+        "Act",
+        "IsTown",
+        "AreaLevel"
+      ]
+    },
+    {
+      "name": "MonsterVarieties",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "Quest",
+      "columns": [
+        "Id",
+        "Act",
+        "Name"
+      ]
+    },
+    {
+      "name": "QuestStates",
+      "columns": [
+        "Quest",
+        "Order",
+        "FlagsPresent",
+        "FlagsMissing",
+        "Text",
+        "Message"
+      ]
+    },
+    {
+      "name": "ClientStrings",
+      "columns": [
+        "Id",
+        "Text"
+      ]
+    },
+    {
+      "name": "BaseItemTypes",
+      "columns": [
+        "Id",
+        "Name",
+        "ItemClass"
+      ]
+    },
+    {
+      "name": "ItemClasses",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "Characters",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "Ascendancy",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "PassiveSkills",
+      "columns": [
+        "Id",
+        "Name",
+        "PassiveSkillGraphId"
+      ]
+    }
+  ],
+  "files": [
+    "data/statdescriptions/stat_descriptions.csd",
+    "data/statdescriptions/passive_skill_stat_descriptions.csd",
+    "data/statdescriptions/atlas_stat_descriptions.csd",
+    "data/statdescriptions/atlas_variant_stat_descriptions.csd"
+  ]
+}

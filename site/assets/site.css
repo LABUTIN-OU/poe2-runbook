@@ -1,0 +1,162 @@
+/* PoE2 Runbook — the program's site. Colours, type and shapes are the program's own (planner/static/index.html):
+   the same column, the same header rows, panels, tiles and key caps. The dark theme is the program's palette;
+   the light one is its counterpart. Which is shown — the system's setting decides. No file from other sites. */
+:root{
+  color-scheme:dark light;
+  --bg:#111316;--card:#1a1d22;--tile:#20242a;--line:#2d323a;
+  --text:#eceae6;--muted:#98a0aa;--accent:#7fb2ff;--on-accent:#111316;--sel:#1c2a40;
+  --over:#f0604f;--ok:#5cbd88;--key:#4a525e;
+  --col:900px;
+  --mono:Consolas,"Cascadia Mono","SFMono-Regular",Menlo,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --bg:#f4f2ee;--card:#ffffff;--tile:#f3f1ec;--line:#d9d5cc;
+    --text:#1b1d21;--muted:#5b636e;--accent:#1d5fc4;--on-accent:#ffffff;--sel:#dde8fb;
+    --over:#c23b2a;--ok:#1f7a4b;--key:#b5b0a5;
+  }
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scrollbar-gutter:stable;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 "Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.in{max-width:var(--col);margin:0 auto;padding:0 16px}
+
+/* Header — the program's two rows: name and language on the first, the page's sections on the second. */
+.hbar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.abar{display:flex;align-items:center;justify-content:space-between;gap:12px;height:44px}
+.brand{display:inline-flex;align-items:center;gap:9px;min-width:0;color:var(--text);font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap}
+.brand img{display:block;width:24px;height:24px}
+.mode{display:inline-flex;flex:none;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.mode a{padding:3px 12px;font-size:13px;line-height:20px;color:var(--muted);text-decoration:none}
+.mode a + a{border-left:1px solid var(--line)}
+.mode a[href]:hover{color:var(--text);background:var(--tile)}
+.mode a.on{color:var(--text);background:var(--sel);cursor:default}
+.tabs{display:flex;flex-wrap:nowrap;gap:6px;min-height:42px;padding:0 0 8px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:none;padding:6px 11px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--text);
+  font-size:14px;line-height:20px;white-space:nowrap;text-decoration:none}
+.tabs a:hover{border-color:var(--accent)}
+
+/* Top: the name, one sentence, the download panel, pictures of the program. */
+.top{padding:22px 0 4px}
+h1{margin:0;font-size:30px;font-weight:600;line-height:1.1}
+.lead{margin:8px 0 0;max-width:44em;color:var(--muted);font-size:17px;line-height:1.45}
+.panel{margin:18px 0 0;padding:12px 16px 14px;border:1px solid var(--accent);border-radius:12px;background:var(--card);scroll-margin-top:104px}
+.ptitle{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;font-size:12px;font-weight:600;
+  letter-spacing:.04em;color:var(--accent)}
+.ptitle span:last-child{min-width:0;font-weight:400;letter-spacing:0;color:var(--muted);text-align:right;overflow-wrap:anywhere}
+.panel p{margin:0 0 6px}
+.panel p:last-child{margin-bottom:0}
+.cpb{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);
+  color:var(--on-accent);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+.cpb:hover{filter:brightness(1.1)}
+.cpb:focus-visible{outline:2px solid var(--text);outline-offset:2px;border-radius:8px}
+.ttime{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0 8px}
+.tt{min-width:0;margin:0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--tile)}
+.ttl{margin:0;font-size:10.5px;line-height:15px;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
+.ttv{margin:0;font-size:19px;font-weight:600;line-height:26px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tts{display:block;font-size:12px;font-weight:400;line-height:16px;color:var(--muted)}
+.sha{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:4px 10px;padding:8px 10px;border-radius:8px;
+  border:1px solid var(--line);background:var(--tile)}
+.sha .ttl{line-height:20px}
+.sha code{font:13px/20px var(--mono);overflow-wrap:anywhere;word-break:break-all}
+.mini{padding:2px 9px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--muted);font:inherit;font-size:12px;
+  line-height:18px;cursor:pointer}
+.mini:hover{color:var(--text);border-color:var(--muted)}
+.mini.done{color:var(--ok);border-color:var(--ok)}
+.dl-notes{margin:10px 0 0;color:var(--muted);font-size:14px}
+.dl-how{margin:10px 0 0;font-size:14px}
+.dl-wait{display:none;color:var(--muted)}
+.js .dl-wait{display:block}
+.soon b{font-weight:600}
+.quiet{color:var(--muted);font-size:14px}
+
+.shots{margin:14px 0 12px}
+figure{margin:0}
+.shot{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#111316}   /* ссылка: снимок в полный размер */
+.shot:hover{border-color:var(--accent)}
+.shot:focus-visible{border-radius:10px}
+.shot img{display:block;width:100%;height:auto}
+figcaption{margin:6px 2px 0;color:var(--muted);font-size:13.5px;line-height:1.4}
+figcaption b{color:var(--text);font-weight:600}
+.pair{display:grid;grid-template-columns:minmax(0,480fr) minmax(0,540fr);align-items:start;gap:12px;margin-top:12px}
+.shots .quiet{margin:10px 2px 0}
+
+/* Sections — the program's cards. A fact is a row: what on the left, why and when on the right. */
+main section{margin:0 0 12px;padding:16px 18px 18px;border:1px solid var(--line);border-radius:10px;background:var(--card);scroll-margin-top:104px}
+h2{margin:0 0 4px;font-size:20px;font-weight:600;line-height:1.25}
+.sub{margin:0 0 4px;color:var(--muted);font-size:15px}
+h3{margin:18px 0 8px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+main p{margin:0 0 8px}
+main section > :last-child{margin-bottom:0}
+.facts{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.fr{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,9fr);gap:2px 18px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);
+  background:var(--tile)}
+.fr dt{margin:0;font-weight:600;overflow-wrap:anywhere}
+.fr dd{margin:0;overflow-wrap:break-word}
+.fr .w{display:block;font-weight:400;color:var(--muted);font-size:14px}
+.fr.one{grid-template-columns:minmax(0,1fr)}
+/* правило GGG слева, программа справа — каждое под своей подписью */
+.fr.rule{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.fr.rule dt{font-weight:400}
+.fr .ttl{display:block;margin-bottom:2px}
+code,kbd,pre{font-family:var(--mono)}
+code{font-size:.875em;overflow-wrap:anywhere}
+.nb{white-space:nowrap}      /* имя папки с пробелом не рвётся: путь переносится по обратным чертам */
+dt code{font-size:.84em;font-weight:400}
+kbd{display:inline-block;min-width:22px;padding:0 5px;border:1px solid var(--key);border-bottom-width:2px;border-radius:4px;
+  font:700 11px/15px "Segoe UI",system-ui,sans-serif;text-align:center;color:var(--muted);vertical-align:1px;white-space:nowrap}
+ul.no{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0;padding:0;list-style:none}
+ul.no li{position:relative;padding:8px 12px 8px 36px;border-radius:8px;border:1px solid var(--line);background:var(--tile)}
+ul.no li::before{content:"";position:absolute;left:13px;top:15px;width:12px;height:12px;
+  background:linear-gradient(45deg,transparent 43%,var(--over) 43%,var(--over) 57%,transparent 57%),
+             linear-gradient(-45deg,transparent 43%,var(--over) 43%,var(--over) 57%,transparent 57%)}
+ul.files{margin:6px 0 0;padding:0;list-style:none}
+ul.files li{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:0 12px;padding:3px 0;border-top:1px solid var(--line);font-size:14px}
+ul.files li:first-child{border-top:0}
+ul.files span{color:var(--muted)}
+ol.steps{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none;counter-reset:step}
+ol.steps > li{position:relative;padding:10px 12px 10px 48px;border-radius:8px;border:1px solid var(--line);background:var(--tile);counter-increment:step}
+ol.steps > li::before{content:counter(step);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:6px;border:1px solid var(--line);
+  background:var(--card);color:var(--muted);font-size:13px;font-weight:600;line-height:22px;text-align:center}
+ol.steps b{font-weight:600}
+ol.steps .w{display:block;color:var(--muted);font-size:14px}
+pre{position:relative;margin:8px 0 0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:13px;
+  line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+ul.plain{margin:0 0 8px;padding-left:22px}
+ul.plain li{margin:3px 0}
+.langs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;padding:0;list-style:none}
+.langs li{padding:3px 10px;border-radius:8px;border:1px solid var(--line);background:var(--tile);font-size:14px}
+blockquote{margin:10px 0 0;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--tile)}
+blockquote p{margin:0}
+.addr{font:600 17px/1.4 var(--mono);overflow-wrap:anywhere}
+
+.foot{max-width:var(--col);margin:0 auto;padding:6px 16px 40px;color:var(--muted);font-size:13px}
+.foot p{margin:0 0 6px}
+
+@media (max-width:760px){
+  .pair{grid-template-columns:minmax(0,1fr)}
+  .pair figure{max-width:540px}
+  .fr,.fr.rule{grid-template-columns:minmax(0,1fr)}
+  .fr.rule{gap:8px}
+  ul.no{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  .ttime{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sha{grid-template-columns:minmax(0,1fr) auto}
+  .sha code{grid-column:1 / -1;grid-row:2}
+  h1{font-size:26px}
+  .lead{font-size:16px}
+  main section{padding:14px 12px 16px}
+  .panel{padding:12px 12px 14px}
+  ul.files li{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:400px){
+  .in{padding:0 12px}
+  .foot{padding-left:12px;padding-right:12px}
+  .mode a{padding:3px 9px}
+}
+@media print{.hbar{position:static}.tabs{display:none}}

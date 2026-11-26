@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Vulnerability · Уязвимость
+    url: "https://github.com/LABUTIN-OU/poe2-runbook/security/advisories/new"
+    about: Report it privately, not in a public issue · Сообщите закрыто, не в открытом Issue
+  - name: Official site and downloads · Официальный сайт и скачивание
+    url: "https://poe2.labutin.gg"
+    about: Official installers are only there and in the releases of this repository · Официальные установщики — только там и в выпусках этого репозитория

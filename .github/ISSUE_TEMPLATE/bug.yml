@@ -1,0 +1,46 @@
+name: Bug report · Сообщение об ошибке
+description: Something in PoE2 Runbook works wrong · Что-то в PoE2 Runbook работает не так
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. One problem per report, please. · Спасибо. Одна ошибка — одно сообщение.
+        A vulnerability is [reported privately](https://github.com/LABUTIN-OU/poe2-runbook/security/advisories/new), not here. · Об уязвимости — [закрытым сообщением](https://github.com/LABUTIN-OU/poe2-runbook/security/advisories/new), не здесь.
+  - type: input
+    id: version
+    attributes:
+      label: Program version · Версия программы
+      description: The program shows it as "program … · game …" · Программа показывает её строкой «программа … · игра …»
+      placeholder: 0.5.5.17
+    validations:
+      required: true
+  - type: input
+    id: game
+    attributes:
+      label: Game version and language · Версия и язык игры
+      placeholder: 0.5.5h, English · 0.5.5h, русский
+    validations:
+      required: true
+  - type: textarea
+    id: did
+    attributes:
+      label: What did you do? · Что вы сделали?
+      description: Step by step, so that it can be repeated · По шагам, чтобы это можно было повторить
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect, and what happened instead? · Что вы ожидали и что произошло вместо этого?
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: program.log
+      description: |
+        Drag the file here: %APPDATA%\PoE2 Runbook\program.log (paste the path into the address bar of Explorer). Look through it first: it may hold your character's name and the paths of your folders.
+        Перетащите сюда файл %APPDATA%\PoE2 Runbook\program.log (вставьте этот путь в адресную строку Проводника). Сначала просмотрите его: в нём может быть имя вашего героя и пути ваших папок.
+    validations:
+      required: false

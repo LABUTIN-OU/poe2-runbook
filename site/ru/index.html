@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<title>PoE2 Runbook — официальный сайт</title>
+<meta name="description" content="Программа для Windows к Path of Exile 2: ведёт по вашему плану — маршрут, цели, билд — по логу игры и показывает текущий шаг и что на нём осталось сделать. Скачать программу и точный перечень того, что она читает и нажимает.">
+<meta name="color-scheme" content="dark light">
+<link rel="canonical" href="https://poe2.labutin.gg/ru/">
+<link rel="alternate" hreflang="en" href="https://poe2.labutin.gg/">
+<link rel="alternate" hreflang="ru" href="https://poe2.labutin.gg/ru/">
+<link rel="alternate" hreflang="x-default" href="https://poe2.labutin.gg/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PoE2 Runbook">
+<meta property="og:title" content="PoE2 Runbook">
+<meta property="og:description" content="Программа для Windows к Path of Exile 2: ведёт по вашему плану по логу игры и показывает текущий шаг и что на нём осталось сделать.">
+<meta property="og:url" content="https://poe2.labutin.gg/ru/">
+<meta property="og:image" content="https://poe2.labutin.gg/assets/icon.png">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:locale:alternate" content="en_GB">
+<link rel="icon" type="image/png" href="../assets/icon.png">
+<link rel="stylesheet" href="../assets/site.css">
+<script src="../assets/lang.js"></script>
+<script src="../assets/config.js" defer></script>
+<script src="../assets/site.js" defer></script>
+</head>
+<body id="top">
+
+<header class="hbar">
+  <div class="in">
+    <div class="abar">
+      <a class="brand" href="#top"><img src="../assets/icon.png" width="24" height="24" alt="">PoE2 Runbook</a>
+      <nav class="mode" aria-label="Язык">
+        <a href="../?lang=en" lang="en" hreflang="en" data-lang="en">English</a>
+        <a class="on" aria-current="page" lang="ru">Русский</a>
+      </nav>
+    </div>
+    <nav class="tabs" aria-label="Разделы">
+      <a href="#download">Скачать</a>
+      <a href="#reads">Читает и нажимает</a>
+      <a href="#first-start">Первый запуск</a>
+      <a href="#needs">Что нужно</a>
+      <a href="#licence">Лицензия</a>
+      <a href="#official">Адреса</a>
+    </nav>
+  </div>
+</header>
+
+<main class="in">
+
+  <div class="top">
+    <h1>PoE2 Runbook</h1>
+    <p class="lead">Программа для Windows к Path of Exile 2: ведёт по вашему плану — маршрут, цели, билд — по логу игры и показывает текущий шаг и что на нём осталось сделать.</p>
+
+    <div class="panel" id="download" data-t-button="Скачать PoE2 Runbook {version}" data-t-mb="{n} МБ" data-t-bytes="{n} байт">
+      <div class="ptitle"><span>Скачать</span><span id="dl-file"></span></div>
+      <p class="dl-wait" id="dl-wait">Узнаю текущую сборку…</p>
+      <div id="dl-ready" hidden>
+        <a class="cpb" id="dl-link" href="#download">Скачать для Windows</a>
+        <dl class="ttime">
+          <div class="tt"><dt class="ttl">Программа</dt><dd class="ttv" id="dl-version"></dd></div>
+          <div class="tt"><dt class="ttl">Сделана под игру</dt><dd class="ttv" id="dl-game"></dd></div>
+          <div class="tt"><dt class="ttl">Размер</dt><dd class="ttv"><span id="dl-size"></span><span class="tts" id="dl-bytes"></span></dd></div>
+          <div class="tt"><dt class="ttl">Опубликована</dt><dd class="ttv" id="dl-date"></dd></div>
+        </dl>
+        <div class="sha">
+          <span class="ttl">SHA-256</span>
+          <code id="dl-sha"></code>
+          <button class="mini" type="button" data-copy="dl-sha" data-done="Скопировано" hidden>Скопировать</button>
+        </div>
+        <p class="dl-notes" id="dl-notes" hidden>Что нового: <span id="dl-notes-text"></span></p>
+        <p class="dl-how"><a href="#first-start">Как сверить файл и о чём спросит Windows</a></p>
+      </div>
+      <div class="soon" id="dl-soon" hidden>
+        <p><b>Первая публичная сборка ещё не опубликована.</b></p>
+        <p class="quiet">Она появится здесь: программа скачивается только с этой страницы.</p>
+      </div>
+      <noscript>
+        <p>JavaScript выключен, поэтому страница не покажет текущую сборку. Версия, адрес установщика и его SHA-256 записаны в обычном текстовом файле: <a href="../update/latest.json">update/latest.json</a>.</p>
+        <p class="quiet">Файл появится вместе с первой публичной сборкой.</p>
+      </noscript>
+    </div>
+  </div>
+
+  <div class="shots">
+    <figure>
+      <a class="shot" href="../assets/shot-main-ru.webp"><img src="../assets/shot-main-ru.webp" width="1850" height="1642" alt="Страница «Игра» программы PoE2 Runbook: зона «Охотничьи угодья», три плитки времени, маршрут и текущий шаг с его точками, боссом и двумя умениями."></a>
+      <figcaption><b>Страница «Игра».</b> Текущий шаг, время против целей плана и что осталось на шаге: точки, босс, умения.</figcaption>
+    </figure>
+    <div class="pair">
+      <figure>
+        <a class="shot" href="../assets/shot-answer-ru.webp"><img src="../assets/shot-answer-ru.webp" width="960" height="673" loading="lazy" decoding="async" alt="Ответ на копию предмета: «ЛУЧШЕ», три стата выше — сопротивление огню и холоду, здоровье — и кнопка «Надеть» с клавишей F2."></a>
+        <figcaption><b><kbd>F2</kbd> над предметом в игре.</b> Программа копирует текст предмета и отвечает: лучше или хуже надетого, по каждому стату.</figcaption>
+      </figure>
+      <figure>
+        <a class="shot" href="../assets/shot-list-ru.webp"><img src="../assets/shot-list-ru.webp" width="1080" height="336" loading="lazy" decoding="async" alt="Список шага: два умения, босс, две точки и строка шага с его временем и кнопкой «Шаг пройден»."></a>
+        <figcaption><b>Список шага поверх окна игры.</b> Раскрывается, пока зажат <kbd>Alt</kbd>; нажатие с <kbd>Alt</kbd> отмечает цель сделанной.</figcaption>
+      </figure>
+    </div>
+    <p class="quiet">Снимки — с пробной копии программы с вымышленным героем.</p>
+  </div>
+
+  <section id="reads">
+    <h2>Что программа читает, слушает и нажимает</h2>
+    <p class="sub">Каждая строка ниже взята из кода программы. Программа — отдельное окно рядом с игрой: в самой игре она ничего не меняет — ни файлов, ни памяти.</p>
+
+    <h3>Читает: файлы игры</h3>
+    <dl class="facts">
+      <div class="fr">
+        <dt><code>logs\Client.txt</code><span class="w">лог игры, в папке игры</span></dt>
+        <dd>Только чтение: при запуске — весь лог, дальше новые строки дважды в секунду.
+          <span class="w">Из него берётся: запуск и закрытие игры; зона, в которую вы вошли; уровень героя — из этих строк известны имя и класс героя; награды за задания; гибель героя; какой фильтр предметов загрузила игра; ваши нажатия в дереве пассивных умений; версия игры. Из всего, что сказано в чате, замечаются только реплики NPC, которых ждёт ваш план; остальное не сохраняется.</span></dd>
+      </div>
+      <div class="fr">
+        <dt><code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span>\<wbr>poe2_production_Config.ini</code><span class="w">настройки игры</span></dt>
+        <dd>Только чтение; читается заново, когда файл меняется.
+          <span class="w">Из него берётся: какой фильтр предметов выбран, язык клиента и клавиши, привязанные в игре, — чтобы клавиши программы не заняли клавишу, которой пользуется игра.</span></dd>
+      </div>
+      <div class="fr">
+        <dt><code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span>\<wbr>OnlineFilters\</code><span class="w">фильтры предметов, которые игра скачала из вашего аккаунта</span></dt>
+        <dd>Только чтение: название и правила каждого фильтра.
+          <span class="w">Чтобы называть фильтр по имени и предупреждать, когда выбранный фильтр скрывает предмет, который ищет план. Копия каждой версии фильтра, которую загрузила игра, остаётся в папке самой программы.</span></dd>
+      </div>
+      <div class="fr">
+        <dt>Файлы библиотеки Steam и реестр Windows</dt>
+        <dd>Только чтение — чтобы найти, где стоит игра.
+          <span class="w"><code>libraryfolders.vdf</code>, <code>appmanifest_2694490.acf</code>; в реестре — папка Steam и запись «Path of Exile 2» среди установленных программ. Игра не нашлась — папку указываете сами.</span></dd>
+      </div>
+    </dl>
+
+    <h3>Спрашивает у Windows</h3>
+    <dl class="facts">
+      <div class="fr">
+        <dt>Активное окно</dt>
+        <dd>Какое окно сейчас впереди и какой программе оно принадлежит — чтобы знать, что это игра. Память игры не читается.</dd>
+      </div>
+      <div class="fr">
+        <dt>Окно игры, курсор, <kbd>Alt</kbd></dt>
+        <dd>Где стоит окно игры, где курсор мыши и зажат ли <kbd>Alt</kbd> — чтобы поставить окна программы поверх игры и дать по ним нажать. С экрана ничего не читается.</dd>
+      </div>
+    </dl>
+
+    <h3>Буфер обмена</h3>
+    <dl class="facts">
+      <div class="fr">
+        <dt>За чем следит</dt>
+        <dd>Только за счётчиком изменений буфера — это число, которое ведёт Windows. Содержимое не читается.</dd>
+      </div>
+      <div class="fr">
+        <dt>Когда читает содержимое</dt>
+        <dd>Один раз — когда счётчик изменился при активном окне игры: это ваше <kbd>Ctrl</kbd>+<kbd>C</kbd> или <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd> над предметом. В любом другом окне буфер не открывается вовсе. То, что лежало в буфере до запуска программы, не читается.</dd>
+      </div>
+      <div class="fr">
+        <dt>Что остаётся</dt>
+        <dd>Только текст, не больше 200 000 байт. Текст, который не начинается со строки игры «Класс предмета», сразу отбрасывается: не хранится и никуда не пишется. Текст предмета живёт только в памяти; когда вы нажимаете «Надеть», предмет записывается в файл героя как надетый.</dd>
+      </div>
+      <div class="fr">
+        <dt>Копия по <kbd>F2</kbd></dt>
+        <dd>Программа запоминает буфер целиком (до 32 МБ), нажимает в игре клавиши копии, один раз читает предмет и возвращает в буфер то, что в нём лежало. В то, что запомнила, она не заглядывает.</dd>
+      </div>
+    </dl>
+
+    <h3>Клавиши, которые слушает</h3>
+    <dl class="facts">
+      <div class="fr">
+        <dt><kbd>F2</kbd> Сравнить / Надеть</dt>
+        <dd>Сравнивает предмет под курсором с надетым; нажата ещё раз над тем же предметом — записывает его как надетый. Работает и с зажатым <kbd>Alt</kbd>.</dd>
+      </div>
+      <div class="fr">
+        <dt><kbd>F3</kbd> Закрыть</dt>
+        <dd>Убирает верхнее окно программы поверх игры.</dd>
+      </div>
+      <div class="fr">
+        <dt><kbd>F7</kbd> Программа ↔ игра</dt>
+        <dd>Выводит окно программы вперёд и возвращает в игру.</dd>
+      </div>
+      <div class="fr">
+        <dt>Когда слушает</dt>
+        <dd>Только пока активно окно игры (<kbd>F7</kbd> — и в окне самой программы). Как только активно другое окно, клавиши освобождаются: в других программах они работают как обычно. Если одну из них занимает сама игра, программа берёт следующую свободную из F2, F3, F7, F6, F9, F10, F11. F4 не берётся никогда.</dd>
+      </div>
+      <div class="fr">
+        <dt>Остальные клавиши</dt>
+        <dd>Перехватчика клавиатуры нет: что ещё вы нажимаете, программа не видит. Исключение одно — <kbd>Alt</kbd>: пока включены окна поверх игры, программа спрашивает у Windows, зажат ли он.</dd>
+      </div>
+    </dl>
+
+    <h3>Что посылает игре</h3>
+    <dl class="facts">
+      <div class="fr">
+        <dt><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>C</kbd></dt>
+        <dd>Один раз на каждое нажатие <kbd>F2</kbd> и только пока активно окно игры. Это клавиши самой игры — «скопировать предмет с подробным описанием». Если подробное описание в игре привязано не к Alt, вместо Alt нажимается та клавиша.</dd>
+      </div>
+      <div class="fr">
+        <dt>Больше ничего</dt>
+        <dd>Ни сообщений и команд в чат, ни нажатий мыши, ничего по таймеру, ничего в ответ на лог или экран. «Надеть» и ваши отметки меняют только записи самой программы.</dd>
+      </div>
+    </dl>
+
+    <h3>Окна поверх игры</h3>
+    <ul class="facts">
+      <li class="fr one">Над окном игры стоят три небольших окна программы: список шага, ответ на копию предмета и подсказка по дереву пассивных умений. Фокус они не забирают никогда, мышь проходит сквозь них в игру — кроме случая, когда зажат <kbd>Alt</kbd> и курсор над окном, и кроме кнопок ответа. Им нужна игра в окне или в оконном полноэкранном режиме. Выключаются одним переключателем в «Настройках».</li>
+    </ul>
+
+    <h3>Что пишет на диск</h3>
+    <dl class="facts">
+      <div class="fr">
+        <dt><code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span>\</code></dt>
+        <dd>Всё, что программа пишет во время работы:
+          <ul class="files">
+            <li><code>plans\</code><span>ваши планы; план, который идёт с программой, копируется сюда при первом запуске</span></li>
+            <li><code>runs\</code><span>по файлу на героя: события из лога, ваши отметки, предметы, которые вы записали надетыми</span></li>
+            <li><code>filters\</code><span>копии версий фильтра, которые загружала игра</span></li>
+            <li><code>backup\</code><span>прежние версии плана — перед каждой правкой; убранные планы</span></li>
+            <li><code>export\</code><span>файлы планов, которые вы сохранили, чтобы поделиться</span></li>
+            <li><code>settings.json</code><span>папка игры, размер и место окна, ваш выбор в «Настройках»</span></li>
+            <li><code>program.log</code><span>что программа делала в этот запуск; пять запусков до него тоже хранятся</span></li>
+            <li><code>webview\</code><span>хранилище движка окна: собственные настройки страниц и кеш</span></li>
+          </ul></dd>
+      </div>
+      <div class="fr">
+        <dt><code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span>\</code></dt>
+        <dd>Сама программа. Сюда пишет только установщик; права администратора не спрашиваются.</dd>
+      </div>
+      <div class="fr">
+        <dt>Папка «Загрузки»</dt>
+        <dd>Файл плана — когда вы нажимаете «Скачать файл плана».</dd>
+      </div>
+      <div class="fr">
+        <dt>Папки игры</dt>
+        <dd>В папку игры и в <code>Documents\<wbr><span class="nb">My Games</span>\<wbr><span class="nb">Path of Exile 2</span></code> не пишется ничего.</dd>
+      </div>
+      <div class="fr">
+        <dt>После удаления</dt>
+        <dd>Удаление программы оставляет <code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span></code> на месте — там ваши планы и герои. Не нужны — удалите папку сами.</dd>
+      </div>
+    </dl>
+
+    <h3>Сеть</h3>
+    <ul class="facts">
+      <li class="fr one">Программа никуда не отправляет ничего о вас и вашей игре: у неё нет ни аккаунта, ни статистики, ни отчётов об ошибках.</li>
+      <li class="fr one" id="net-none" hidden>Своих запросов в интернет у неё нет вовсе — нет даже проверки обновлений.</li>
+      <li class="fr one" id="net-update" hidden>Проверка обновлений: программа скачивает с этого сайта один файл — <code>update/latest.json</code> — и узнаёт, вышла ли версия новее. О вас она ничего не отправляет.</li>
+      <li class="fr one">Страницы её окна отдаются с вашего же компьютера (адрес 127.0.0.1) и отвечают только ему.</li>
+      <li class="fr one">Окно рисует Microsoft Edge WebView2 — компонент Windows. Он принадлежит Microsoft и может сам обращаться к её серверам, как это делает браузер Edge.</li>
+      <li class="fr one">Браузер программа открывает только по вашему нажатию: этот сайт — из окна «О программе»; страница фильтра предметов на pathofexile2.com; страница загрузки WebView2 у Microsoft, если этого компонента нет.</li>
+    </ul>
+
+    <h3>Чего программа не делает</h3>
+    <ul class="no">
+      <li>Не читает память игры.</li>
+      <li>Не читает экран.</li>
+      <li>Не меняет файлы и настройки игры.</li>
+      <li>Не пишет в чат и не посылает команд.</li>
+      <li>Сама ничего не нажимает: каждое её нажатие — ответ на одно ваше.</li>
+      <li>Не просит прав администратора.</li>
+    </ul>
+
+    <h3>Правила Grinding Gear Games, которым она следует</h3>
+    <dl class="facts">
+      <div class="fr rule">
+        <dt><span class="ttl">Правило GGG</span>Программа, которая работает отдельно от игры, разрешена; та, что меняет игру или её файлы, — нет.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>PoE2 Runbook — отдельная программа: читает лог и свои файлы, в игре ничего не меняет.</dd>
+      </div>
+      <div class="fr rule">
+        <dt><span class="ttl">Правило GGG</span>Клавишу, которая действует в игре, нажимаете вы; она делает одно определённое дело и одно действие в игре.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span><kbd>F2</kbd> делает одну копию на одно нажатие. По таймеру, по логу и по экрану не запускается ничего.</dd>
+      </div>
+      <div class="fr rule">
+        <dt><span class="ttl">Правило GGG</span>Лог, буфер обмена и экран можно читать, когда вы знаете, что с ними делается; буфер и экран — один раз на одно ваше нажатие клавиши.</dt>
+        <dd><span class="ttl">PoE2 Runbook</span>Эта страница и есть такой перечень. Буфер читается один раз на копию; экран не читается.</dd>
+      </div>
+    </dl>
+    <p class="quiet">Правила пересказаны своими словами. Источник — <a href="https://www.pathofexile.com/developer/docs/index" rel="noopener noreferrer">документация Path of Exile для разработчиков</a> (на английском). GGG не одобряет программы по одной; правила — её, и она может их менять.</p>
+    <blockquote>
+      <p lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+      <p class="quiet">По-русски: программа не связана с Grinding Gear Games и не одобрена ею.</p>
+    </blockquote>
+  </section>
+
+  <section id="first-start">
+    <h2>Первый запуск</h2>
+    <p class="sub">Установщик пока не подписан, поэтому Windows не знает его издателя. Для этого здесь и стоит SHA-256: он показывает, что ваш файл — тот самый, что опубликован на этой странице.</p>
+    <ol class="steps">
+      <li><b>Сверьте файл до запуска.</b>
+        <span class="w">В папке со скачанным файлом нажмите на адресную строку Проводника, наберите <code>powershell</code> и нажмите Enter. В открывшемся окне выполните:</span>
+        <pre><code id="cmd-hash">Get-FileHash "<span data-file>PoE2Runbook-Setup-*.exe</span>"</code></pre>
+        <span class="w">Сравните значение под словом <b>Hash</b> с SHA-256 у кнопки «Скачать» — все 64 знака; большие буквы или маленькие — не важно. Не совпало — не запускайте файл: скачайте его заново с этой страницы.</span></li>
+      <li><b>Windows предупредит о неизвестном издателе.</b>
+        <span class="w">Появится окно «Система Windows защитила ваш компьютер». Нажмите <b>«Подробнее»</b>, затем <b>«Выполнить в любом случае»</b>. Браузер может предупредить раньше — что файл скачивают редко: сохраните его всё равно. В Windows 11 с включённым «Интеллектуальным управлением приложениями» установщик может быть заблокирован совсем: у этой защиты кнопки «Выполнить в любом случае» нет.</span></li>
+      <li><b>Прав администратора установщик не просит.</b>
+        <span class="w">Он ставит программу для текущего пользователя в <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code>. Новая версия ставится поверх прежней; ваши планы и герои остаются.</span></li>
+      <li><b>Игру программа находит сама.</b>
+        <span class="w">Steam или клиент с сайта игры, на любом диске. Игра не нашлась — программа так и скажет и даст указать её папку.</span></li>
+    </ol>
+  </section>
+
+  <section id="needs">
+    <h2>Что нужно</h2>
+    <ul class="plain">
+      <li>Windows 10 или Windows 11, 64-разрядная.</li>
+      <li>Microsoft Edge WebView2 — в Windows 11 он есть, в Windows 10 его ставит Центр обновления Windows. Если его нет, программа так и скажет и предложит страницу загрузки Microsoft.</li>
+      <li>Path of Exile 2. Каждая сборка программы сделана под одну версию игры — она названа у кнопки «Скачать».</li>
+      <li>Для окон поверх игры: игра в окне или в оконном полноэкранном режиме.</li>
+    </ul>
+    <h3>Языки программы</h3>
+    <ul class="langs">
+      <li lang="en">English</li>
+      <li lang="ru">Русский</li>
+      <li lang="de">Deutsch</li>
+      <li lang="es">Español</li>
+      <li lang="fr">Français</li>
+      <li lang="ja">日本語</li>
+      <li lang="ko">한국어</li>
+      <li lang="pt-BR">Português (Brasil)</li>
+      <li lang="th">ไทย</li>
+    </ul>
+    <p class="quiet">Лог игры программа читает на любом из этих языков клиента.</p>
+  </section>
+
+  <section id="licence">
+    <h2>Автор и лицензия</h2>
+    <p>© 2026 Sergei Labutin</p>
+    <p>Исходный код открыт: лицензия GNU General Public License версии 3 с дополнительными условиями автора.</p>
+    <p>Программой можно пользоваться для чего угодно, изучать её, менять и распространять свою версию. Кто распространяет свою версию, обязан:</p>
+    <ul class="plain">
+      <li>открыть её исходный код под той же лицензией;</li>
+      <li>оставить в окне «О программе» и в описании строку «Based on PoE2 Runbook by Sergei Labutin — https://poe2.labutin.gg»;</li>
+      <li>указать, что версия изменена, и когда;</li>
+      <li>дать ей другое название и другой значок.</li>
+    </ul>
+    <p class="quiet">Это пересказ условий, он их не заменяет. Условия целиком — файлы <code>LICENSE</code> и <code>NOTICE.md</code>: они есть в самой программе («Настройки» → «О программе») и в исходном коде. Юридическую силу имеет английский текст.</p>
+    <p data-repo-row hidden>Исходный код: <a data-repo href="#licence" rel="noopener noreferrer">репозиторий программы</a>.</p>
+    <p>Данные и изображения Path of Exile 2, которые идут с программой, принадлежат Grinding Gear Games. Лицензия на них не распространяется.</p>
+  </section>
+
+  <section id="official">
+    <h2>Официальные адреса</h2>
+    <p class="addr">poe2.labutin.gg</p>
+    <p>Это единственный официальный адрес программы. <code>poe2runbook.com</code> ведёт сюда.</p>
+    <p>Официальные сборки публикуются только на этой странице. Сборка с любого другого адреса — не наша: перед запуском сверьте SHA-256 файла с тем, что стоит у кнопки «Скачать».</p>
+    <div id="contact" hidden>
+      <h3>Связь</h3>
+      <p>Вопросы и сообщения об ошибках: <a id="contact-link" href="#official" rel="noopener noreferrer"></a></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p lang="en">This product isn't affiliated with or endorsed by Grinding Gear Games in any way.</p>
+  <p>© 2026 Sergei Labutin · PoE2 Runbook · poe2.labutin.gg</p>
+  <p>Эта страница ничего не загружает с других сайтов: ни шрифтов, ни счётчиков, ни трекеров. В вашем браузере она хранит одно — язык, выбранный переключателем.</p>
+</footer>
+
+</body>
+</html>

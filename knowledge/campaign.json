@@ -1,0 +1,994 @@
+{
+  "version": 2,
+  "id": "campaign-0.5",
+  "steps": [
+    {
+      "id": "riverbank",
+      "zone": "G1_1",
+      "name": "Берег реки"
+    },
+    {
+      "id": "clearfell-encampment",
+      "zone": "G1_town",
+      "name": "Лагерь Клирфелл"
+    },
+    {
+      "id": "clearfell",
+      "zone": "G1_2",
+      "name": "Клирфелл",
+      "touch": [
+        {
+          "zone": "G1_4"
+        }
+      ]
+    },
+    {
+      "id": "mud-burrow",
+      "zone": "G1_3",
+      "name": "Грязевая нора"
+    },
+    {
+      "id": "grelwood-1",
+      "zone": "G1_4",
+      "name": "Грельвуд",
+      "touch": [
+        {
+          "zone": "G1_5"
+        }
+      ]
+    },
+    {
+      "id": "redvale",
+      "zone": "G1_5",
+      "name": "Красная Долина"
+    },
+    {
+      "id": "grelwood-2",
+      "zone": "G1_4",
+      "name": "Грельвуд · дерево",
+      "touch": [
+        {
+          "zone": "G1_6"
+        }
+      ]
+    },
+    {
+      "id": "tangle",
+      "zone": "G1_6",
+      "name": "Мрачные заросли",
+      "touch": [
+        {
+          "zone": "G1_7"
+        }
+      ]
+    },
+    {
+      "id": "cemetery",
+      "zone": "G1_7",
+      "name": "Кладбище Вечных",
+      "touch": [
+        {
+          "zone": "G1_8"
+        },
+        {
+          "zone": "G1_9"
+        }
+      ]
+    },
+    {
+      "id": "mausoleum",
+      "zone": "G1_8",
+      "also": [
+        "G1_7"
+      ],
+      "name": "Мавзолей претора"
+    },
+    {
+      "id": "tomb",
+      "zone": "G1_9",
+      "name": "Супружеская гробница"
+    },
+    {
+      "id": "cemetery-of-the-eternals",
+      "zone": "G1_7",
+      "name": "Кладбище Вечных · Лакланн",
+      "touch": [
+        {
+          "zone": "G1_11"
+        }
+      ]
+    },
+    {
+      "id": "hunting",
+      "zone": "G1_11",
+      "name": "Охотничьи угодья",
+      "touch": [
+        {
+          "zone": "G1_13_1"
+        },
+        {
+          "zone": "G1_12"
+        }
+      ]
+    },
+    {
+      "id": "freythorn",
+      "zone": "G1_12",
+      "name": "Фрейторн"
+    },
+    {
+      "id": "farmlands",
+      "zone": "G1_13_1",
+      "name": "Фермерские земли Огама",
+      "touch": [
+        {
+          "zone": "G1_13_2"
+        }
+      ]
+    },
+    {
+      "id": "village",
+      "zone": "G1_13_2",
+      "name": "Деревня Огам",
+      "touch": [
+        {
+          "zone": "G1_14"
+        }
+      ]
+    },
+    {
+      "id": "ramparts",
+      "zone": "G1_14",
+      "name": "Стены замка",
+      "touch": [
+        {
+          "zone": "G1_15"
+        }
+      ]
+    },
+    {
+      "id": "root-hollow",
+      "zone": "G1_10",
+      "name": "Яма в корнях"
+    },
+    {
+      "id": "manor",
+      "zone": "G1_15",
+      "name": "Замок Огам"
+    },
+    {
+      "id": "vastiri",
+      "zone": "G2_1",
+      "name": "Окраины Вастири"
+    },
+    {
+      "id": "quarry",
+      "zone": "G2_10_1",
+      "name": "Каменоломня Маудун",
+      "touch": [
+        {
+          "zone": "G2_10_2"
+        }
+      ]
+    },
+    {
+      "id": "mine",
+      "zone": "G2_10_2",
+      "name": "Шахта Маудун"
+    },
+    {
+      "id": "passage",
+      "zone": "G2_2",
+      "name": "Тропа Изменницы",
+      "touch": [
+        {
+          "zone": "G2_3"
+        }
+      ]
+    },
+    {
+      "id": "gates",
+      "zone": "G2_3",
+      "name": "Ворота Халани"
+    },
+    {
+      "id": "ascension",
+      "zone": "G2_13",
+      "also": [
+        "Sanctum_1_Foyer_1"
+      ],
+      "name": "Испытание Сехем"
+    },
+    {
+      "id": "after-ascension",
+      "event": "ascend",
+      "name": "После восхождения"
+    },
+    {
+      "id": "badlands",
+      "zone": "G2_5_1",
+      "name": "Бесплодные земли мастодонтов",
+      "touch": [
+        {
+          "zone": "Abyss_Intro"
+        },
+        {
+          "zone": "G2_5_2"
+        }
+      ]
+    },
+    {
+      "id": "bonepits",
+      "zone": "G2_5_2",
+      "name": "Костяные ямы"
+    },
+    {
+      "id": "keth",
+      "zone": "G2_4_1",
+      "name": "Кет",
+      "touch": [
+        {
+          "zone": "G2_4_2"
+        }
+      ]
+    },
+    {
+      "id": "lostcity",
+      "zone": "G2_4_2",
+      "name": "Затерянный город",
+      "touch": [
+        {
+          "zone": "G2_4_3"
+        }
+      ]
+    },
+    {
+      "id": "shrines",
+      "zone": "G2_4_3",
+      "name": "Захоронённые святилища"
+    },
+    {
+      "id": "titans",
+      "zone": "G2_6",
+      "name": "Долина Титанов",
+      "touch": [
+        {
+          "zone": "G2_7"
+        }
+      ]
+    },
+    {
+      "id": "grotto",
+      "zone": "G2_7",
+      "name": "Грот Титанов"
+    },
+    {
+      "id": "deshar",
+      "zone": "G2_8",
+      "name": "Дешар",
+      "touch": [
+        {
+          "zone": "G2_9_1"
+        }
+      ]
+    },
+    {
+      "id": "mourning",
+      "zone": "G2_9_1",
+      "name": "Путь скорби",
+      "touch": [
+        {
+          "zone": "G2_9_2"
+        }
+      ]
+    },
+    {
+      "id": "spires",
+      "zone": "G2_9_2",
+      "name": "Шпили Дешара"
+    },
+    {
+      "id": "dreadnoughts-wake",
+      "zone": "G2_11",
+      "name": "След Дредноута"
+    },
+    {
+      "id": "dreadnought",
+      "zone": "G2_12",
+      "name": "Дредноут"
+    },
+    {
+      "id": "marsh",
+      "zone": "G3_1",
+      "name": "Занесённое песком болото",
+      "touch": [
+        {
+          "zone": "G3_town"
+        }
+      ]
+    },
+    {
+      "id": "jungle",
+      "zone": "G3_3",
+      "name": "Развалины в джунглях",
+      "touch": [
+        {
+          "zone": "G3_4"
+        },
+        {
+          "zone": "G3_2_1"
+        }
+      ]
+    },
+    {
+      "id": "crypts",
+      "zone": "G3_4",
+      "name": "Ядовитые крипты"
+    },
+    {
+      "id": "barrens",
+      "zone": "G3_2_1",
+      "name": "Заражённые земли",
+      "touch": [
+        {
+          "zone": "G3_5"
+        }
+      ]
+    },
+    {
+      "id": "wetlands",
+      "zone": "G3_5",
+      "name": "Топи химеридов",
+      "touch": [
+        {
+          "zone": "G3_10_Airlock"
+        },
+        {
+          "zone": "G3_6_1"
+        }
+      ]
+    },
+    {
+      "id": "machinarium",
+      "zone": "G3_6_1",
+      "name": "Машинариум Джиквани",
+      "touch": [
+        {
+          "zone": "G3_6_2"
+        }
+      ]
+    },
+    {
+      "id": "sanctum",
+      "zone": "G3_6_2",
+      "name": "Святилище Джиквани"
+    },
+    {
+      "id": "chaos",
+      "zone": "G3_10_Airlock",
+      "also": [
+        "G3_10"
+      ],
+      "name": "Испытание Хаоса"
+    },
+    {
+      "id": "after-chaos",
+      "event": "ascend2",
+      "name": "После испытания Хаоса"
+    },
+    {
+      "id": "waterways",
+      "zone": "G3_2_2",
+      "name": "Водотоки Матлан",
+      "touch": [
+        {
+          "zone": "G3_7"
+        }
+      ]
+    },
+    {
+      "id": "azak",
+      "zone": "G3_7",
+      "name": "Болото Азак"
+    },
+    {
+      "id": "drowned",
+      "zone": "G3_8",
+      "name": "Затопленный город",
+      "touch": [
+        {
+          "zone": "G3_11"
+        },
+        {
+          "zone": "G3_9"
+        }
+      ]
+    },
+    {
+      "id": "molten-vault",
+      "zone": "G3_9",
+      "name": "Расплавленные залы"
+    },
+    {
+      "id": "apex",
+      "zone": "G3_11",
+      "name": "Вершина мерзости"
+    },
+    {
+      "id": "kopec",
+      "zone": "G3_12",
+      "name": "Храм Копека"
+    },
+    {
+      "id": "utzaal",
+      "zone": "G3_14",
+      "name": "Утцааль",
+      "touch": [
+        {
+          "zone": "G3_16"
+        }
+      ]
+    },
+    {
+      "id": "aggorat",
+      "zone": "G3_16",
+      "name": "Аггорат",
+      "touch": [
+        {
+          "zone": "G3_17"
+        }
+      ]
+    },
+    {
+      "id": "chambers",
+      "zone": "G3_17",
+      "name": "Чёрные залы"
+    },
+    {
+      "id": "whakapanu",
+      "zone": "G4_3_1",
+      "name": "Остров Вакапану",
+      "touch": [
+        {
+          "zone": "G4_3_2"
+        }
+      ]
+    },
+    {
+      "id": "caverns",
+      "zone": "G4_3_2",
+      "name": "Поющие пещеры"
+    },
+    {
+      "id": "ngakanu-fin",
+      "zone": "G4_11_1a",
+      "name": "Нгакану: плавник"
+    },
+    {
+      "id": "eye",
+      "zone": "G4_4_1",
+      "name": "Глаз Хинекоры",
+      "touch": [
+        {
+          "zone": "G4_4_2"
+        }
+      ]
+    },
+    {
+      "id": "halls",
+      "zone": "G4_4_2",
+      "name": "Залы мёртвых",
+      "touch": [
+        {
+          "zone": "G4_4_3"
+        }
+      ]
+    },
+    {
+      "id": "trial-ancestors",
+      "zone": "G4_4_3",
+      "name": "Испытание предков"
+    },
+    {
+      "id": "prison",
+      "zone": "G4_5_1",
+      "name": "Заброшенная тюрьма",
+      "touch": [
+        {
+          "zone": "G4_5_2"
+        }
+      ]
+    },
+    {
+      "id": "solitary",
+      "zone": "G4_5_2",
+      "name": "Одиночные камеры"
+    },
+    {
+      "id": "shrike",
+      "zone": "G4_7",
+      "name": "Остров сорокопутов"
+    },
+    {
+      "id": "kin",
+      "zone": "G4_1_1",
+      "name": "Остров Рода",
+      "touch": [
+        {
+          "zone": "G4_1_2"
+        }
+      ]
+    },
+    {
+      "id": "warrens",
+      "zone": "G4_1_2",
+      "name": "Вулканические лабиринты"
+    },
+    {
+      "id": "kedge",
+      "zone": "G4_2_1",
+      "name": "Кеджский залив",
+      "touch": [
+        {
+          "zone": "G4_2_2"
+        }
+      ]
+    },
+    {
+      "id": "journey",
+      "zone": "G4_2_2",
+      "name": "Конец странствия"
+    },
+    {
+      "id": "arastas",
+      "zone": "G4_8b",
+      "also": [
+        "G4_8a"
+      ],
+      "name": "Арастас",
+      "touch": [
+        {
+          "zone": "G4_10"
+        }
+      ]
+    },
+    {
+      "id": "excavation",
+      "zone": "G4_10",
+      "name": "Раскопки"
+    },
+    {
+      "id": "isle-of-decay",
+      "zone": "G4_9_",
+      "name": "Остров Тлена"
+    },
+    {
+      "id": "plunders-point",
+      "zone": "G4_13",
+      "name": "Мыс грабителя"
+    },
+    {
+      "id": "brinerot-cove",
+      "zone": "G4_14",
+      "name": "Бухта Морской гнили"
+    },
+    {
+      "id": "ngakanu",
+      "zone": "G4_11_1b",
+      "name": "Нгакану",
+      "touch": [
+        {
+          "zone": "G4_11_2"
+        }
+      ]
+    },
+    {
+      "id": "heart",
+      "zone": "G4_11_2",
+      "name": "Сердце племени"
+    },
+    {
+      "id": "ashen",
+      "zone": "P3_1",
+      "name": "Пепельный лес",
+      "touch": [
+        {
+          "zone": "P3_2"
+        }
+      ]
+    },
+    {
+      "id": "kriar-village",
+      "zone": "P3_2",
+      "name": "Деревня Криар",
+      "touch": [
+        {
+          "zone": "P3_3"
+        }
+      ]
+    },
+    {
+      "id": "tarn",
+      "zone": "P3_3",
+      "name": "Ледниковое озеро",
+      "touch": [
+        {
+          "zone": "P3_4"
+        },
+        {
+          "zone": "P3_5"
+        }
+      ]
+    },
+    {
+      "id": "howling",
+      "zone": "P3_4",
+      "name": "Воющие пещеры"
+    },
+    {
+      "id": "peaks",
+      "zone": "P3_5",
+      "name": "Пики Криар",
+      "touch": [
+        {
+          "zone": "P3_6"
+        }
+      ]
+    },
+    {
+      "id": "ravine",
+      "zone": "P3_6",
+      "name": "Высеченное ущелье",
+      "touch": [
+        {
+          "zone": "P3_7"
+        }
+      ]
+    },
+    {
+      "id": "vault",
+      "zone": "P3_7",
+      "name": "Убежище Куачик"
+    },
+    {
+      "id": "crossing",
+      "zone": "P2_1",
+      "name": "Кхарийский перевал",
+      "touch": [
+        {
+          "zone": "P2_2"
+        },
+        {
+          "zone": "P2_5"
+        }
+      ]
+    },
+    {
+      "id": "pools",
+      "zone": "P2_2",
+      "name": "Воды Хаталя",
+      "touch": [
+        {
+          "zone": "P2_3"
+        }
+      ]
+    },
+    {
+      "id": "sanctuary",
+      "zone": "P2_3",
+      "name": "Храм Селхари"
+    },
+    {
+      "id": "ascension-3",
+      "zone": "G2_13",
+      "also": [
+        "Sanctum_1_Foyer_1",
+        "Sanctum_2_Foyer_3",
+        "Sanctum_3_Foyer_3"
+      ],
+      "name": "Испытание Сехем · третье восхождение"
+    },
+    {
+      "id": "after-ascension-3",
+      "event": "ascend3",
+      "name": "После третьего восхождения"
+    },
+    {
+      "id": "galai",
+      "zone": "P2_5",
+      "name": "Ворота Галаи",
+      "touch": [
+        {
+          "zone": "P2_6"
+        }
+      ]
+    },
+    {
+      "id": "qimah",
+      "zone": "P2_6",
+      "name": "Кима",
+      "touch": [
+        {
+          "zone": "P2_7"
+        }
+      ]
+    },
+    {
+      "id": "reservoir",
+      "zone": "P2_7",
+      "name": "Водохранилище Кима"
+    },
+    {
+      "id": "scorched",
+      "zone": "P1_1",
+      "name": "Выжженные фермерские земли",
+      "touch": [
+        {
+          "zone": "P1_2"
+        }
+      ]
+    },
+    {
+      "id": "serle",
+      "zone": "P1_2",
+      "name": "Камни Серли"
+    },
+    {
+      "id": "scorched-farmlands",
+      "zone": "P1_1",
+      "name": "Выжженные фермерские земли",
+      "touch": [
+        {
+          "zone": "P1_3"
+        }
+      ]
+    },
+    {
+      "id": "blackwood",
+      "zone": "P1_3",
+      "name": "Чернолесье",
+      "touch": [
+        {
+          "zone": "P1_4"
+        }
+      ]
+    },
+    {
+      "id": "holten",
+      "zone": "P1_4",
+      "name": "Холтен",
+      "touch": [
+        {
+          "zone": "P1_5"
+        },
+        {
+          "zone": "P1_6"
+        }
+      ]
+    },
+    {
+      "id": "wolvenhold",
+      "zone": "P1_5",
+      "name": "Вольфенхолд"
+    },
+    {
+      "id": "estate",
+      "zone": "P1_6",
+      "name": "Поместье Холтен"
+    },
+    {
+      "id": "maps",
+      "zone": "G_Endgame_Town",
+      "name": "Выход на карты"
+    },
+    {
+      "id": "maps-65",
+      "level": 65,
+      "name": "Карты 1–5"
+    },
+    {
+      "id": "maps-70",
+      "level": 70,
+      "name": "Карты 6–10"
+    },
+    {
+      "id": "maps-75",
+      "level": 75,
+      "name": "Карты 11–14"
+    },
+    {
+      "id": "maps-79",
+      "level": 79,
+      "name": "Карты 15–16"
+    }
+  ],
+  "goals": [
+    {"id": "boss-miller", "need": "riverbank"},
+    {"id": "boss-beira", "need": "clearfell"},
+    {"id": "cache-mysterious-campsite", "need": "clearfell"},
+    {"id": "boss-devourer", "need": "mud-burrow"},
+    {"id": "cache-witch-hut", "need": "grelwood-1"},
+    {"id": "boss-brambleghast", "need": "grelwood-1"},
+    {"id": "boss-areagne", "need": "grelwood-1"},
+    {"id": "boss-rust-king", "need": "redvale"},
+    {"id": "quest-tree-of-souls", "need": "grelwood-2"},
+    {"id": "boss-rotten-druid", "need": "tangle"},
+    {"id": "cache-ancient-ruin", "need": "cemetery"},
+    {"id": "boss-draven", "need": "mausoleum"},
+    {"id": "cache-forgotten-riches", "need": "mausoleum"},
+    {"id": "boss-asinia", "need": "tomb"},
+    {"id": "cache-embattled-trove", "need": "tomb"},
+    {"id": "boss-lachlann", "need": "cemetery-of-the-eternals"},
+    {"id": "boss-crowbell", "need": "hunting"},
+    {"id": "ritual-hunting", "ref": "mech-ritual", "need": "hunting"},
+    {"id": "boss-dryadic-ritual", "need": "hunting"},
+    {"id": "boss-king-mists", "need": "freythorn"},
+    {"id": "points-una", "need": "farmlands"},
+    {"id": "boss-crop-circle", "need": "farmlands"},
+    {"id": "boss-executioner", "need": "village"},
+    {"id": "cache-blacksmith-chest", "need": "village"},
+    {"id": "quest-renlys-workshop", "need": "village"},
+    {"id": "cache-gallows", "need": "ramparts"},
+    {"id": "boss-hooded-ones-request", "need": "root-hollow"},
+    {"id": "boss-candlemass", "need": "manor"},
+    {"id": "boss-geonor", "need": "manor"},
+    {"id": "boss-rathbreaker", "need": "vastiri"},
+    {"id": "cache-tinkers-tools", "need": "quarry"},
+    {"id": "cache-faridun-war-cache", "need": "quarry"},
+    {"id": "boss-rudja", "need": "mine"},
+    {"id": "boss-balbala", "need": "passage"},
+    {"id": "cache-bell-chest", "need": "passage"},
+    {"id": "boss-jamanra", "need": "gates"},
+    {"id": "boss-forward-command-tents", "need": "gates"},
+    {"id": "boss-rattlecage", "need": "ascension"},
+    {"id": "ascendancy-ascension", "ref": "ascendancy", "need": "ascension"},
+    {"id": "abyss-badlands", "ref": "mech-abyss", "need": "badlands"},
+    {"id": "cache-shrine-of-bones", "need": "badlands"},
+    {"id": "boss-ekbab", "need": "bonepits"},
+    {"id": "relic-sun", "need": "bonepits"},
+    {"id": "boss-kabala", "need": "keth"},
+    {"id": "relic-kabala", "need": "keth"},
+    {"id": "cache-abandoned-shrine", "need": "keth"},
+    {"id": "boss-ninth-treasure", "need": "lostcity"},
+    {"id": "cache-golden-tomb", "need": "lostcity"},
+    {"id": "boss-azarian", "need": "shrines"},
+    {"id": "cache-elemental-offering", "need": "shrines"},
+    {"id": "boss-guarded-sarcophagus", "need": "shrines"},
+    {"id": "charms-medallion", "need": "titans"},
+    {"id": "abyss-titans", "ref": "mech-abyss", "need": "titans"},
+    {"id": "boss-zalmarath", "need": "grotto"},
+    {"id": "cache-titans-treasure", "need": "grotto"},
+    {"id": "cache-titans-fall", "need": "grotto"},
+    {"id": "points-final-letter", "need": "deshar"},
+    {"id": "cache-forgotten-hollow", "need": "deshar"},
+    {"id": "boss-watchful-twins", "need": "deshar"},
+    {"id": "cache-shifting-vases", "need": "mourning"},
+    {"id": "res-garukhan", "need": "spires"},
+    {"id": "boss-tor-gul", "need": "spires"},
+    {"id": "boss-jamanra-abomination", "need": "dreadnought"},
+    {"id": "boss-rootdredge", "need": "marsh"},
+    {"id": "cache-hanging-tree", "need": "marsh"},
+    {"id": "boss-orok-campfire", "need": "marsh"},
+    {"id": "boss-silverfist", "need": "jungle"},
+    {"id": "vaal-beacon-jungle", "ref": "mech-vaal-beacon", "need": "jungle"},
+    {"id": "camp-troubled-camp-jungle-ruins", "need": "jungle"},
+    {"id": "venom-draught", "need": "crypts"},
+    {"id": "abyss-crypts", "ref": "mech-abyss", "need": "crypts"},
+    {"id": "vaal-beacon-crypts", "ref": "mech-vaal-beacon", "need": "crypts"},
+    {"id": "vaal-beacon-barrens", "ref": "mech-vaal-beacon", "need": "barrens"},
+    {"id": "camp-troubled-camp-infested-barrens", "need": "barrens"},
+    {"id": "boss-xyclucian", "need": "wetlands"},
+    {"id": "vaal-beacon-wetlands", "ref": "mech-vaal-beacon", "need": "wetlands"},
+    {"id": "cache-ravaged-camp", "need": "wetlands"},
+    {"id": "boss-toxic-bloom", "need": "wetlands"},
+    {"id": "boss-blackjaw", "need": "machinarium"},
+    {"id": "boss-zicoatl", "need": "sanctum"},
+    {"id": "vaal-beacon-sanctum", "ref": "mech-vaal-beacon", "need": "sanctum"},
+    {"id": "quest-paquates-mechanism", "need": "sanctum"},
+    {"id": "ascendancy-chaos", "ref": "ascendancy", "need": "chaos"},
+    {"id": "vaal-beacon-waterways", "ref": "mech-vaal-beacon", "need": "waterways"},
+    {"id": "cache-grave-findings", "need": "waterways"},
+    {"id": "quest-canal-lever", "need": "waterways"},
+    {"id": "boss-narags-hut", "need": "waterways"},
+    {"id": "boss-ignagduk", "need": "azak"},
+    {"id": "cache-molten-flow", "need": "molten-vault"},
+    {"id": "boss-mektul", "need": "molten-vault"},
+    {"id": "boss-queen-filth", "need": "apex"},
+    {"id": "camp-bubbling-respite", "need": "apex"},
+    {"id": "boss-ketzuli", "need": "kopec"},
+    {"id": "boss-napuatzi", "need": "utzaal"},
+    {"id": "sacrificial-heart", "need": "utzaal"},
+    {"id": "cache-peculiar-fortunes-utzaal", "need": "utzaal"},
+    {"id": "quest-chaos-statue", "need": "utzaal"},
+    {"id": "points-blood-sacrifice", "need": "aggorat"},
+    {"id": "cache-undamaged-core", "need": "aggorat"},
+    {"id": "cache-peculiar-fortunes-aggorat", "need": "aggorat"},
+    {"id": "boss-doryani", "need": "chambers"},
+    {"id": "boss-great-white", "need": "whakapanu"},
+    {"id": "boss-dread-crab", "need": "whakapanu"},
+    {"id": "quest-torn-map-piece-whakapanu-island", "need": "whakapanu"},
+    {"id": "boss-diamora", "need": "caverns"},
+    {"id": "cache-beckoning-clam", "need": "caverns"},
+    {"id": "camp-shoreline-hideout", "need": "caverns"},
+    {"id": "bonus-shark-fin", "need": "ngakanu-fin"},
+    {"id": "bonus-navali", "need": "eye"},
+    {"id": "tattoo-lightning", "need": "halls"},
+    {"id": "tattoo-cold", "need": "halls"},
+    {"id": "tattoo-fire", "need": "halls"},
+    {"id": "boss-yama", "need": "halls"},
+    {"id": "points-hinekora", "need": "trial-ancestors"},
+    {"id": "bonus-justice", "need": "prison"},
+    {"id": "cache-armoury", "need": "prison"},
+    {"id": "cache-forgotten-cells", "need": "prison"},
+    {"id": "boss-prisoner", "need": "solitary"},
+    {"id": "boss-scourge-skies", "need": "shrike"},
+    {"id": "quest-torn-map-piece-shrike-island", "need": "shrike"},
+    {"id": "cache-doomed-mine", "need": "kin"},
+    {"id": "boss-blind-beast", "need": "kin"},
+    {"id": "quest-torn-map-piece-isle-of-kin", "need": "kin"},
+    {"id": "boss-beast-pen", "need": "kin"},
+    {"id": "boss-krutog", "need": "warrens"},
+    {"id": "boss-magma-twins", "need": "warrens"},
+    {"id": "quest-torn-map-piece-kedge-bay", "need": "kedge"},
+    {"id": "boss-hartlin", "need": "journey"},
+    {"id": "boss-omniphobia", "need": "journey"},
+    {"id": "boss-torvian", "need": "arastas"},
+    {"id": "cache-golden-bells", "need": "arastas"},
+    {"id": "boss-benedictus", "need": "excavation"},
+    {"id": "cache-remote-station", "need": "plunders-point"},
+    {"id": "boss-mad-butcher", "need": "ngakanu"},
+    {"id": "abyss-ngakanu", "ref": "mech-abyss", "need": "ngakanu"},
+    {"id": "boss-tavakai", "need": "heart"},
+    {"id": "cache-meeting-house", "need": "heart"},
+    {"id": "vaal-beacon-ashen", "ref": "mech-vaal-beacon", "need": "ashen"},
+    {"id": "cache-ancient-monument", "need": "ashen"},
+    {"id": "boss-lythara", "need": "kriar-village"},
+    {"id": "abyss-kriar-village", "ref": "mech-abyss", "need": "kriar-village"},
+    {"id": "ritual-kriar-village", "ref": "mech-ritual", "need": "kriar-village"},
+    {"id": "vaal-beacon-kriar-village", "ref": "mech-vaal-beacon", "need": "kriar-village"},
+    {"id": "quest-roving-wisps", "need": "kriar-village"},
+    {"id": "boss-rakkar", "need": "tarn"},
+    {"id": "ritual-tarn", "ref": "mech-ritual", "need": "tarn"},
+    {"id": "vaal-beacon-tarn", "ref": "mech-vaal-beacon", "need": "tarn"},
+    {"id": "expedition-tarn", "ref": "mech-expedition", "need": "tarn"},
+    {"id": "boss-yeti", "need": "howling"},
+    {"id": "ritual-howling", "ref": "mech-ritual", "need": "howling"},
+    {"id": "vaal-beacon-howling", "ref": "mech-vaal-beacon", "need": "howling"},
+    {"id": "gift-madox", "need": "peaks"},
+    {"id": "vaal-beacon-peaks", "ref": "mech-vaal-beacon", "need": "peaks"},
+    {"id": "boss-stormgore", "need": "ravine"},
+    {"id": "vaal-beacon-ravine", "ref": "mech-vaal-beacon", "need": "ravine"},
+    {"id": "boss-zolin-zelina", "need": "vault"},
+    {"id": "cache-ancient-treasures", "need": "vault"},
+    {"id": "boss-akthi-anundr", "need": "crossing"},
+    {"id": "bonus-molten-shrine", "need": "crossing"},
+    {"id": "ritual-crossing", "ref": "mech-ritual", "need": "crossing"},
+    {"id": "camp-travelling-merchant", "need": "crossing"},
+    {"id": "expedition-pools", "ref": "mech-expedition", "need": "pools"},
+    {"id": "boss-elzarah", "need": "sanctuary"},
+    {"id": "ritual-sanctuary", "ref": "mech-ritual", "need": "sanctuary"},
+    {"id": "two-wishes", "need": "sanctuary"},
+    {"id": "ascendancy-ascension-3", "ref": "ascendancy", "need": "ascension-3"},
+    {"id": "boss-vornas", "need": "galai"},
+    {"id": "abyss-galai", "ref": "mech-abyss", "need": "galai"},
+    {"id": "ritual-galai", "ref": "mech-ritual", "need": "galai"},
+    {"id": "bonus-pillar", "need": "qimah"},
+    {"id": "boss-azmadi", "need": "reservoir"},
+    {"id": "quest-sacred-well", "need": "reservoir"},
+    {"id": "boss-bloodbilge", "need": "reservoir"},
+    {"id": "boss-isolde-heldra", "need": "scorched"},
+    {"id": "ritual-scorched", "ref": "mech-ritual", "need": "scorched"},
+    {"id": "boss-siora", "need": "serle"},
+    {"id": "abyss-serle", "ref": "mech-abyss", "need": "serle"},
+    {"id": "expedition-serle", "ref": "mech-expedition", "need": "serle"},
+    {"id": "cache-dark-omens", "need": "blackwood"},
+    {"id": "boss-sigbert-godwin", "need": "holten"},
+    {"id": "ritual-holten", "ref": "mech-ritual", "need": "holten"},
+    {"id": "camp-ferryman", "need": "holten"},
+    {"id": "boss-oswin", "need": "wolvenhold"},
+    {"id": "ritual-wolvenhold", "ref": "mech-ritual", "need": "wolvenhold"},
+    {"id": "boss-wulfric-elswyth", "need": "estate"},
+    {"id": "points-siege", "need": "estate"},
+    {"id": "ascendancy-maps-75", "ref": "ascendancy", "need": "maps-75"}
+  ]
+}

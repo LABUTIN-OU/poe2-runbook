@@ -1,0 +1,48 @@
+{
+  "about": "Правила крафта, которых нет в выгрузке игры: ведутся руками, у каждого правила в src сказано, откуда оно. Данные игры 0.5.5. Собрано подсессией крафта (work/craft/PROPOSAL.md, 2026-11-19); названия предметов сверяет с таблицей игры catalog/build.py.",
+  "slots": {"normal": 0, "magic": 1, "rare": 3},
+  "grades": {
+    "transmute": [["Orb of Transmutation", 0], ["Greater Orb of Transmutation", 44], ["Perfect Orb of Transmutation", 70]],
+    "augment": [["Orb of Augmentation", 0], ["Greater Orb of Augmentation", 44], ["Perfect Orb of Augmentation", 70]],
+    "regal": [["Regal Orb", 0], ["Greater Regal Orb", 35], ["Perfect Regal Orb", 50]],
+    "exalt": [["Exalted Orb", 0], ["Greater Exalted Orb", 35], ["Perfect Exalted Orb", 50]],
+    "chaos": [["Chaos Orb", 0], ["Greater Chaos Orb", 35], ["Perfect Chaos Orb", 50]]
+  },
+  "bones": {
+    "jaw": {"classes": ["Sceptre", "Wand", "Staff", "Crossbow", "Bow", "Quiver"],
+            "gnawed": "Gnawed Jawbone", "preserved": "Preserved Jawbone", "ancient": "Ancient Jawbone"},
+    "rib": {"classes": ["Helmet", "Body Armour", "Gloves", "Boots", "Shield", "Focus"],
+            "gnawed": "Gnawed Rib", "preserved": "Preserved Rib", "ancient": "Ancient Rib"},
+    "collar": {"classes": ["Amulet", "Ring", "Belt"],
+               "gnawed": "Gnawed Collarbone", "preserved": "Preserved Collarbone", "ancient": "Ancient Collarbone"}
+  },
+  "boneLimits": {"gnawedMaxItem": 64, "ancientMinMod": 40},
+  "omens": {
+    "exalt": {"P": "Omen of Sinistral Exaltation", "S": "Omen of Dextral Exaltation"},
+    "regal": {"P": "Omen of Sinistral Coronation", "S": "Omen of Dextral Coronation"},
+    "bone": {"P": "Omen of Sinistral Necromancy", "S": "Omen of Dextral Necromancy"},
+    "annul": {"P": "Omen of Sinistral Annulment", "S": "Omen of Dextral Annulment"},
+    "echoes": "Omen of Abyssal Echoes",
+    "light": "Omen of Light"
+  },
+  "items": {"alchemy": "Orb of Alchemy", "annul": "Orb of Annulment", "regal": "Regal Orb"},
+  "limits": {"crafted": 1, "desecrated": 1},
+  "alchemy": {"mods": 4, "perSide": 3},
+  "reveal": 3,
+  "bench": {"in": 3, "out": 1},
+  "heroLevel": 0.8,
+  "good": 0.8,
+  "src": {
+    "slots": "Волшебный предмет — 1 префикс и 1 суффикс, редкий — до 3 и 3: общее правило игры (poe2db, страница любого класса предметов).",
+    "grades": "Пороги уровня свойства у Больших и Совершенных сфер: превращения и усиления — 44 / 70, царей, возвышения и хаоса — 35 / 50. https://poe2db.tw/us/Stackable_Currency ; порог 44 у Больших сфер превращения и усиления — патч 0.5.0, https://www.pathofexile.com/forum/view-thread/3932540",
+    "gradeKeepsTop": "Сфера с порогом убирает ступени ниже порога; у семейства, все ступени которого ниже, остаётся высшая. Не из текста GGG: вики PoE2 и сводка https://domistae.github.io/poe2-leveling/poe2_crafting_codex.html ; проверить в игре.",
+    "bones": "Челюсть — оружие и колчан, ребро — доспехи, ключица — бижутерия; Обглоданные (Gnawed) — до уровня предмета 64, Древние (Ancient) — свойство от 40-го уровня. https://poe2db.tw/us/Stackable_Currency",
+    "omens": "Предзнаменования стороны (левши — префикс, правши — суффикс), отголосков Бездны (переброс трёх вариантов), света (отмена только очернённого). https://poe2db.tw/us/Omen",
+    "limits": "Одно ремесленное (сущность или сплав) и одно очернённое свойство на предмет: патч 0.5.0, https://www.pathofexile.com/forum/view-thread/3932540",
+    "alchemy": "Сфера алхимии: редкий предмет с четырьмя случайными свойствами. https://poe2db.tw/us/Stackable_Currency",
+    "reveal": "Очернение: у Колодца душ выбор одного из трёх вариантов; в кампании — обычные свойства. Патч 0.3.0, https://www.pathofexile.com/forum/view-thread/3826682 . Веса вариантов не опубликованы: принято, что они те же, что у обычных свойств (допущение записки).",
+    "bench": "Верстак для перековки: три предмета одной базы и редкости — один неопознанный той же; три сущности — следующая ступень. https://poe2db.tw/us/Reforging_Bench",
+    "heroLevel": "Требование уровня героя ≈ 0,8 × уровень старшего свойства: скипетр игрока (свойство 25-го уровня — требование 20) и poe2db (60 — 48).",
+    "good": "Мера «к максимуму» — не правило игры, а порог помощника: свойство, чьё нижнее значение не ниже 0,8 лучшего, что бывает на этом уровне предмета."
+  }
+}

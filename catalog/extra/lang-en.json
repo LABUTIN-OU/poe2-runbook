@@ -1,0 +1,38 @@
+{
+  "statNames": {
+    "minion_level": ["Level of Minion Skills", "Minions"],
+    "spirit": ["Spirit", "Spirit"],
+    "weapon_elem": ["Added Elemental Damage of the weapon", "Elemental damage"],
+    "ally_damage": ["Damage of Allies in Presence", "Presence damage"],
+    "ally_crit": ["Critical Damage Bonus of Allies in Presence", "Presence crit"],
+    "block": ["Block chance", "Block"],
+    "speed": ["Movement Speed", "Speed"],
+    "res_fire": ["Fire Resistance", "Fire"],
+    "res_cold": ["Cold Resistance", "Cold"],
+    "res_lightning": ["Lightning Resistance", "Lightning"],
+    "res_chaos": ["Chaos Resistance", "Chaos"],
+    "life": ["Life", "Life"],
+    "es": ["Energy Shield", "Energy Shield"],
+    "armour": ["Armour", "Armour"],
+    "evasion": ["Evasion", "Evasion"],
+    "mana": ["Mana", "Mana"],
+    "str": ["Strength", "Strength"],
+    "dex": ["Dexterity", "Dexterity"],
+    "int": ["Intelligence", "Intelligence"]
+  },
+  "props": {
+    "Armour": "armour",
+    "Evasion Rating": "evasion",
+    "Energy Shield": "energy_shield",
+    "Block chance": "block",
+    "Spirit": "spirit",
+    "Quality": "quality"
+  },
+  "words": {
+    "sockets": "Sockets",
+    "requires": "Requires",
+    "level": ["Level"],
+    "str": ["Strength", "Str"],
+    "dex": ["Dexterity", "Dex"],
+    "int": ["Intelligence", "Int"]
+  }, "wayMods": {"MapMonsterAccuracy": ["Monster accuracy", "+#%"], "MapMonsterArmourBreak": ["Armour break", "#%"], "MapMonsterBleeding": ["Bleeding", "#%"], "MapMonsterCritIncrease": ["Monster crit chance", "+#%"], "MapMonsterDamageAsChaos": ["Extra chaos damage", "#%"], "MapMonsterDamageAsCold": ["Extra cold damage", "#%"], "MapMonsterDamageAsFire": ["Extra fire damage", "#%"], "MapMonsterDamageAsLightning": ["Extra lightning damage", "#%"], "MapMonsterDamageIncrease": ["Monster damage", "+#%"], "MapMonsterLifeIncrease": ["Monster life", "+#%"], "MapMonsterPoisoning": ["Poison", "#%"], "MapMonsterSpeedIncrease": ["Monster speed", "+#%"], "MapMonsterStunBuildup": ["Stun buildup", "+#%"], "MapMonstersElementalPenetration": ["Resistance penetration", "#%"], "MapMonsterArmoured": ["Monsters are armoured", ""], "MapMonsterElementAilmentChance": ["Elemental ailment chance", "+#%"], "MapMonsterElementalResistances": ["Monster resistances", "+#%"], "MapMonsterEnergyShield": ["Monster energy shield", "#%"], "MapMonsterEvasive": ["Monsters are evasive", ""], "MapMonsterStunAilmentThreshold": ["Monster stun threshold", "+#%"], "MapMonstersBaseSelfCriticalMultiplier": ["Crit damage against monsters", "−#%"], "MapMonstersCurseEffectOnSelf": ["Curses on monsters", "−#%"], "MapPlayerCooldownRecovery": ["Skill cooldown recovery", "−#%"], "MapPlayerElementalWeakness": ["Elemental Weakness", ""], "MapPlayerEnfeeble": ["Enfeeble", ""], "MapPlayerFlaskChargeGain": ["Flask charges", "−#%"], "MapPlayerMaximumResists": ["Max resistances", "−#%"], "MapPlayerRecoveryRate": ["Life and shield recovery", "−#%"], "MapPlayerTemporalChains": ["Temporal Chains", ""], "MapSpreadBurningGround": ["Burning ground", ""], "MapSpreadChilledGround": ["Chilled ground", ""], "MapSpreadShockedGround": ["Shocked ground", ""]}}
