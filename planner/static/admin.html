@@ -504,6 +504,27 @@ html:lang(th) body{font-family:"Segoe UI","Leelawadee UI",Tahoma,system-ui,sans-
 .ctxb.on{border-color:var(--accent)}
 .ctxb.need{border-color:var(--due);background:#33290f;color:var(--due-text)}
 .ctxb.need .ctxc{color:var(--due-text)}
+/* Обновление программы (updParts, updLine). В первом ряду шапки, у правого угла, — «есть версия …» и «Обновить» (во
+   время загрузки — «загрузка …%», не вышло — почему, красным, и та же кнопка): ряд той же высоты, страница под ним не
+   сдвигается. Объявление автора программы для всех — своей строкой под этим рядом, в колонке программы: одна строка
+   (длинное — с «…», целиком в подсказке), цветом «обратите внимание»; строка есть, только пока объявление есть в файле
+   обновления, и с первого кадра (браузер помнит последнее объявление). */
+.updw{display:inline-flex;align-items:center;gap:8px;flex:none;margin-left:auto;font-size:13px;white-space:nowrap}
+.updw + .corner{margin-left:0}
+.updw .updv.bad{color:var(--over-text)}
+.updb{padding:3px 12px;border-radius:7px;border:1px solid var(--accent);background:#1c2a40;color:var(--text);font:inherit;
+  font-size:13px;line-height:18px;cursor:pointer}
+.updb:hover{filter:brightness(1.15)}
+.updb:disabled{opacity:.6;cursor:default}
+/* Окно «Настройки» и список языков стоят в шапке, а шапка — свой слой (z-index 7): пока одно из них открыто, вся шапка
+   встаёт над всплывающими окнами «Игры» (сравнение предмета 61, путевой камень 60, очки дерева 59) — что открыл сам
+   игрок, под ними не прячется; закрыли — шапка снова на своём слое. */
+.hbar:has(.setp,.lgm){z-index:63}
+.updl{display:flex;align-items:baseline;gap:8px;max-width:var(--col);margin:-4px auto 0;padding:0 14px 8px;font-size:13px;
+  line-height:18px;white-space:nowrap}
+.updl .updt{flex:none;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.updl .updn{min-width:0;overflow:hidden;text-overflow:ellipsis;color:var(--due-text)}
+@media (max-width:780px){.updl{padding-left:8px;padding-right:8px}}
 /* Список под ним: шириной в колонку страницы (место и размер ставит ctxPlace), до низа окна, крутится целиком; подложка
    ниже первого ряда шапки ловит нажатие мимо и колесо — страница под списком стоит. Список — над всплывающими окнами
    «Игры» (путевой камень, очки дерева): его открыл сам игрок, а окна никуда не денутся, когда он его закроет. */
@@ -765,6 +786,12 @@ function setPanel() {
     rows += line(T('Папка игры'), g.dir, `<span class="setd${g.found ? '' : ' bad'}">${ctxEsc(g.found && dir ? dir : T('не найдена'))}</span>` +
       (g.pick ? `<button class="setb" data-cfgv="game:pick">${ctxEsc(T('указать папку игры'))}</button>` : ''), ' gap');
   }
+  // обновления программы — только у окна программы (во вкладке браузера их нет: обновлять там нечего)
+  const u = d && d.update;
+  if (u && u.can) {
+    rows += line(T('Проверять обновления'), T('При запуске и раз в 6 часов программа спрашивает у poe2.labutin.gg, есть ли новая версия; в запросе — только номер версии программы. Новая версия ставится только по нажатию «Обновить»'),
+      pick([opt('upd', true, u.on, T('вкл')), opt('upd', false, u.on, T('выкл'))]), ' gap');
+  }
   return `<div class="setp" role="dialog" aria-label="${ctxEsc(T('Настройки'))}"><div class="seth"><b>${ctxEsc(T('Настройки'))}</b>` +
     `<button class="setx" data-cfg="shut" aria-label="${ctxEsc(T('Закрыть'))}" title="${ctxEsc(T('Закрыть'))}">✕</button></div>` +
     (d ? rows : '') + '</div>';
@@ -789,6 +816,7 @@ document.addEventListener('click', e => {
     const post = (url, body) => fetch(url, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
       .catch(() => {}).then(setLoad);
     if (name === 'game') { post('/api/game', {pick: true}); return; }
+    if (name === 'upd') { post('/api/update', {on: raw === 'true'}).then(updLoad); return; }
     const key = {on: 'overlay', list: 'overlayList', alt: 'overlayAlt', clear: 'overlayClear'}[name];
     if (key) post('/api/mark', {[key]: name === 'on' ? raw === 'true' : name === 'clear' ? Number(raw) : raw});
     return;
@@ -796,6 +824,74 @@ document.addEventListener('click', e => {
   if (SET.open && !e.target.closest('.setw')) setShow(false);
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && SET.open) setShow(false); });
+// --- Обновление программы -------------------------------------------------------------------------------------------
+// О новой версии программа узнаёт сама (update.py: при запуске и раз в 6 часов; выключается в «Настройках»). Есть версия
+// новее — это видно без единого нажатия: в первом ряду шапки, у правого угла, «есть версия 0.5.5.19» и кнопка «Обновить»
+// (что изменилось — в подсказке). Без нажатия «Обновить» ничего не качается и не ставится; после нажатия — «загрузка
+// …%», затем окно закрывается, а установщик открывает уже новую программу. Не вышло — почему (красным) и та же кнопка.
+// Объявление автора программы для всех — своей строкой под первым рядом шапки (updLine). Данные — GET /api/update: при
+// открытии страницы, потом раз в минуту, во время загрузки — каждую секунду; «Игре» о перемене программа говорит сразу
+// (поле update её состояния). Тексты автора выводятся как текст, не как разметка.
+const UPD = {data: null, timer: 0, seen: null};
+const UPD_KEY = 'updNotice';
+// объявление, которое страница видела в прошлый раз (на том же языке): с ним шапка встаёт сразу, не дожидаясь программы
+function updMemo() {
+  try {
+    const m = JSON.parse(localStorage.getItem(UPD_KEY) || 'null');
+    return m && m.lang === I18N.lang && typeof m.text === 'string' ? m.text : '';
+  } catch (err) { return ''; }
+}
+function updLoad() {
+  clearTimeout(UPD.timer);
+  return fetch(langUrl('/api/update')).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => {
+    const was = JSON.stringify(UPD.data), line = updLine();
+    if (d) {                       // нет ответа (программа закрывается) — остаётся то, что было
+      UPD.data = d;
+      try { localStorage.setItem(UPD_KEY, JSON.stringify({lang: I18N.lang, text: (d.can && d.notice) || ''})); } catch (err) { /* без памяти браузера */ }
+    }
+    if (JSON.stringify(UPD.data) !== was) {
+      ctxBar();
+      if (ABOUT.open) abtPaint();
+      if (updLine() !== line) dispatchEvent(new Event('resize'));    // высота шапки сменилась — отступы страниц под неё
+    }
+    const busy = UPD.data && (UPD.data.state === 'load' || UPD.data.state === 'run');
+    UPD.timer = setTimeout(updLoad, busy ? 1000 : 60000);
+  });
+}
+// «есть версия …» и «Обновить» — в первый ряд шапки, перед правым углом
+function updParts() {
+  const d = UPD.data;
+  if (!d || !d.can) return '';
+  const go = `<button class="updb" data-upd="go">${ctxEsc(T('Обновить'))}</button>`;
+  const pct = d.total ? Math.min(100, Math.floor(100 * d.done / d.total)) : 0;
+  const tip = d.notes ? ` title="${ctxEsc(T('Что изменилось: {0}', d.notes))}"` : '';
+  const what = d.state === 'offer' ? `<span class="updv"${tip}>${ctxEsc(T('есть версия {0}', d.version))}</span>${go}`
+    : d.state === 'fail' ? `<span class="updv bad" title="${ctxEsc(T('есть версия {0}', d.version))}">${ctxEsc(d.error || '')}</span>${go}`
+      : d.state === 'load' ? `<span class="updv">${ctxEsc(T('загрузка версии {0}: {1}%', d.version, pct))}</span>`
+        : d.state === 'run' ? `<span class="updv">${ctxEsc(T('ставится версия {0}…', d.version))}</span>` : '';
+  return what ? `<span class="updw">${what}</span>` : '';
+}
+// объявление для всех — строкой под первым рядом шапки; пока программа не ответила — то, что видели в прошлый раз
+function updLine() {
+  const text = UPD.data ? (UPD.data.can && UPD.data.notice) || '' : updMemo();
+  return text ? `<div class="updl" role="note"><span class="updt">${ctxEsc(T('Объявление'))}</span>` +
+    `<span class="updn" title="${ctxEsc(text)}">${ctxEsc(text)}</span></div>` : '';
+}
+// строка окна «О программе»: когда была последняя проверка обновлений и что ответили
+function updAbout() {
+  const d = UPD.data, last = d && d.can && d.last;
+  if (!last) return '';
+  const when = last.at ? new Date(last.at * 1000).toLocaleString(I18N.locale || undefined,
+    {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'}) : '';
+  return `<div class="abm">${ctxEsc(when ? T('проверка обновлений: {0} — {1}', when, last.text) : T('проверка обновлений: {0}', last.text))}</div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('[data-upd="go"]');
+  if (!b || b.disabled) return;
+  for (const x of document.querySelectorAll('[data-upd="go"]')) x.disabled = true;
+  fetch('/api/update', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({go: true})})
+    .catch(() => {}).then(updLoad);
+});
 // --- О программе ----------------------------------------------------------------------------------------------------
 // Первая строка окна «Настройки» — чья программа («PoE2 Runbook · © 2026 Sergei Labutin») и кнопка «О программе». Окно
 // «О программе» встаёт на место окна «Настройки» (тот же угол, ✕ на том же месте): версия программы и игры, под которую
@@ -846,6 +942,7 @@ function abtPanel() {
   const here = T('Эта программа никак не связана с Grinding Gear Games и не одобрена ею.');
   return head(T('О программе')) + '<div class="abb">' +
     `<div class="abs abtop"><div class="abn">${x(d.name)}</div><div class="abm">${x(T('версия {0} · для игры {1}', d.version, d.game))}</div>` +
+    updAbout() +
     `<div class="abc">© ${x(d.year)} ${x(d.author)}</div></div>` +
     `<div class="abs"><div class="abr">${x(T('Официальный сайт:'))} <a href="${x(d.site)}" target="_blank" rel="noopener" data-site>${x(d.site)}</a></div>` +
     `<p>${x(T('Официальные сборки программы публикуются только там.'))}</p></div>` +
@@ -934,6 +1031,15 @@ let barMemo = '';
 const CTX = {data: null, page: 'play', edit: '', editTitle: '', open: false, all: false, arm: null, msg: null, same: null, busy: false,
   q: null, after: () => {}, before: go => go(), picked: () => ctxShow(false)};
 const ctxEsc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+// Адрес ссылки, собранный из данных (код фильтра, имя из плана), — только http или https: javascript:, data: и прочее
+// ссылкой не становятся (пустой адрес). Относительный адрес — от адреса страницы.
+const webLink = u => { try { const x = new URL(String(u), location.href); return /^https?:$/.test(x.protocol) ? x.href : ''; } catch (err) { return ''; } };
+// Картинка, которой нет (рисунка у программы нет), прячется — обработчиком отсюда, а не встроенным onerror=…: встроенные
+// обработчики страница не выполняет (Content-Security-Policy). Такой картинке страница ставит атрибут data-hide.
+document.addEventListener('error', e => {
+  const t = e.target;
+  if (t && t.tagName === 'IMG' && t.hasAttribute('data-hide')) t.style.visibility = 'hidden';
+}, true);
 const ctxPlan = id => { const p = CTX.data && CTX.data.plans; return (p && (p.list || []).find(q => q.id === id)) || null; };
 const ctxTitle = id => { const x = ctxPlan(id); return x ? x.title : ''; };
 // Текущий герой словами страницы. Героя без имени (лог называет героя со второго уровня) зовут его классом; героя ещё
@@ -958,7 +1064,9 @@ function appBar() {
   const btn = open => `<button class="ctxb${lab.ask ? ' need' : ''}${open ? ' on' : ''}" data-ctx="toggle" aria-haspopup="dialog" ` +
     `aria-expanded="${open}" title="${ctxEsc(tip)}"><span class="ctxt">${ctxEsc(lab.text || T('Герои и планы'))}</span>` +
     `<span class="ctxc" aria-hidden="true">▾</span></button>`;
-  const row = (open, lg, st) => btn(open) + `<div class="corner">${modeSwitch(cur)}${setSwitch(st)}${langSwitch(lg)}</div>`;
+  // обновление программы (updParts) — только в живом ряду: в запомненном для первого кадра оно могло устареть
+  const row = (open, lg, st, up) => btn(open) + (up ? updParts() : '') +
+    `<div class="corner">${modeSwitch(cur)}${setSwitch(st)}${langSwitch(lg)}</div>`;
   // ряд другой страницы остаётся, каким та его запомнила (на том же языке)
   const keep = mem && mem.lang === I18N.lang ? mem : {};
   const memo = JSON.stringify(Object.assign({}, keep, {lang: I18N.lang, [cur]: row(false, false, false), [cur + 'Text']: lab.text}));
@@ -966,12 +1074,15 @@ function appBar() {
     barMemo = memo;
     try { localStorage.setItem(BAR_KEY, memo); } catch (err) { /* без памяти браузера шапка появится чуть позже */ }
   }
-  return `<div class="abar">${row(CTX.open, langOpen, SET.open)}</div>`;
+  return `<div class="abar">${row(CTX.open, langOpen, SET.open, true)}</div>` + updLine();
 }
 // Первый ряд шапки заново — когда изменились герой, план или открыт ли список (вся страница при этом не рисуется)
 function ctxBar() {
   const a = document.querySelector('#hbar .abar');
-  if (a) a.outerHTML = Q(appBar());
+  if (!a) return;
+  const n = a.nextElementSibling;           // строка объявления (updLine) рисуется вместе с первым рядом
+  if (n && n.classList.contains('updl')) n.remove();
+  a.outerHTML = Q(appBar());
 }
 // Время героя: меньше минуты — «42 сек», до десяти минут — «4:38», дальше — «12 мин», от часа — «3 ч 30 мин»
 function ctxTime(sec) {
@@ -3562,7 +3673,7 @@ function filterField(st) {
     has.map(f => `<option value="${esc(f.id)}"${fid === f.id ? ' selected' : ''} translate="no">${esc(f.name || f.id)}${f.name && twin(f.name) ? ' · ' + esc(f.id) : ''}</option>`).join('') +
     (lost ? `<option value="${esc(fid)}" selected translate="no">${T('нет в игре:')} ${esc(filterName(st))}</option>` : '');
   const site = !!fid && fid !== NO_FILTER && SITE_FILTER.test(fid);
-  const page = site ? `<a class="fpage" href="${FILTER_PAGE + fid}" target="_blank" rel="noopener" data-fpage="${esc(fid)}" ` +
+  const page = site ? `<a class="fpage" href="${esc(webLink(FILTER_PAGE + encodeURIComponent(fid)))}" target="_blank" rel="noopener" data-fpage="${esc(fid)}" ` +
     `title="${esc(T('Страница фильтра на сайте игры: на ней на фильтр подписываются (Follow), и игра скачивает его сама. Подписаться можно только на публичный фильтр, а публичный обратно личным уже не сделать'))}">` +
     `${T('страница фильтра')}${OUT_ICON}</a>` : '';
   const hint = lost ? `<div class="fhint bad">${T('Этого фильтра нет в игре — подпишитесь на него на странице фильтра')}</div>`
@@ -5239,7 +5350,7 @@ load().then(() => {
   render();
 });
 }
-loadLang().then(startPage);
+loadLang().then(startPage).then(updLoad);
 </script>
 </body>
 </html>

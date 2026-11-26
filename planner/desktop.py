@@ -18,6 +18,9 @@
   * поверх окна игры стоят два маленьких окна программы — список шага и ответ на копию предмета (overlay.py): видны,
     только пока игра активна, фокус у неё не забирают; выключаются кнопкой «поверх игры» на странице «Игра»;
   * в заголовке окна — версия программы: «версия игры, под которую она сделана» и номер сборки (appversion.py);
+  * о новой версии программа узнаёт сама — с официального адреса, при запуске и раз в 6 часов (update.py; настройка
+    «Проверять обновления»); «Обновить» скачивает установщик, сверяет его с подписанным файлом, запускает и закрывает
+    программу — установщик дожидается её выхода (мьютекс update.APP_MUTEX) и открывает уже новую;
   * закрыли окно — программа закончила работу.
 
 Для проверок: --data <папка> (вместо %APPDATA%\\PoE2 Runbook), --selftest (окно не показывается: страница
@@ -45,6 +48,7 @@ import gamepaths  # noqa: E402
 import i18n  # noqa: E402
 import logtext  # noqa: E402
 import planlib  # noqa: E402
+import update  # noqa: E402
 from i18n import tr  # noqa: E402
 
 APP = 'PoE2 Runbook'
@@ -309,6 +313,8 @@ def main(argv=None):
     if not first_instance(data):
         bring_front()
         return 0
+    # отметка для установщика новой версии: он ждёт, пока её нет (программа закрылась), — packaging/update.iss
+    _MUTEX.append(update.hold_app_mutex())
 
     # Журнал запуска: что нашла программа, что не так. У окна программы нет консоли — пишем в файл. Журналы прежних
     # запусков остаются рядом (open_log): программу закрыли или она упала, запустили заново — что было, читается.
@@ -316,6 +322,7 @@ def main(argv=None):
     sys.stdout = sys.stderr = log
     version = program_version()
     print('%s %s · Python %s · %s' % (APP, version, sys.version.split()[0], time.strftime('%Y-%m-%d %H:%M:%S')))
+    print('update key: %s' % update.key_name())     # ключ подписи обновлений в этой сборке (отпечаток) или none
     i18n.CONSOLE[0] = 'en'
     lang = message_lang()
 
@@ -345,7 +352,7 @@ def main(argv=None):
     win = webview.create_window('%s %s' % (APP, version), html=SPLASH, min_size=(760, 520), background_color='#15120e',
                                 hidden=own.selftest, text_select=True, **size, **place)
     dialog = getattr(getattr(webview, 'FileDialog', None), 'FOLDER', None) or getattr(webview, 'FOLDER_DIALOG', 20)
-    result = {'code': 0}
+    result = {'code': 0, 'update': False}
 
     # Окна поверх игры (overlay.py): список шага, ответ на копию и дерево. Создаются скрытыми вместе с окном программы, за краем
     # экрана; свои свойства и место получают от overlay.Overlay (start_overlay), страницы — когда готов сервер (boot).
@@ -356,10 +363,13 @@ def main(argv=None):
             bridge = overlay.Bridge()
             for part in ('list', 'answer', 'tree'):
                 wide, tall = overlay.SIZE[part]
+                # text_select=True: запрет выделения текста — правило самой страницы (html.ov body); свой <style>,
+                # который pywebview вставил бы для этого, Content-Security-Policy страницы не пускает
                 panes[part] = webview.create_window('%s · %s' % (APP, part), html=PANE_BLANK, js_api=bridge, width=wide,
                                                     height=tall, x=-20000, y=-20000, hidden=True, frameless=True,
                                                     easy_drag=False, shadow=False, focus=False, on_top=True,
-                                                    resizable=False, min_size=(60, 20), background_color='#111316')
+                                                    resizable=False, min_size=(60, 20), background_color='#111316',
+                                                    text_select=True)
         except Exception:
             traceback.print_exc()
             panes = {}
@@ -400,7 +410,7 @@ def main(argv=None):
                 except Exception:
                     pass
             time.sleep(0.5)
-        time.sleep(3)
+        time.sleep(0 if result['update'] else 3)      # установщик новой версии ждёт выхода программы
         print('closed by watchdog, code %d' % result['code'])
         log.flush()
         os._exit(result['code'])
@@ -418,6 +428,28 @@ def main(argv=None):
         except Exception:
             pass
 
+    def quit_for_update():
+        """Установщик новой версии запущен: окно запоминает своё место и закрывается, программа завершается —
+        установщик ждёт её выхода, ставит новую версию и открывает её. Не завершилась за 10 секунд — завершаем."""
+        result['update'] = True
+        remember_window()
+        threading.Timer(10, lambda: os._exit(0)).start()
+        try:
+            win.destroy()
+        except Exception:
+            traceback.print_exc()
+            os._exit(0)
+
+    def start_updates(app):
+        """Обновление программы (update.py): проверка при запуске и раз в 6 часов (чаще, пока игра новее программы),
+        «Обновить» на страницах. Только у собранной программы: из исходников обновлять нечего."""
+        made = (app.base_catalog or {}).get('version')
+        upd = update.Updater(version, data / 'update', data / 'settings.json', update.embedded_key(),
+                             quit=quit_for_update, urgent=lambda: appversion.newer(app.game_tag, made))
+        upd.changed = app._bump
+        app.updater = upd
+        upd.start()
+
     def boot():
         try:
             ready = server.prepare(args)
@@ -425,6 +457,11 @@ def main(argv=None):
                 raise RuntimeError('port %d is busy' % port)
             app = ready[0]
             app.picker = pick_folder
+            if getattr(sys, 'frozen', False) and not own.selftest:
+                try:
+                    start_updates(app)
+                except Exception:
+                    traceback.print_exc()       # без проверки обновлений программа работает как раньше
             if panes:
                 try:
                     start_overlay(app)

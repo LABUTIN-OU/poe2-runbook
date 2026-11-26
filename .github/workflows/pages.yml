@@ -20,6 +20,8 @@ concurrency:
 
 jobs:
   deploy:
+    # While the repository is private there is no Pages site to deploy to (free plan): skip instead of failing.
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

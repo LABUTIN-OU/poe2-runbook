@@ -80,3 +80,6 @@ Name: "{autodesktop}\PoE2 Runbook"; Filename: "{app}\PoE2Runbook.exe"; Tasks: de
 
 [Run]
 Filename: "{app}\PoE2Runbook.exe"; Description: "{cm:LaunchProgram,PoE2 Runbook}"; Flags: nowait postinstall skipifsilent
+
+; обновление из самой программы: тихая установка ждёт её выхода и открывает её снова (planner/update.py)
+#include "update.iss"

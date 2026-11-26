@@ -69,8 +69,11 @@ PoE2 Runbook — программа для Windows: прохождение Path 
 
     python -X utf8 -m unittest discover -s planner
     python -X utf8 -m unittest discover -s catalog
+    python -X utf8 -m unittest discover -s release
 
 Несколько тестов требуют исходных таблиц игры (`catalog/sources`, их нет в репозитории) и без них пропускаются.
+Тестам инструмента выпуска (`release/publish.py`: подписанные файлы обновления) нужен openssl — подойдёт тот, что
+идёт с Git для Windows.
 
 ## Сборка установщика
 

@@ -40,6 +40,7 @@
       <a href="#download">Download</a>
       <a href="#reads">Reads and presses</a>
       <a href="#first-start">First start</a>
+      <a href="#plans" data-plans-row hidden>Plans</a>
       <a href="#needs">What it needs</a>
       <a href="#licence">Licence</a>
       <a href="#official">Addresses</a>
@@ -213,6 +214,7 @@
             <li><code>filters\</code><span>copies of the filter versions the game loaded</span></li>
             <li><code>backup\</code><span>earlier versions of a plan, saved before each edit; removed plans</span></li>
             <li><code>export\</code><span>plan files you saved to share</span></li>
+            <li><code>update\</code><span>the installer of a new version — after you press Update; removed once it is installed</span></li>
             <li><code>settings.json</code><span>the game's folder, the window's size and place, your choices in Settings</span></li>
             <li><code>program.log</code><span>what the program did at this start; the five starts before it are kept too</span></li>
             <li><code>webview\</code><span>storage of the window's engine: the pages' own settings and cache</span></li>
@@ -239,8 +241,9 @@
     <h3>Network</h3>
     <ul class="facts">
       <li class="fr one">The program sends nothing about you or your game anywhere: it has no account, no statistics, no error reports.</li>
-      <li class="fr one" id="net-none" hidden>Its own code makes no requests to the internet at all — there is not even an update check.</li>
-      <li class="fr one" id="net-update" hidden>Update check: the program downloads one file from this site — <code>update/latest.json</code> — to learn whether a newer version exists. It sends nothing about you.</li>
+      <li class="fr one"><b>Update check.</b> At start, and then every 6 hours, the program downloads two small files from this site: <code>update/latest.json</code> and its signature <code>update/latest.json.sig</code>. If the site does not answer — or the game is already newer than the program and no new build is out yet — it asks again in 30 minutes. The request carries the program's version (<code>User-Agent: PoE2Runbook/&lt;version&gt;</code>) and nothing else: no cookies, no name, nothing about your game. The hosting sees your IP address, as with any web request. The check is switched off in Settings: “Check for updates”.</li>
+      <li class="fr one">The program checks the file's signature itself — with a key built into it — before it reads the file, and accepts only a version newer than its own.</li>
+      <li class="fr one">Nothing is downloaded or installed until you press Update. Then the program downloads the installer from the address named in the signed file, compares its size and SHA-256 with that file, starts it and closes; the installer puts the new version in place and opens it.</li>
       <li class="fr one">The pages of its window are served from your own computer (address 127.0.0.1) and answer this computer only.</li>
       <li class="fr one">The window is drawn by Microsoft Edge WebView2, a component of Windows. It is Microsoft's, and it may contact Microsoft on its own, the way the Edge browser does.</li>
       <li class="fr one">The program opens your browser only on your click: this site — from its About window; an item filter's page on pathofexile2.com; Microsoft's download page for WebView2 when that component is missing.</li>
@@ -286,10 +289,24 @@
       <li><b>Windows will warn about an unknown publisher.</b>
         <span class="w">It shows “Windows protected your PC”. Press <b>More info</b>, then <b>Run anyway</b>. A browser may warn earlier that the file is rarely downloaded — choose to keep it. On Windows 11 with Smart App Control switched on the installer may be blocked outright: that protection has no “Run anyway”.</span></li>
       <li><b>The installer asks for no administrator rights.</b>
-        <span class="w">It installs for the current user into <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code>. A new version is installed over the old one; your plans and heroes stay.</span></li>
+        <span class="w">It installs for the current user into <code>%LOCALAPPDATA%\<wbr>Programs\<wbr><span class="nb">PoE2 Runbook</span></code>. A new version is installed over the old one; your plans and heroes stay. Later the program tells you about a new version itself and installs it when you press Update.</span></li>
       <li><b>The program finds the game by itself.</b>
         <span class="w">Steam or the standalone client, on any drive. If the game is not found, the program says so and lets you choose its folder.</span></li>
     </ol>
+  </section>
+
+  <section id="plans" data-plans-row hidden>
+    <h2>Plans</h2>
+    <p class="sub">Plans approved by the program's author. A plan is installed from the program itself: Edit → Catalogue.</p>
+    <ul class="plans" id="plans-list"></ul>
+    <p class="quiet" data-contact-row hidden>To propose a plan of your own, send the plan's file to <a data-contact href="#plans" rel="noopener noreferrer"></a>.</p>
+    <template id="plan-tpl">
+      <li class="plan">
+        <b class="pn" data-p="title"></b>
+        <span class="pm"><span data-p="author-row">by <span data-p="author"></span></span><span data-p="game-row">for game <span data-p="game"></span></span><span data-p="version-row">version <span data-p="version"></span></span><span data-p="date"></span></span>
+        <span class="ps" data-p="summary"></span>
+      </li>
+    </template>
   </section>
 
   <section id="needs">
@@ -337,9 +354,9 @@
     <p>This is the only official address of the program. <code>poe2runbook.com</code> leads here.</p>
     <p>Official builds are published only at poe2.labutin.gg<span data-repo-row hidden>; the files themselves are stored in the releases of <a data-repo data-repo-text href="#official" rel="noopener noreferrer">the program's repository</a></span>.</p>
     <p>A build from any other address is not ours: before you run a file, compare its SHA-256 with the one next to the Download button.</p>
-    <div id="contact" hidden>
+    <div id="contact" data-contact-row hidden>
       <h3>Contact</h3>
-      <p>Questions and error reports: <a id="contact-link" href="#official" rel="noopener noreferrer"></a></p>
+      <p>Questions and error reports: <a id="contact-link" data-contact href="#official" rel="noopener noreferrer"></a></p>
     </div>
   </section>
 

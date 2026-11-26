@@ -1,0 +1,38 @@
+{
+ "format": "poe2-runbook-plans",
+ "v": 1,
+ "updated": "2026-11-26",
+ "plans": [
+  {
+   "uid": "a1b2c3d4e5f6",
+   "version": 3,
+   "title": {
+    "ru": "Пример: Чародейка, кампания",
+    "en": "Example: Sorceress, campaign"
+   },
+   "author": {
+    "name": "Sergei Labutin",
+    "url": "https://poe2.labutin.gg"
+   },
+   "game": "0.5.5",
+   "class": "Sorceress",
+   "ascendancy": "Disciple of Varashta",
+   "tags": ["campaign", "hc", "ssf"],
+   "langs": ["ru", "en"],
+   "summary": {
+    "ru": "Кампания за Чародейку до карт: маршрут по шагам и цели по умениям и предметам.",
+    "en": "The campaign as a Sorceress up to maps: the route step by step, with goals for skills and items."
+   },
+   "changed": {
+    "ru": "Первая версия.",
+    "en": "The first version."
+   },
+   "published": "2026-11-26",
+   "file": {
+    "url": "https://example.com/plans/a1b2c3d4e5f6.plan.json",
+    "size": 91234,
+    "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+   }
+  }
+ ]
+}

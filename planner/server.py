@@ -16,6 +16,7 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import shutil
 import sys
 import threading
@@ -224,6 +225,9 @@ class App:
         self.overlay = dict(overlay_from({}), can=False)
         self.window_toggle = None
         self.window_front = None
+        # Обновление программы (update.Updater): есть только у окна программы (desktop.py) — сервер из исходников о новых
+        # версиях не спрашивает. Его состояние — /api/update (шапка всех страниц) и поле update состояния «Игры».
+        self.updater = None
         self.shut_at = None           # когда нажата «Закрыть» в игре: страница убирает своё верхнее окно
         # Путевой камень, скопированный в игре: страница отвечает «идти / без босса / не идти». Плана для
         # ответа не нужно: класс опасности каждого аффикса лежит в базе знаний (knowledge/waystones.json),
@@ -429,6 +433,9 @@ class App:
                 self.plan_problems.append(tr('Наград с такими кодами нет в данных игры: %s') % ', '.join(odd))
         except (ValueError, OSError) as e:
             self.plan_error = tr('План не прочитан, показан прежний: %s') % e
+        except Exception as e:   # noqa: BLE001 — план не того вида, что ждёт программа: страница живёт, о плане сказано
+            self.plan_error = tr('План не прочитан, показан прежний: %s') % type(e).__name__
+            i18n.say('plan %s: %r' % (self.plan_path, e), flush=True)
         # отметка времени — уже с учётом частей, названных в только что прочитанном оглавлении
         try:
             self._plan_mtime = self._plan_stamp()
@@ -637,10 +644,15 @@ class App:
         if not self.plans_dir:
             return {'ok': False, 'problems': [tr('библиотеки планов нет: программа запущена с одним планом')]}
         data = req.get('import')
+        if not (req.get('file') is None or isinstance(req.get('file'), str)) or not (
+                req.get('replace') in (None, '', False) or isinstance(req.get('replace'), str)):
+            return {'ok': False, 'problems': [tr('план не добавлен: %s') % tr('это не файл плана')]}
         try:
             planlib.parse_bundle(data)
             if req.get('replace'):
                 pid = str(req['replace'])
+                if planlib.manifest_path(self.plans_dir, pid) is None:
+                    raise ValueError(tr('плана «%s» нет') % '?')
                 planlib.replace(self.plans_dir, pid, data, req.get('file'), backup_dir=self.backup_dir / 'plans' / pid)
                 fresh = False
             else:
@@ -2339,7 +2351,9 @@ class App:
         (found — лог игры в ней найден; pick — указать папку можно: окно выбора есть только у окна программы)."""
         return {'overlay': dict(self.overlay),
                 'game': {'dir': str(self.game_dir or ''), 'found': bool(self.log_path), 'pick': bool(self.picker)},
-                'about': {'name': about.NAME, 'author': about.AUTHOR, 'year': about.YEAR}}     # первая строка окна
+                'about': {'name': about.NAME, 'author': about.AUTHOR, 'year': about.YEAR},     # первая строка окна
+                # «Проверять обновления»: строка есть только у окна программы (can) — сервер из исходников не спрашивает
+                'update': self.updater.setting() if self.updater else {'can': False}}
 
     def hotkey_close(self):
         """Клавиша «Закрыть» в игре: страница убирает своё верхнее окно (сравнение, путевой камень, очки дерева) — какое из
@@ -2650,6 +2664,10 @@ class App:
         made = (self.base_catalog or {}).get('version')
         v['version'] = {'program': appversion.program(made), 'made': appversion.stem(made), 'game': self.game_tag,
                         'newer': appversion.newer(self.game_tag, made)}
+        # обновление программы: есть ли новая версия (тогда у красной строки «нужна новая версия программы» — кнопка
+        # «Обновить») и счёт перемен (шапка спрашивает /api/update заново); None — программа о новых версиях не
+        # спрашивает (сервер из исходников)
+        v['update'] = self.updater.brief() if self.updater else None
         v['planError'] = self.plan_error
         v['planProblems'] = self.plan_problems
         v['wayProblems'] = self.know_problems     # база знаний о путевых камнях разошлась с данными игры
@@ -2803,6 +2821,31 @@ class App:
             self.tick()
 
 
+# Content-Security-Policy страниц программы — вторая стена после esc на самих страницах: если текст чужого плана
+# где-то всё же ляжет на страницу разметкой, браузер не выполнит из него ничего. Скрипт и стиль страницы — только
+# те, что пришли с ней (метка nonce — новая на каждый ответ, сервер ставит её в теги <script> и <style> страницы);
+# встроенные обработчики (onerror=…), eval, чужие скрипты и стили не выполняются. Атрибут style в разметке
+# страниц нужен (ширины, цвета) — он разрешён. Картинки — только с самого сервера, запросы — только к нему
+# (/api/…, поток событий). Окно программы (pywebview) вставляет свой мост через WebView2 — политика его не касается.
+PAGE_POLICY = ("default-src 'none'; script-src 'nonce-{n}'; style-src 'nonce-{n}'; style-src-attr 'unsafe-inline'; "
+               "img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+RE_PAGE_TAG = re.compile(rb'(?m)^<(script|style)>')
+
+
+def page_nonce():
+    return secrets.token_urlsafe(18)
+
+
+def with_nonce(body, nonce):
+    """Текст страницы с меткой ответа в её тегах <script> и <style> (они стоят в начале своей строки)."""
+    return RE_PAGE_TAG.sub(lambda m: b'<%s nonce="%s">' % (m.group(1), nonce.encode('ascii')), body)
+
+
+def no_constant(name):
+    """NaN и Infinity в теле запроса — не JSON: страница таких чисел не шлёт."""
+    raise ValueError(name)
+
+
 def make_handler(app, port):
     allowed_hosts = {'127.0.0.1:%d' % port, 'localhost:%d' % port}
     allowed_origins = {'http://' + h for h in allowed_hosts}
@@ -2820,6 +2863,20 @@ def make_handler(app, port):
             self.send_header('Content-Length', str(len(data)))
             # картинки умений не меняются — их браузер держит у себя; всё остальное всегда свежее
             self.send_header('Cache-Control', 'max-age=86400' if cache else 'no-store')
+            self.end_headers()
+            self.wfile.write(data)
+
+        def _page(self, body):
+            """Страница программы: с политикой (PAGE_POLICY) и меткой этого ответа в её скриптах и стилях."""
+            nonce = page_nonce()
+            data = with_nonce(body, nonce)
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.send_header('Content-Length', str(len(data)))
+            self.send_header('Cache-Control', 'no-store')
+            self.send_header('Content-Security-Policy', PAGE_POLICY.format(n=nonce))
+            self.send_header('X-Content-Type-Options', 'nosniff')
+            self.send_header('Referrer-Policy', 'no-referrer')
             self.end_headers()
             self.wfile.write(data)
 
@@ -2859,7 +2916,7 @@ def make_handler(app, port):
                     body = (HERE / 'static' / ('admin.html' if path == '/admin' else 'index.html')).read_bytes()
                 except OSError:
                     return self._send(500, tr('Нет файла страницы'), 'text/plain; charset=utf-8')
-                return self._send(200, body, 'text/html; charset=utf-8')
+                return self._page(body)
             lang = self._lang()
             if path == '/api/lang':
                 # тексты страницы на языке lang и список языков для переключателя
@@ -2868,6 +2925,12 @@ def make_handler(app, port):
                 # настройки программы — для окна «Настройки» в шапке (оно одно на всех страницах)
                 with app.cond:
                     body = json.dumps(app.settings_view(), ensure_ascii=False)
+                return self._send(200, body, 'application/json; charset=utf-8')
+            if path == '/api/update':
+                # обновление программы — для шапки всех страниц: есть ли версия новее, как идёт «Обновить», объявление
+                # для всех, когда была последняя проверка и что ответила (окно «О программе»)
+                upd = app.updater
+                body = json.dumps(i18n.render(upd.view(lang) if upd else {'can': False}, lang), ensure_ascii=False)
                 return self._send(200, body, 'application/json; charset=utf-8')
             if path == '/api/about':
                 # окно «О программе» (в окне «Настройки»): чья программа, версия, лицензия, сторонние компоненты
@@ -3020,19 +3083,19 @@ def make_handler(app, port):
             if not self._local_only():
                 return self._send(403, 'forbidden', 'text/plain; charset=utf-8')
             path, lang = self.path.split('?', 1)[0], self._lang()
-            if path not in ('/api/mark', '/api/build', '/api/check', '/api/open', '/api/plans', '/api/game'):
+            if path not in ('/api/mark', '/api/build', '/api/check', '/api/open', '/api/plans', '/api/game', '/api/update'):
                 return self._send(404, 'not found', 'text/plain; charset=utf-8')
             try:
                 n = int(self.headers.get('Content-Length') or 0)
                 # отметка — короткая; версии дерева — три списка по сотне узлов; разделы билда — этапы
                 # и цели с заметками (сотня записей); присланный файл плана — маршрут и билд целиком
-                if not 0 < n <= {'/api/mark': 4096, '/api/open': 256, '/api/game': 256,
+                if not 0 < n <= {'/api/mark': 4096, '/api/open': 256, '/api/game': 256, '/api/update': 256,
                                  '/api/plans': 2 * planlib.MAX_TEXT + 65536}.get(path, 262144):
                     raise ValueError('bad length')
-                req = json.loads(self.rfile.read(n).decode('utf-8'))
+                req = json.loads(self.rfile.read(n).decode('utf-8'), parse_constant=no_constant)
                 if not isinstance(req, dict):
                     raise ValueError('bad body')
-            except (ValueError, OSError):
+            except (ValueError, OSError, RecursionError):
                 return self._send(400, '{"ok": false}', 'application/json')
             if path == '/api/game':
                 # «указать папку игры»: окно выбора папки открывает сама программа (оно есть только у окна программы),
@@ -3050,6 +3113,19 @@ def make_handler(app, port):
                 with app.cond:
                     body = app.answer(app.choose_game(folder), lang)
                 return self._send(200, body, 'application/json; charset=utf-8')
+            if path == '/api/update':
+                # «Обновить» (go) — скачать, сверить и запустить установщик новой версии; «Проверять обновления» (on) —
+                # настройка окна «Настройки». Адрес и файл берёт сама программа: от страницы — только «да» и «вкл/выкл».
+                upd = app.updater
+                if upd is None:
+                    ok = False
+                elif req.get('go') is True:
+                    ok = upd.install()
+                elif 'on' in req:
+                    ok = upd.set_on(req['on'])
+                else:
+                    ok = False
+                return self._send(200 if ok else 400, json.dumps({'ok': bool(ok)}), 'application/json')
             if path == '/api/open':
                 # страница просит открыть в браузере системы страницу фильтра на сайте игры (App.open_filter) или
                 # официальный сайт программы (App.open_site): адрес собирает программа — адрес от страницы не принимается

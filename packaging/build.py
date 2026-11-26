@@ -118,6 +118,11 @@ def main():
     for name in LEGAL:
         if not (root / name).is_file():
             sys.exit('no %s in %s' % (name, root))
+    # ключ подписи обновлений (planner/updatekey.py, его вписывает release/publish.py keygen): без него собранная программа
+    # не примет ни одного файла обновления — установленные копии придётся обновлять руками
+    if "PUBLIC_KEY = '" not in (root / 'planner' / 'updatekey.py').read_text(encoding='utf-8'):
+        print('== WARNING: no update signing key in planner/updatekey.py — this build will accept no updates '
+              '(run: python -X utf8 release/publish.py keygen)', flush=True)
     iscc = None
     if not args.no_installer:
         iscc = next((p for p in ISCC if p.is_file()), None)

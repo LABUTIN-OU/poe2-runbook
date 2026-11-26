@@ -9,6 +9,7 @@
 """
 import json
 import os
+import re
 import sys
 import tempfile
 import threading
@@ -520,7 +521,9 @@ class AppTest(unittest.TestCase):
                     return r.read().decode('utf-8')
             page = get('/review')
             self.assertIn('function reviewPage()', page)
-            self.assertEqual(page, get('/'))
+            # та же страница; метка скриптов и стилей (nonce) у каждого ответа своя
+            plain = lambda s: re.sub(r'nonce="[^"]+"', 'nonce=""', s)     # noqa: E731
+            self.assertEqual(plain(page), plain(get('/')))
             data = json.loads(get('/api/review?hero=%s&base=%s&lang=en' % (SECOND, FIRST)))
             self.assertEqual((data['pick'], data['hero']['steps'][0]['a'], data['base']['id']), (SECOND, 'Act 1', FIRST))
             self.assertEqual(json.loads(get('/api/review?last=%s&since=0' % FIRST))['pick'], SECOND)

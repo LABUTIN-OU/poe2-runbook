@@ -30,8 +30,9 @@ import langscan  # noqa: E402
 from i18n import tr  # noqa: E402
 
 PAGES = ('index.html', 'admin.html')
-# модули без текстов программы: сам слой языка и его проверка
-SKIP = ('i18n.py', 'langscan.py')
+# модули без текстов программы: сам слой языка и его проверка; проверочные инструменты (враждебные планы — их данные
+# и отчёт; в программу они не входят)
+SKIP = ('i18n.py', 'langscan.py', 'hostile.py', 'hostile_pages.py')
 
 
 def modules():

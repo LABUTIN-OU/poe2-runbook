@@ -98,7 +98,7 @@ main section > :last-child{margin-bottom:0}
 .fr dt{margin:0;font-weight:600;overflow-wrap:anywhere}
 .fr dd{margin:0;overflow-wrap:break-word}
 .fr .w{display:block;font-weight:400;color:var(--muted);font-size:14px}
-.fr.one{grid-template-columns:minmax(0,1fr)}
+.fr.one{display:block}      /* строка-утверждение: обычный текст (в сетке каждая клавиша и каждый <code> встали бы отдельной строкой) */
 /* правило GGG слева, программа справа — каждое под своей подписью */
 .fr.rule{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .fr.rule dt{font-weight:400}
@@ -126,6 +126,12 @@ ol.steps b{font-weight:600}
 ol.steps .w{display:block;color:var(--muted);font-size:14px}
 pre{position:relative;margin:8px 0 0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:13px;
   line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+/* Планы: строка — один план: название, под ним кто, для какой игры, версия и дата — через точку, ниже одно предложение */
+ul.plans{display:flex;flex-direction:column;gap:6px;margin:8px 0;padding:0;list-style:none}
+.plan{padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--tile);overflow-wrap:anywhere}
+.plan .pn{display:block;font-weight:600}
+.plan .pm{display:block;color:var(--muted);font-size:14px}
+.plan .ps{display:block;margin-top:2px}
 ul.plain{margin:0 0 8px;padding-left:22px}
 ul.plain li{margin:3px 0}
 .langs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;padding:0;list-style:none}

@@ -69,8 +69,11 @@ About 1,900 files, 15 MB, from the CDN of poe2db.tw into `planner/static/icons/`
 
     python -X utf8 -m unittest discover -s planner
     python -X utf8 -m unittest discover -s catalog
+    python -X utf8 -m unittest discover -s release
 
-A few tests need the raw game tables (`catalog/sources`, not in the repository) and are skipped without them.
+A few tests need the raw game tables (`catalog/sources`, not in the repository) and are skipped without them. The
+tests of the release tool (`release/publish.py`: signed update files) need openssl — the one of Git for Windows will
+do.
 
 ## Build the installer
 

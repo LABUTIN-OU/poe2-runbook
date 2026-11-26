@@ -28,6 +28,7 @@ from pathlib import Path
 
 import buildplan
 import planfiles
+import planguard
 from i18n import tr
 
 FORMAT = 'poe2-runbook-plan'
@@ -46,11 +47,16 @@ _LAT = dict(zip('абвгдеёжзийклмнопрстуфхцчшщъыьэ�
                  'u', 'f', 'kh', 'ts', 'ch', 'sh', 'shch', '', 'y', '', 'e', 'yu', 'ya']))
 
 
+# имена устройств Windows: папкой с таким именем Windows не пользуется как обычной
+DEVICES = frozenset(['con', 'prn', 'aux', 'nul'] + ['com%d' % i for i in range(10)] + ['lpt%d' % i for i in range(10)])
+
+
 def slug(title):
-    """id плана из его названия: латиница, цифры и дефисы («HC SSF · DoV» -> «hc-ssf-dov»)."""
+    """id плана из его названия: латиница, цифры и дефисы («HC SSF · DoV» -> «hc-ssf-dov»); имя устройства Windows
+    («CON», «nul») получает приставку -plan."""
     s = ''.join(_LAT.get(c, c) for c in str(title or '').lower())
     s = re.sub(r'[^a-z0-9]+', '-', s).strip('-')[:48].strip('-')
-    return s or 'plan'
+    return (s + '-plan' if s in DEVICES else s) or 'plan'
 
 
 def free_id(root, base):
@@ -177,9 +183,20 @@ def _parts_text(path, manifest):
     return buildplan.read_text(paths['route'])[0], buildplan.read_text(paths['build'])[0]
 
 
+def inside(root, path):
+    """Путь path — внутри папки библиотеки root (оба разворачиваются: ссылка и «..» наружу не выведут). Нет —
+    ValueError: библиотека пишет только в свои папки."""
+    top, path = Path(root).resolve(), Path(path).resolve()
+    if top == path or top not in path.parents:
+        raise ValueError(tr('запись вне папки библиотеки планов не делается'))
+    return path
+
+
 def _make(root, pid, route_text, build_text, manifest):
     """Новая папка плана: части и оглавление. Не вышло — папки нет."""
-    folder = Path(root) / pid
+    if not RE_ID.fullmatch(pid):
+        raise ValueError(tr('плана «%s» нет') % '?')
+    folder = inside(root, Path(root) / pid)
     folder.mkdir(parents=True)
     try:
         for name, text in ((ROUTE, route_text), (BUILD, build_text)):
@@ -256,32 +273,42 @@ def bundle(root, pid):
 
 def parse_bundle(data):
     """Проверяет присланный файл плана: (текст маршрута, текст билда, сведения {uid, title, groups}).
-    Не файл плана или в нём что-то не так — ValueError со словами для игрока."""
+    Не файл плана или в нём что-то не так — ValueError со словами для игрока. Файл с чужой машины: каждое поле
+    маршрута и билда — того вида, что пишет сама программа (planguard), иначе план не принимается."""
     if not isinstance(data, dict) or data.get('format') != FORMAT:
         raise ValueError(tr('это не файл плана'))
-    if not isinstance(data.get('version'), int) or data['version'] > 1:
+    if isinstance(data.get('version'), bool) or not isinstance(data.get('version'), int) or data['version'] > 1:
         raise ValueError(tr('файл плана новее программы: обновите программу'))
-    texts = {}
+    texts, parsed = {}, {}
     for part, word in (('route', tr('маршрут')), ('build', tr('билд'))):
         text = data.get(part)
         if not isinstance(text, str) or not text.strip() or len(text) > MAX_TEXT:
             raise ValueError(tr('в файле плана нет части «%s»') % word)
         try:
-            obj = json.loads(text)
+            obj = planguard.loads(text, word)
+        except planguard.Refused:
+            raise
         except ValueError as e:
             raise ValueError(tr('часть «%s» файла плана не читается: %s') % (word, e))
         if not isinstance(obj, dict):
             raise ValueError(tr('часть «%s» файла плана записана не так') % word)
-        texts[part] = text
+        texts[part], parsed[part] = text, obj
+    groups = data.get('groups') if data.get('groups') is not None else []
+    title = data.get('title') if data.get('title') is not None else ''
+    found = planguard.problems(parsed['route'], parsed['build'], groups)
+    out = []
+    planguard.text(200)(title, 'title', out)
+    found += [tr('файл плана, %s: %s') % (place, planguard.word(k, args)) for place, k, args in out]
+    if found:
+        raise planguard.Refused(planguard.verdict(found))
     uid = data.get('uid') if isinstance(data.get('uid'), str) and re.fullmatch(r'[0-9a-z]{1,40}', data['uid']) else ''
-    title = data.get('title') if isinstance(data.get('title'), str) else ''
-    groups = [g for g in data.get('groups') or [] if isinstance(g, str)][:40] if isinstance(data.get('groups'), list) else []
-    return texts['route'], texts['build'], {'uid': uid, 'title': title.strip()[:120], 'groups': groups}
+    return texts['route'], texts['build'], {'uid': uid, 'title': title.strip()[:120], 'groups': list(groups)}
 
 
 def _file_name(name):
-    name = str(name or '').replace('\\', '/').rsplit('/', 1)[-1]
-    return re.sub(r'[\x00-\x1f]', '', name)[:120]
+    """Имя присланного файла для списка планов: без папок, управляющих и невидимых знаков, не длиннее 120."""
+    name = (name if isinstance(name, str) else '').replace('\\', '/').rsplit('/', 1)[-1]
+    return planguard.RE_BAD.sub('', re.sub(r'[\x00-\x1f]', '', name))[:120]
 
 
 def add(root, data, file_name='', now=None, uid=None):
@@ -322,6 +349,10 @@ def replace(root, pid, data, file_name='', now=None, backup_dir=None):
     if not isinstance(m.get('received'), dict):
         raise ValueError(tr('план «%s» — ваш: присланный файл его не заменяет') % summary(rec)['title'])
     paths = planfiles.part_paths(path, m)
+    if set(paths) != {'route', 'build'}:
+        raise ValueError(tr('у плана нет маршрута или билда'))
+    for target in [path] + list(paths.values()):
+        inside(root, target)
     for part, text in (('route', route_text), ('build', build_text)):
         buildplan.write_text(paths[part], text, False, backup_dir, part, now)
     m['received'] = {'file': _file_name(file_name), 'at': stamp_text(now)}
