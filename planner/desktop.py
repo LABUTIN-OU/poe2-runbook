@@ -10,7 +10,8 @@
     планов для обмена (export), настройки (где игра, размер окна) и журнал запуска program.log (журналы пяти
     прежних запусков — program.1.log … program.5.log). Папка самой программы только читается: новая версия ставится
     поверх и ничего из этого не трогает;
-  * при первом запуске в пустую библиотеку кладутся планы, пришедшие с программой;
+  * при первом запуске в пустую библиотеку кладутся планы, пришедшие с программой (как полученные — только для
+    просмотра; совпала метка с планом каталога одобренных планов — получают его новые версии);
   * адрес страниц игрок не видит; порт — постоянный (первый свободный из 4727…4736): настройки страниц
     (язык, свёрнутые блоки) окно хранит по адресу, и они не теряются от запуска к запуску;
   * окно — движок Microsoft Edge WebView2 (он есть в Windows 11, в Windows 10 его ставит Центр обновления); нет
@@ -20,7 +21,8 @@
   * в заголовке окна — версия программы: «версия игры, под которую она сделана» и номер сборки (appversion.py);
   * о новой версии программа узнаёт сама — с официального адреса, при запуске и раз в 6 часов (update.py; настройка
     «Проверять обновления»); «Обновить» скачивает установщик, сверяет его с подписанным файлом, запускает и закрывает
-    программу — установщик дожидается её выхода (мьютекс update.APP_MUTEX) и открывает уже новую;
+    программу — установщик дожидается её выхода (мьютекс update.APP_MUTEX) и открывает уже новую; с тем же
+    расписанием и под той же настройкой — каталог одобренных планов (plancat.py);
   * закрыли окно — программа закончила работу.
 
 Для проверок: --data <папка> (вместо %APPDATA%\\PoE2 Runbook), --selftest (окно не показывается: страница
@@ -31,7 +33,6 @@ import ctypes
 import hashlib
 import os
 import re
-import shutil
 import socket
 import sys
 import threading
@@ -89,17 +90,24 @@ def program_version():
     return appversion.program(current) or '%s.%d' % (appversion.GAME, appversion.BUILD)
 
 
-def seed_plans(data):
-    """Библиотека пуста (первый запуск) — кладём в неё планы, пришедшие с программой."""
+def seed_plans(data, src=None):
+    """Библиотека пуста (первый запуск) — кладём в неё планы, пришедшие с программой (src — их папка; по умолчанию —
+    plans в папке программы). Это планы автора программы, не игрока: они ложатся обычным приёмом плана (planlib.add)
+    как полученные — только для просмотра, с пометкой «пришёл с программой» (received.by); свой план на их основе
+    игрок делает «Новым планом». Совпала метка с планом каталога одобренных планов — план получает его новые версии
+    (plancat.py). Ответ — id добавленных планов."""
     plans = data / 'plans'
     if planlib.scan(plans):
         return []
     added = []
-    src = BUNDLE / 'plans'
-    for d in sorted(src.iterdir()) if src.is_dir() else []:
-        if d.is_dir() and (d / planlib.MANIFEST).is_file() and not (plans / d.name).exists():
-            shutil.copytree(d, plans / d.name)
-            added.append(d.name)
+    src = Path(src) if src else BUNDLE / 'plans'
+    for rec in planlib.scan(src) if src.is_dir() else []:
+        try:
+            plan = planlib.bundle(src, rec['id'])
+            added.append(planlib.add(plans, plan, '', uid=plan['uid'] or None,
+                                     extra={'received': {'file': '', 'at': planlib.stamp_text(), 'by': 'program'}}))
+        except (OSError, ValueError) as e:
+            print('plan %s not added: %s' % (rec['id'], e))
     return added
 
 
@@ -447,6 +455,7 @@ def main(argv=None):
         upd = update.Updater(version, data / 'update', data / 'settings.json', update.embedded_key(),
                              quit=quit_for_update, urgent=lambda: appversion.newer(app.game_tag, made))
         upd.changed = app._bump
+        upd.also.append(app.plancat_check)          # каталог одобренных планов — с тем же расписанием и настройкой
         app.updater = upd
         upd.start()
 

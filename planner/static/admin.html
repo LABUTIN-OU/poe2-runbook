@@ -591,9 +591,26 @@ html:lang(th) body{font-family:"Segoe UI","Leelawadee UI",Tahoma,system-ui,sans-
 #ctxnew .nwbtns{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
 #ctxnew .cxmsg{margin:8px 0 0;color:var(--over-text)}
 #ctx .cxadd{gap:8px}
+/* «Каталог» (только в «Редакторе»): строки — та же сетка, что у планов (название · класс · автор · действие); под строкой
+   — для какой игры, версия и день, и что изменилось (у плана, который можно обновить) или о чём план */
+#ctx .catr{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+#ctx .catst{font-size:12px;color:var(--muted);text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ctx .catst.bad{color:var(--over-text)}
+#ctx .catrow{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1.3fr) 160px;column-gap:10px;row-gap:2px;
+  align-items:center;margin:0 -8px;padding:7px 8px;border-top:1px solid var(--line);border-radius:6px;transition:background .4s}
+#ctx .catrow > span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ctx .catrow .cata{font-size:12px;color:var(--muted)}
+#ctx .catrow .cata a{color:var(--accent);text-decoration:none}
+#ctx .catrow .cata a:hover{text-decoration:underline}
+#ctx .catd{grid-column:1 / 4;min-width:0;font-size:12px;line-height:17px;color:var(--muted);overflow-wrap:anywhere}
+#ctx .catd .catg{color:var(--due-text)}
+#ctx .catd .catc{color:var(--text)}
+#ctx .catrow.flash{background:rgba(230,169,63,.14)}
+#ctx .mini.upd{border-color:var(--due);color:var(--due-text)}
 /* узкое окно: место — именам; где герой, его план и класс плана уходят, кнопки берут сколько им нужно */
 @media (max-width:640px){#ctx{padding:2px 10px 10px}#ctx .runrow,#ctx .runrow.lib{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 52px auto}
-  #ctx .runz,#ctx .runp{display:none}#ctx .planrow{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto}#ctx .plc{display:none}}
+  #ctx .runz,#ctx .runp{display:none}#ctx .planrow{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto}#ctx .plc{display:none}
+  #ctx .catrow{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto}#ctx .catd{grid-column:1 / 3}}
 </style>
 </head>
 <body>
@@ -789,7 +806,7 @@ function setPanel() {
   // обновления программы — только у окна программы (во вкладке браузера их нет: обновлять там нечего)
   const u = d && d.update;
   if (u && u.can) {
-    rows += line(T('Проверять обновления'), T('При запуске и раз в 6 часов программа спрашивает у poe2.labutin.gg, есть ли новая версия; в запросе — только номер версии программы. Новая версия ставится только по нажатию «Обновить»'),
+    rows += line(T('Проверять обновления'), T('При запуске, раз в 6 часов и когда вы открываете список планов в «Редакторе» программа спрашивает у poe2.labutin.gg, есть ли новая версия программы и новые версии планов каталога; в запросе — только номер версии программы. Ставится только то, что вы обновите сами'),
       pick([opt('upd', true, u.on, T('вкл')), opt('upd', false, u.on, T('выкл'))]), ' gap');
   }
   return `<div class="setp" role="dialog" aria-label="${ctxEsc(T('Настройки'))}"><div class="seth"><b>${ctxEsc(T('Настройки'))}</b>` +
@@ -1140,9 +1157,18 @@ function ctxPanel() {
   const ask = !!p.ask;
   const plan = x => {
     const mine = x.id === p.current;
-    const tag = x.received ? T('присланный') : !x.from ? T('мой') : x.from.template ? T('из шаблона')
-      : x.from.take === 'route' ? T('маршрут «{0}»', x.from.title || '') : T('копия «{0}»', x.from.title || '');
-    const tip = x.received ? T('Прислан файлом «{0}» {1}', x.received.file || '', ctxDay(x.received.at)) : '';
+    // план из каталога — с именем его автора (из подписанного каталога); пришедший с программой — так и сказано
+    const cat = x.catalog, born = x.received && x.received.by === 'program';
+    const tag = cat ? T('автор: {0}', cat.author.name) : born ? T('с программой') : x.received ? T('присланный') : !x.from ? T('мой')
+      : x.from.template ? T('из шаблона') : x.from.take === 'route' ? T('маршрут «{0}»', x.from.title || '') : T('копия «{0}»', x.from.title || '');
+    const tip = cat ? T('Из каталога: версия {0} от {1}', cat.version, ctxDay(cat.published || cat.at))
+      : born ? T('Пришёл вместе с программой {0}', ctxDay(x.received.at))
+        : x.received ? T('Прислан файлом «{0}» {1}', x.received.file || '', ctxDay(x.received.at)) : '';
+    // в каталоге версия новее (редактор): вместо автора — «есть новая версия»; нажатие ведёт к строке каталога, где
+    // «Обновить» и что изменилось (автор — там же и в подсказке)
+    const newer = CTX.page === 'edit' && x.newer && x.uid ? `<button class="mini upd" data-cxcat="show:${ctxEsc(x.uid)}" ` +
+      `title="${ctxEsc((cat ? T('автор: {0}', cat.author.name) + ' · ' : '') + T('В каталоге — версия {0}: что изменилось и «Обновить» — в разделе «Каталог»', x.newer))}">` +
+      `${T('есть новая версия')}</button>` : '';
     const yes = lib && mine && ask ? `<button class="mini go" data-cxpick="${ctxEsc(x.id)}">${T('Да, по нему')}</button>` : '';
     const rm = lib && !mine && !x.heroes ? `<button class="mini rm${ctxArmed('rm:' + x.id) ? ' arm' : ''}" data-cxrm="${ctxEsc(x.id)}" ` +
       `title="${ctxEsc(T('Убрать план из библиотеки (папка плана уйдёт в backup/removed). План, по которому идёт живой герой, не убрать'))}">` +
@@ -1152,7 +1178,7 @@ function ctxPanel() {
       : T('Выбрать план: герой пойдёт по нему, «Игра» и «Редактор» — о нём'))}"`;
     const row = `<div class="planrow${mine ? ' cur' : ''}${lib ? ' pick' : ''}"${pick}>` +
       `<span class="pln">${mine ? '<span class="tdone">✓</span> ' : ''}${ctxEsc(x.title)}</span>` +
-      `<span class="plc">${ctxEsc(x.clsName || '')}</span><span class="plt"${tip ? ` title="${ctxEsc(tip)}"` : ''}>${ctxEsc(tag)}</span>` +
+      `<span class="plc">${ctxEsc(x.clsName || '')}</span><span class="plt"${tip ? ` title="${ctxEsc(tip)}"` : ''}>${newer || ctxEsc(tag)}</span>` +
       `<span class="runa">${yes}${rm}</span></div>`;
     // герой в игре: выбор этого плана ждёт ответа — вопрос прямо под строкой
     return row + (CTX.q !== x.id ? '' : `<div class="cxq"><span>${T('{0} в игре: шаг, цели и фильтр шага станут по плану «{1}». Сменить?',
@@ -1173,6 +1199,7 @@ function ctxPanel() {
       `<button class="mini add" data-cxadd>${T('Добавить план из файла')}</button></div>`;
   }
   h += '</div>';
+  if (lib && CTX.page === 'edit') h += catSection();
   if (CTX.msg) h += `<p class="cxmsg${CTX.msg.ok ? ' ok' : ''}">${ctxEsc(CTX.msg.text)}</p>`;
   return h;
 }
@@ -1209,10 +1236,10 @@ function ctxPaint() {
 function ctxShow(open) {
   if (CTX.open === open) return;
   CTX.open = open;
-  if (!open) { CTX.arm = null; CTX.msg = null; CTX.same = null; CTX.all = false; CTX.q = null; }
+  if (!open) { CTX.arm = null; CTX.msg = null; CTX.same = null; CTX.all = false; CTX.q = null; CAT.q = null; CAT.flash = ''; }
   ctxBar();
   ctxPaint();
-  if (open) { const box = document.getElementById('ctx'); box.scrollTop = 0; box.focus({preventScroll: true}); }
+  if (open) { const box = document.getElementById('ctx'); box.scrollTop = 0; box.focus({preventScroll: true}); catLoad(true); }
 }
 // Второе нажатие в течение 6 с — действие; первое — «Точно?»
 function ctxArm(key) {
@@ -1279,9 +1306,10 @@ document.addEventListener('click', e => {
   if (t.id === 'ctxbg') { ctxShow(false); return; }
   if (!t.closest('#ctx') || CTX.busy) return;
   const el = t.closest('[data-cxall], [data-cxrun], [data-cxgone], [data-cxrm], [data-cxyes], [data-cxno], [data-cxpick], [data-cxadd], ' +
-    '[data-cxsame], [data-cxnew]');
+    '[data-cxsame], [data-cxnew], [data-cxcat]');
   if (!el) return;
   const ds = el.dataset;
+  if (ds.cxcat !== undefined) { catAct(ds.cxcat); return; }
   if (ds.cxall !== undefined) { CTX.all = !CTX.all; ctxPaint(); return; }
   if (ds.cxrun !== undefined) {
     if (!ctxArm('run:' + ds.cxrun)) return;
@@ -1334,6 +1362,121 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     e.target.click();
   }
+});
+// --- Каталог одобренных планов (только в «Редакторе») -------------------------------------------------------------
+// Планы, которые одобрил автор программы (программа: plancat.py). Сама программа спрашивает каталог, только пока
+// включено «Проверять обновления»; выключено — только по кнопке «Спросить каталог». Строка: название, класс и восхождение (названия из
+// данных игры на языке страницы), автор плана (ссылкой — только http(s)), под ней — для какой игры (другая версия игры —
+// жёлтым), версия плана и день; у плана, который можно обновить, — что изменилось, у остальных — о чём план. Справа —
+// «Поставить» (плана нет), «Обновить» (в каталоге версия новее), или состояние: «поставлен», «ваш план» (свой план с
+// той же меткой — его каталог не меняет). Поставленный план — только для просмотра, как любой полученный. Каталог
+// программа спрашивает, когда список открывают в редакторе (не чаще раза в минуту), и вместе с проверкой обновлений;
+// файл плана качается только по нажатию. Слова каталога — простым текстом (ctxEsc), никогда не разметкой.
+const CAT = {data: null, busy: false, fresh: false, load: '', q: null, flash: ''};
+function catLoad(refresh) {
+  if (CTX.page !== 'edit') return;
+  CAT.fresh = false;
+  fetch(langUrl('/api/plancat')).then(r => (r.ok ? r.json() : null)).catch(() => null)
+    .then(d => { if (d && d.list && !CAT.fresh) { CAT.data = d; ctxPaint(); } });
+  if (refresh) catPost({refresh: true});
+}
+// refresh — открыли список (программа спросит каталог, только если ей можно спрашивать сайт самой); ask — «Спросить
+// каталог»: спрашивает сразу
+function catPost(body) {
+  CAT.busy = true;
+  ctxPaint();
+  fetch(langUrl('/api/plancat'), {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)})
+    .then(r => r.json()).catch(() => null).then(d => {
+      CAT.busy = false;
+      if (d && d.list) { CAT.data = d; CAT.fresh = true; }
+      ctxPaint();
+      CTX.after();            // у планов библиотеки «есть новая версия» — по только что полученному каталогу
+    });
+}
+const catTime = t => (t ? new Date(t * 1000).toLocaleTimeString(I18N.locale || undefined, {hour: '2-digit', minute: '2-digit'}) : '');
+function catSection() {
+  const d = CAT.data, list = (d && d.list) || [], last = d && d.last;
+  let st = '', bad = false;
+  if (d && !d.can) { st = T('в этой сборке нет ключа подписи — проверять нечем'); bad = true; }
+  else if (CAT.busy && !(d && d.got)) st = T('запрос каталога…');
+  else if (d && !d.auto && !d.got) st = T('программа не спрашивает его: выключено «Проверять обновления»');
+  else if (last && last.code !== 'ok' && last.code !== 'none') { st = last.text + (d.got ? ' · ' + T('показан полученный в {0}', catTime(d.got)) : ''); bad = true; }
+  else if (d && d.got) st = T('получен в {0}', catTime(d.got));
+  const row = r => {
+    const who = r.author || {}, link = who.url ? webLink(who.url) : '';
+    const author = link ? `<a href="${ctxEsc(link)}" target="_blank" rel="noopener noreferrer" data-cxauthor="${ctxEsc(r.uid)}" ` +
+      `title="${ctxEsc(T('Страница автора плана: {0}', link))}">${ctxEsc(who.name)}</a>` : ctxEsc(who.name);
+    const hero = [r.cls, r.asc].filter(Boolean).join(' · ');
+    const act = CAT.load === r.uid || r.job ? `<span class="runl">${T('загрузка…')}</span>`
+      : r.state === 'new' ? `<button class="mini add" data-cxcat="get:${ctxEsc(r.uid)}" title="${ctxEsc(T('Поставить план в библиотеку: он будет только для просмотра, его новые версии придут из каталога'))}">${T('Поставить')}</button>`
+        : r.state === 'update' ? `<button class="mini go" data-cxcat="get:${ctxEsc(r.uid)}" title="${ctxEsc(T('Обновить план до версии из каталога: герой продолжит с того же шага, отметки останутся'))}">${T('Обновить')}</button>`
+          : r.state === 'own' ? `<span class="runl" title="${ctxEsc(T('В библиотеке ваш план с этой меткой: его правите вы, каталог его не меняет'))}">${T('ваш план')}</span>`
+            : `<span class="runl" title="${ctxEsc(r.state === 'older' ? T('У вас версия {0} — в каталоге старее: не ставится', r.have) : T('Та же версия, что в каталоге'))}">${T('поставлен')}</span>`;
+    const game = !r.game ? '' : r.other ? `<span class="catg" title="${ctxEsc(T('Программа сделана для игры {0}: план может не сойтись с игрой', (d && d.game) || ''))}">${ctxEsc(T('для игры {0}', r.game))}</span>`
+      : `<span>${ctxEsc(T('для игры {0}', r.game))}</span>`;
+    const ver = `<span${r.changed && r.state !== 'update' ? ` title="${ctxEsc(T('Что изменилось: {0}', r.changed))}"` : ''}>` +
+      `${ctxEsc([T('версия {0}', r.version), ctxDay(r.published)].filter(Boolean).join(' · '))}</span>`;
+    const have = r.state === 'update' && r.have ? `<span>${ctxEsc(T('у вас версия {0}', r.have))}</span>` : '';
+    const more = r.state === 'update' && r.changed ? `<div class="catc">${ctxEsc(T('Что изменилось: {0}', r.changed))}</div>`
+      : r.summary ? `<div>${ctxEsc(r.summary)}</div>` : '';
+    // обновить план, по которому идёт герой, пока он в игре: сперва вопрос — шаг и цели сменятся прямо в игре
+    const q = CAT.q !== r.uid ? '' : `<div class="cxq"><span>${ctxEsc(T('{0} в игре: шаг, цели и фильтр шага станут по новой версии плана «{1}». Обновить?',
+      ctxHero() || T('герой'), r.title))}</span><span class="runa"><button class="mini go" data-cxcat="yes:${ctxEsc(r.uid)}">${T('Обновить')}</button>` +
+      `<button class="mini" data-cxcat="no">${T('Отмена')}</button></span></div>`;
+    return `<div class="catrow${CAT.flash === r.uid ? ' flash' : ''}" data-catrow="${ctxEsc(r.uid)}">` +
+      `<span class="pln" title="${ctxEsc(r.title)}">${ctxEsc(r.title)}</span><span class="plc" title="${ctxEsc(hero)}">${ctxEsc(hero)}</span>` +
+      `<span class="cata">${author}</span><span class="runa">${act}</span>` +
+      `<div class="catd"><div>${[game, ver, have].filter(Boolean).join(' · ')}</div>${more}</div></div>` + q;
+  };
+  const empty = list.length ? '' : CAT.busy || !d ? '' : d.can && last && (last.code === 'ok' || last.code === 'none') ? T('в каталоге пока нет планов') : '';
+  // «Проверять обновления» выключено: каталог программа сама не спрашивает — спросить его можно этой кнопкой
+  const ask = d && d.can && !d.auto ? `<button class="mini" data-cxcat="ask"${CAT.busy ? ' disabled' : ''} ` +
+    `title="${ctxEsc(T('Спросить каталог у poe2.labutin.gg сейчас: в запросе — только номер версии программы'))}">${T('Спросить каталог')}</button>` : '';
+  return `<div class="cxs"><div class="cxh"><h3 title="${ctxEsc(T('Каталог одобренных планов: их одобрил автор программы. Список — с poe2.labutin.gg'))}">` +
+    `${T('Каталог')}</h3><span class="catr"><span class="catst${bad ? ' bad' : ''}">${ctxEsc(st)}</span>${ask}</span></div>` +
+    list.map(row).join('') + (empty ? `<p class="ctxw">${ctxEsc(empty)}</p>` : '') + '</div>';
+}
+// «Поставить» / «Обновить»: программа качает файл, сверяет его с подписанным каталогом и кладёт план в библиотеку.
+// Обновлён план, который сейчас открыт в редакторе, — редактор открывает его новую версию.
+function catGet(uid) {
+  CAT.q = null;
+  CAT.load = uid;
+  CTX.msg = null;
+  ctxPaint();
+  ctxPost('/api/plancat', {get: uid}).then(j => {
+    CAT.load = '';
+    if (j.ok && !j.fresh && CTX.page === 'edit' && CTX.edit === j.plan) { CTX.picked(); return; }
+    ctxDone(j, j.ok ? (j.fresh ? T('Поставлен план «{0}»', j.title || '') : T('План «{0}» обновлён до версии {1}', j.title || '', j.version)) : '');
+    catLoad(false);
+  });
+}
+// строка каталога — на виду и подсвечена (нажали «есть новая версия» у плана)
+function catShow(uid) {
+  CAT.flash = uid;
+  ctxPaint();
+  const el = Array.from(document.querySelectorAll('#ctx [data-catrow]')).find(x => x.dataset.catrow === uid);
+  if (el) el.scrollIntoView({block: 'nearest'});
+  setTimeout(() => { if (CAT.flash === uid) { CAT.flash = ''; ctxPaint(); } }, 2400);
+}
+function catAct(v) {
+  const k = v.indexOf(':'), what = k < 0 ? v : v.slice(0, k), uid = k < 0 ? '' : v.slice(k + 1);
+  if (what === 'no') { CAT.q = null; ctxPaint(); return; }
+  if (what === 'ask') { if (!CAT.busy) catPost({ask: true}); return; }
+  if (what === 'show') { catShow(uid); return; }
+  if (what === 'yes') { catGet(uid); return; }
+  if (what !== 'get') return;
+  const r = ((CAT.data && CAT.data.list) || []).find(x => x.uid === uid), p = CTX.data && CTX.data.plans;
+  if (r && r.state === 'update' && p && p.inGame && r.plan === p.current) { CAT.q = uid; CTX.msg = null; ctxPaint(); return; }
+  catGet(uid);
+}
+// страница автора: окно программы и браузер открывают её сами (новая вкладка); встроенный браузер приложения Claude
+// открыл бы её вместо этой страницы — там её открывает программа (POST /api/open, адрес — из каталога, не отсюда)
+document.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('#ctx a[data-cxauthor]');
+  if (!a || !/\bClaude\/\d/.test(navigator.userAgent)) return;
+  e.preventDefault();
+  fetch('/api/open', {method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({page: 'author', uid: a.dataset.cxauthor})}).catch(() => {});
 });
 // колесо и касание на подложке страницу не крутят: под списком она стоит
 for (const ev of ['wheel', 'touchmove']) {
@@ -2413,9 +2556,12 @@ function heroSection() {
   const seenAsc = seenCls && seenCls.ascendancies.find(a => a.id === seen.ascendancy);
   const differs = seenCls && (seen.class !== S.hero.class || (!!seen.ascendancy && seen.ascendancy !== (S.hero.ascendancy || '')));
   const par = (name, body) => `<div class="par"><span class="lab">${name}</span><div>${body}</div></div>`;
-  // откуда план: присланный файлом (сам не правится — правки ложатся в копию) или копия другого плана
-  const info = D.planInfo || {}, lib = !!(D.plans && D.plans.library);
-  const from = info.received ? T('прислан файлом «{0}» {1} — только просмотр', info.received.file || '', ctxDay(info.received.at))
+  // откуда план: из каталога (с автором из подписанного каталога), пришёл с программой, присланный файлом (такие сами не
+  // правятся — свой план делают на их основе) или копия другого плана
+  const info = D.planInfo || {}, lib = !!(D.plans && D.plans.library), cat = info.catalog;
+  const from = cat ? T('из каталога: автор {0}, версия {1} от {2} — только просмотр', cat.author.name, cat.version, ctxDay(cat.published || cat.at))
+    : info.received && info.received.by === 'program' ? T('пришёл с программой {0} — только просмотр', ctxDay(info.received.at))
+    : info.received ? T('прислан файлом «{0}» {1} — только просмотр', info.received.file || '', ctxDay(info.received.at))
     : info.from && info.from.template ? T('из шаблона кампании, билд свой')
       : info.from && info.from.take === 'route' ? T('маршрут плана «{0}», билд свой', info.from.title || '')
         : info.from ? T('копия плана «{0}»', info.from.title || '') : '';
@@ -4811,7 +4957,9 @@ function bar() {
   if (barAct) { $('#msgact').textContent = barAct.label; $('#msgact').title = barAct.tip || ''; }
   $('#reset').disabled = !dirty() && !bad.length;
   $('#msg').className = 'msg' + ((msg && !msg.ok) || (!msg && bad.length) ? ' bad' : '');
-  $('#msg').textContent = msg ? msg.text : ro ? T('Присланный план — только просмотр')
+  const pi = (D && D.planInfo) || {};
+  $('#msg').textContent = msg ? msg.text : ro ? (pi.catalog ? T('План из каталога — только просмотр')
+    : pi.received && pi.received.by === 'program' ? T('План пришёл с программой — только просмотр') : T('Присланный план — только просмотр'))
     : bad.length ? T('время шага «') + stepName(bad[0]) + T('» не понято: нужно 5:30, 1:05:00 или одни цифры (минуты)')
       : dirty() ? T('есть несохранённые правки') : '';
   queueCheck();        // страница изменилась — проверку гайда пересчитать

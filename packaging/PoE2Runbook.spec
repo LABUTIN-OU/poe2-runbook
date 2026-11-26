@@ -28,7 +28,7 @@ a = Analysis(
     [str(ROOT / 'planner' / 'desktop.py')],
     pathex=[str(ROOT / 'planner')],
     datas=datas,
-    hiddenimports=['server', 'overlay', 'update', 'updatekey'],
+    hiddenimports=['server', 'overlay', 'update', 'updatekey', 'signed', 'plancat'],
     excludes=['tkinter', '_tkinter'],
     noarchive=False,
 )

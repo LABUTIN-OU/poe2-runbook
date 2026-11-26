@@ -81,6 +81,41 @@ def version(root):
     return appversion.program(current)
 
 
+def catalog_check(root, plan):
+    """План в комплекте и каталог одобренных планов (site/plans, его пишет release/plans.py). У игрока план из комплекта
+    получает новые версии из каталога, а узнаёт себя в каталоге по байтам своего файла плана: совпал с последней версией
+    каталога — «поставлен», не совпал — «есть новая версия» и «Обновить» до версии каталога. Ответ — строка для сборки
+    (None — плана в каталоге нет: и сказать нечего)."""
+    import hashlib
+    import json
+    sys.path.insert(0, str(root / 'planner'))
+    import planlib
+    site = root / 'site' / 'plans'
+    try:
+        index = json.loads((site / 'index.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return None
+    try:
+        data = planlib.bundle(root / 'plans', plan)
+    except (OSError, ValueError) as e:
+        return '== WARNING: plan %s cannot be read: %s' % (plan, e)
+    sha = hashlib.sha256(planlib.bundle_bytes(data)).hexdigest()
+    entry = next((p for p in index.get('plans') or [] if isinstance(p, dict) and p.get('uid') == data['uid']), None)
+    if entry is None:
+        return None
+    latest = entry.get('version')
+    if sha == ((entry.get('file') or {}).get('sha256') or '').lower():
+        return '== plan %s = catalogue version %s' % (plan, latest)
+    for f in sorted((site / data['uid']).glob('*.plan')):
+        if hashlib.sha256(f.read_bytes()).hexdigest() == sha:
+            return ('== plan %s = catalogue version %s (the catalogue has %s: players get it as an update)'
+                    % (plan, f.stem, latest))
+    return ('== WARNING: plan %s matches no approved version of the catalogue (it has version %s): players of this build '
+            'will be offered version %s as an update. Approve this plan first: '
+            'python -X utf8 release/plans.py add <its plan file> --author ... --changed-ru ... --changed-en ...'
+            % (plan, latest, latest))
+
+
 def selftest(app):
     """Собранная программа: окно (скрыто) на пробном логе, пустая папка данных — страница сказала статус."""
     tmp = Path(tempfile.mkdtemp(prefix='runbook-selftest-'))
@@ -115,6 +150,9 @@ def main():
     for p in PLANS:
         if not (root / 'plans' / p / 'plan.json').is_file():
             sys.exit('no plan %s in %s' % (p, root / 'plans'))
+        said = catalog_check(root, p)
+        if said:
+            print(said, flush=True)
     for name in LEGAL:
         if not (root / name).is_file():
             sys.exit('no %s in %s' % (name, root))

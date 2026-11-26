@@ -17,8 +17,15 @@
    "game": "0.5.5",
    "class": "Sorceress",
    "ascendancy": "Disciple of Varashta",
-   "tags": ["campaign", "hc", "ssf"],
-   "langs": ["ru", "en"],
+   "tags": [
+    "campaign",
+    "hc",
+    "ssf"
+   ],
+   "langs": [
+    "ru",
+    "en"
+   ],
    "summary": {
     "ru": "Кампания за Чародейку до карт: маршрут по шагам и цели по умениям и предметам.",
     "en": "The campaign as a Sorceress up to maps: the route step by step, with goals for skills and items."
@@ -29,7 +36,7 @@
    },
    "published": "2026-11-26",
    "file": {
-    "url": "https://example.com/plans/a1b2c3d4e5f6.plan.json",
+    "url": "https://poe2.labutin.gg/plans/a1b2c3d4e5f6/3.plan",
     "size": 91234,
     "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
    }

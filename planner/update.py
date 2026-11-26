@@ -15,11 +15,12 @@
     пропускаются.
   * Подпись — ECDSA P-256 над SHA-256 от точных байтов latest.json; в latest.json.sig — base64 от r‖s (64 байта).
     Проверяет сама Windows (bcrypt.dll) открытым ключом из updatekey.py — его вписывает publish.py keygen. Сторонних
-    библиотек шифрования в программе нет.
+    библиотек шифрования в программе нет. Проверка подписи — общая с каталогом планов (signed.py).
 
 Что делает программа.
   * Спрашивает файл при запуске и потом раз в 6 часов (EVERY), пока игрок не выключил «Проверять обновления» в окне
-    «Настройки». Не дозвалась — ещё раз через полчаса (SOON); так же часто, пока игра новее программы, а новой
+    «Настройки»; с тем же расписанием и под той же настройкой — каталог одобренных планов (Updater.also, plancat.py).
+    Не дозвалась — ещё раз через полчаса (SOON); так же часто, пока игра новее программы, а новой
     программы ещё нет: в день новой версии игры её сборку ждут все. В запросе — только User-Agent:
     PoE2Runbook/<версия>, больше ничего (без cookies, без адреса и имени игрока). Неудача молчит и пишется в журнал
     программы (program.log).
@@ -33,13 +34,11 @@
 Сеть — WinHTTP самой Windows: её проверка сертификатов и корневые сертификаты, её настройки прокси; с https на http
 она не перенаправляет.
 """
-import base64
 import ctypes
 import hashlib
 import json
 import os
 import re
-import struct
 import subprocess
 import sys
 import threading
@@ -50,6 +49,9 @@ from pathlib import Path
 
 import appsettings
 from i18n import Raw, tr
+# подпись — общий код с каталогом планов (plancat.py); имена остаются и здесь: ими пользуются publish.py и проверки
+from signed import Refused, SPKI_P256, embedded_key, key_name, public_point, verify  # noqa: F401
+import signed
 
 URL = 'https://poe2.labutin.gg/update/latest.json'
 SIG_URL = URL + '.sig'
@@ -80,9 +82,6 @@ RE_LANG = re.compile(r'[a-z]{2,3}')
 # переставлять соседние слова
 RE_CONTROL = re.compile('[\x00-\x08\x0b-\x1f\x7f-\x9f‎‏‪-‮⁦-⁩]')
 
-# Открытый ключ P-256 в виде DER SubjectPublicKeyInfo: этот заголовок, затем 04 и точка X‖Y (по 32 байта)
-SPKI_P256 = bytes.fromhex('3059301306072a8648ce3d020106082a8648ce3d030107034200')
-
 # Что ответила проверка — для окна «О программе» (страница пишет перед этим, когда она была)
 CHECK_TEXTS = {
     'latest': tr('у вас последняя версия'),
@@ -107,14 +106,6 @@ JOB_TEXTS = {
 }
 
 
-class Refused(Exception):
-    """Файл обновления не принят. code — почему: sig, format, older, nokey; detail — подробность для журнала."""
-
-    def __init__(self, code, detail=''):
-        super().__init__('%s %s' % (code, detail))
-        self.code, self.detail = code, detail
-
-
 class NetError(Exception):
     """Файл не получен. code — net (нет связи, тайм-аут), tls (не прошла проверка сертификата), http (ответ не 200;
     detail — его код), big (больше, чем ждали), url (адрес не https)."""
@@ -137,87 +128,6 @@ def compare(theirs, ours):
     """1 — версия theirs новее ours, 0 — та же, -1 — старее."""
     a, b = version_key(theirs), version_key(ours)
     return (a > b) - (a < b)
-
-
-# --- подпись ------------------------------------------------------------------------------------------------------
-
-def public_point(spki):
-    """Точка открытого ключа X‖Y (64 байта) из DER SubjectPublicKeyInfo ключа P-256 (байты или base64). Не такой
-    ключ — None."""
-    if isinstance(spki, str):
-        try:
-            spki = base64.b64decode(spki, validate=True)
-        except ValueError:
-            return None
-    if not isinstance(spki, bytes) or len(spki) != 91 or not spki.startswith(SPKI_P256) or spki[26] != 4:
-        return None
-    return spki[27:]
-
-
-def embedded_key():
-    """Открытый ключ подписи обновлений, вписанный в программу (updatekey.py); не вписан — None."""
-    try:
-        import updatekey
-    except ImportError:
-        return None
-    return public_point(getattr(updatekey, 'PUBLIC_KEY', None))
-
-
-def key_name():
-    """Отпечаток вписанного ключа (SHA-256 его DER) для журнала программы — сверить с тем, что назвал keygen; ключа нет —
-    'none'."""
-    try:
-        import updatekey
-    except ImportError:
-        return 'none'
-    return getattr(updatekey, 'FINGERPRINT', None) or 'none' if embedded_key() else 'none'
-
-
-_BCRYPT = []
-_BCRYPT_LOCK = threading.Lock()
-
-
-def _bcrypt():
-    """bcrypt.dll с объявленными типами аргументов (без них 64-битные описатели обрезаются)."""
-    with _BCRYPT_LOCK:
-        if not _BCRYPT:
-            from ctypes import wintypes as w
-            b = ctypes.WinDLL('bcrypt')
-            h = ctypes.c_void_p
-            b.BCryptOpenAlgorithmProvider.argtypes = [ctypes.POINTER(h), w.LPCWSTR, w.LPCWSTR, w.ULONG]
-            b.BCryptImportKeyPair.argtypes = [h, h, w.LPCWSTR, ctypes.POINTER(h), ctypes.c_char_p, w.ULONG, w.ULONG]
-            b.BCryptVerifySignature.argtypes = [h, ctypes.c_void_p, ctypes.c_char_p, w.ULONG, ctypes.c_char_p, w.ULONG,
-                                                w.ULONG]
-            b.BCryptDestroyKey.argtypes = [h]
-            b.BCryptCloseAlgorithmProvider.argtypes = [h, w.ULONG]
-            for f in (b.BCryptOpenAlgorithmProvider, b.BCryptImportKeyPair, b.BCryptVerifySignature, b.BCryptDestroyKey,
-                      b.BCryptCloseAlgorithmProvider):
-                f.restype = ctypes.c_long           # NTSTATUS: 0 — успех
-            _BCRYPT.append(b)
-        return _BCRYPT[0]
-
-
-def verify(data, signature, point):
-    """Подпись r‖s (64 байта) над SHA-256 от data сделана закрытым ключом, чья открытая точка — point (X‖Y). Проверяет
-    Windows (bcrypt.dll, ECDSA P-256)."""
-    if sys.platform != 'win32' or not isinstance(signature, bytes) or len(signature) != 64 \
-            or not isinstance(point, bytes) or len(point) != 64:
-        return False
-    b = _bcrypt()
-    alg, key = ctypes.c_void_p(), ctypes.c_void_p()
-    if b.BCryptOpenAlgorithmProvider(ctypes.byref(alg), 'ECDSA_P256', None, 0) != 0:
-        return False
-    try:
-        blob = struct.pack('<LL', 0x31534345, 32) + point            # BCRYPT_ECDSA_PUBLIC_P256_MAGIC, длина X и Y
-        if b.BCryptImportKeyPair(alg, None, 'ECCPUBLICBLOB', ctypes.byref(key), blob, len(blob), 0) != 0:
-            return False
-        try:
-            digest = hashlib.sha256(data).digest()
-            return b.BCryptVerifySignature(key, None, digest, 32, signature, 64, 0) == 0
-        finally:
-            b.BCryptDestroyKey(key)
-    finally:
-        b.BCryptCloseAlgorithmProvider(alg, 0)
 
 
 # --- файл обновления ----------------------------------------------------------------------------------------------
@@ -266,18 +176,7 @@ def read_manifest(data, sig, point):
     """Файл обновления (точные байты latest.json) и его подпись (содержимое latest.json.sig) -> поля файла:
     {version, game, published, url, size, sha256, notes, notice}. Подпись проверяется ДО того, как файл читается.
     Не принят — Refused (sig — подпись не сошлась или не та, format — не тот формат, nokey — нечем проверять)."""
-    if point is None:
-        raise Refused('nokey')
-    if not isinstance(data, bytes) or not 0 < len(data) <= MAX_MANIFEST:
-        raise Refused('format', 'size')
-    try:
-        raw = base64.b64decode(bytes(sig or b'').strip(), validate=True)
-    except (ValueError, TypeError):
-        raise Refused('sig', 'not base64') from None
-    if len(raw) != 64:
-        raise Refused('sig', 'length %d' % len(raw))
-    if not verify(data, raw, point):
-        raise Refused('sig', 'does not match')
+    signed.check(data, sig, point, MAX_MANIFEST)
     try:
         doc = json.loads(data.decode('utf-8'))
     except ValueError:                      # и UnicodeDecodeError
@@ -474,6 +373,9 @@ class Updater:
 
     def __init__(self, version, folder, settings_path=None, point=None, fetch=None, launch=None, quit=None,
                  urgent=None, clock=time.time, say=None):
+        # что ещё спросить у сайта при каждой проверке и под той же настройкой — каталог одобренных планов
+        # (App.plancat_check): функции без аргументов; их неудача не влияет на проверку обновлений
+        self.also = []
         self.version = version
         self.folder = Path(folder)
         self.settings_path = settings_path
@@ -552,6 +454,11 @@ class Updater:
         программы, а новой программы нет, — через SOON. Выключено — не спрашиваем, ждём включения (set_on)."""
         while not self.stopped:
             reached = self.check() if self.on else True
+            for extra in (self.also if self.on else ()):
+                try:
+                    extra()
+                except Exception:
+                    self.say('update check: extra check failed\n' + traceback.format_exc())
             soon = not reached or (self.on and self.offer is None and self.urgent())
             self.wake.wait(SOON if soon else EVERY)
             self.wake.clear()

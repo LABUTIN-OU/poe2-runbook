@@ -209,7 +209,7 @@
         <dt><code>%APPDATA%\<wbr><span class="nb">PoE2 Runbook</span>\</code></dt>
         <dd>Everything the program writes while it runs:
           <ul class="files">
-            <li><code>plans\</code><span>your plans; the plan that comes with the program is copied here at the first start</span></li>
+            <li><code>plans\</code><span>your plans and the plans installed from the catalogue; the plan that comes with the program is put here at the first start</span></li>
             <li><code>runs\</code><span>a file per hero: events from the log, your marks, the items you recorded as worn</span></li>
             <li><code>filters\</code><span>copies of the filter versions the game loaded</span></li>
             <li><code>backup\</code><span>earlier versions of a plan, saved before each edit; removed plans</span></li>
@@ -241,12 +241,14 @@
     <h3>Network</h3>
     <ul class="facts">
       <li class="fr one">The program sends nothing about you or your game anywhere: it has no account, no statistics, no error reports.</li>
-      <li class="fr one"><b>Update check.</b> At start, and then every 6 hours, the program downloads two small files from this site: <code>update/latest.json</code> and its signature <code>update/latest.json.sig</code>. If the site does not answer — or the game is already newer than the program and no new build is out yet — it asks again in 30 minutes. The request carries the program's version (<code>User-Agent: PoE2Runbook/&lt;version&gt;</code>) and nothing else: no cookies, no name, nothing about your game. The hosting sees your IP address, as with any web request. The check is switched off in Settings: “Check for updates”.</li>
-      <li class="fr one">The program checks the file's signature itself — with a key built into it — before it reads the file, and accepts only a version newer than its own.</li>
-      <li class="fr one">Nothing is downloaded or installed until you press Update. Then the program downloads the installer from the address named in the signed file, compares its size and SHA-256 with that file, starts it and closes; the installer puts the new version in place and opens it.</li>
+      <li class="fr one"><b>Check for updates and for the plan catalogue.</b> At start, and then every 6 hours, the program downloads four small files from this site: the update file <code>update/latest.json</code> and the plan catalogue <code>plans/index.json</code>, each with its signature (<code>.sig</code>). If the site does not answer — or the game is already newer than the program and no new build is out yet — it asks again in 30 minutes. It is switched off in Settings: “Check for updates”.</li>
+      <li class="fr one">The program also asks for the plan catalogue when you open the list of plans in Edit — at most once a minute. With “Check for updates” switched off the program makes no request to this site by itself: the catalogue is asked for only when you press “Ask for the catalogue”.</li>
+      <li class="fr one">Each of these requests carries the program's version (<code>User-Agent: PoE2Runbook/&lt;version&gt;</code>) and nothing else: no cookies, no name, nothing about your game. The hosting sees your IP address, as with any web request.</li>
+      <li class="fr one">The program checks the signature of both files itself — with a key built into it — before it reads them. An update is accepted only when its version is newer than the program's own.</li>
+      <li class="fr one">Nothing is downloaded or installed until you press Update or Install. Update in the header: the program downloads the installer from the address named in the signed file, compares its size and SHA-256, starts it and closes; the installer puts the new version in place and opens it. Install or Update in the catalogue: the program downloads the plan's file from the address named in the signed catalogue, compares its size and SHA-256 and puts the plan into its library.</li>
       <li class="fr one">The pages of its window are served from your own computer (address 127.0.0.1) and answer this computer only.</li>
       <li class="fr one">The window is drawn by Microsoft Edge WebView2, a component of Windows. It is Microsoft's, and it may contact Microsoft on its own, the way the Edge browser does.</li>
-      <li class="fr one">The program opens your browser only on your click: this site — from its About window; an item filter's page on pathofexile2.com; Microsoft's download page for WebView2 when that component is missing.</li>
+      <li class="fr one">The program opens your browser only on your click: this site — from its About window; a plan author's page — from the catalogue; an item filter's page on pathofexile2.com; Microsoft's download page for WebView2 when that component is missing.</li>
     </ul>
 
     <h3>What it does not do</h3>

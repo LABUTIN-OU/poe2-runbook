@@ -398,7 +398,7 @@ def start_server(planner, out, port, project):
     cmd = [sys.executable, '-X', 'utf8', '-u', str(planner / 'server.py'), '--port', str(port),
            '--log', str(out / 'logs' / 'Client.txt'), '--plans', str(out / 'plans'), '--runs', str(out / 'runs'),
            '--archive', str(out / 'archive'), '--filters', str(out / 'OnlineFilters'), '--config', str(out / 'config.ini'),
-           '--settings', str(out / 'settings.json'), '--clip-file', str(out / 'clip.txt'), '--lang', 'ru']
+           '--settings', str(out / 'settings.json'), '--clip-file', str(out / 'clip.txt'), '--lang', 'ru', '--offline']
     if (project / 'catalog' / 'data').is_dir():
         cmd += ['--catalog', str(project / 'catalog' / 'data')]
     if (project / 'knowledge').is_dir():

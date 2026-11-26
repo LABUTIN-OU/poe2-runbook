@@ -50,7 +50,10 @@ import logtext  # noqa: E402
 import buildcheck  # noqa: E402
 import planfiles  # noqa: E402
 import planlib  # noqa: E402
+import plancat  # noqa: E402
 import review  # noqa: E402
+import signed  # noqa: E402
+import update  # noqa: E402
 import routeplan  # noqa: E402
 import slotwear  # noqa: E402
 import treegeo  # noqa: E402
@@ -228,6 +231,13 @@ class App:
         # Обновление программы (update.Updater): есть только у окна программы (desktop.py) — сервер из исходников о новых
         # версиях не спрашивает. Его состояние — /api/update (шапка всех страниц) и поле update состояния «Игры».
         self.updater = None
+        # Каталог одобренных планов (plancat.py): спрашивается вместе с проверкой обновлений (окно программы:
+        # update.Updater.also) и когда игрок открывает «Каталог» в редакторе; файл плана — только по «Поставить» /
+        # «Обновить». Ключ подписи — тот же, что у обновлений; нет его — каталог не спрашивается.
+        self.plancat = plancat.Catalog(signed.embedded_key(), 'PoE2Runbook/%s' % (
+            appversion.program((self.base_catalog or {}).get('version')) or '%s.%d' % (appversion.GAME, appversion.BUILD)))
+        self._plancat_jobs = {}       # uid плана, который сейчас качается («Поставить» / «Обновить») -> 'load'
+        self._shas = {}               # SHA-256 файла плана библиотеки (planlib.bundle_sha): id -> (отметка файлов, sha)
         self.shut_at = None           # когда нажата «Закрыть» в игре: страница убирает своё верхнее окно
         # Путевой камень, скопированный в игре: страница отвечает «идти / без босса / не идти». Плана для
         # ответа не нужно: класс опасности каждого аффикса лежит в базе знаний (knowledge/waystones.json),
@@ -609,20 +619,32 @@ class App:
                 pid = self.plan_of(r['id'], ids)
                 alive[pid] = alive.get(pid, 0) + 1
         rec = self.run_plans.get(self.run.id) or {}
+        # в каталоге планов версия новее той, что у игрока: newer — её номер (редактор показывает «есть новая версия»)
+        newer = {}
+        with self.plancat.lock:
+            entries = list((self.plancat.data or {}).get('plans') or ())
+        for e in entries:
+            p = next((x for x in lib if x.get('uid') == e['uid']), None)
+            if p is not None and self.plancat_state(e, p)[0] == 'update':
+                newer[p['id']] = e['version']
         return {'library': True, 'current': self.active.id, 'ask': bool(rec.get('ask')) and len(lib) > 1,
                 'inGame': self.in_game(),
                 'template': self.template_path.is_file(),          # есть шаблон кампании — основа «Нового плана»
-                'list': [self._plan_row(p, heroes=alive.get(p['id'], 0), clsName=words.get(p['cls'], p['cls'])) for p in lib]}
+                'list': [self._plan_row(p, heroes=alive.get(p['id'], 0), clsName=words.get(p['cls'], p['cls']),
+                                        **({'newer': newer[p['id']]} if p['id'] in newer else {})) for p in lib]}
 
     @staticmethod
     def _plan_row(p, **more):
-        """Строка плана для страницы: название плана, название того, с чего сделана копия, и имя присланного файла —
-        слова автора, их не переводят (план «Ведьма · проба» на английской странице не становится «Witch · проба»)."""
+        """Строка плана для страницы: название плана, название того, с чего сделана копия, имя присланного файла и имя
+        автора из каталога — слова людей, их не переводят (план «Ведьма · проба» на английской странице не становится
+        «Witch · проба»)."""
         row = dict(p, title=i18n.Raw(p['title']), **more)
         if isinstance(p.get('from'), dict):
             row['from'] = dict(p['from'], title=i18n.Raw(p['from'].get('title') or ''))
         if isinstance(p.get('received'), dict):
             row['received'] = dict(p['received'], file=i18n.Raw(p['received'].get('file') or ''))
+        if isinstance(p.get('catalog'), dict):
+            row['catalog'] = dict(p['catalog'], author=dict(p['catalog']['author'], name=i18n.Raw(p['catalog']['author']['name'])))
         return row
 
     def copy_plan(self, src, title=None):
@@ -727,6 +749,227 @@ class App:
         except (OSError, ValueError) as e:
             return {'ok': False, 'problems': [tr('файл плана не записан: %s') % e]}
         return {'ok': True, 'path': i18n.Raw(str(path))}
+
+    # --- каталог одобренных планов (plancat.py) --------------------------------
+
+    def _bundle_sha(self, pid):
+        """SHA-256 файла плана pid для обмена (planlib.bundle_sha) — пересчитывается, когда меняются его файлы."""
+        mark = dict(planlib.stamp(self.plans_dir)).get(pid)
+        if pid not in self._shas or self._shas[pid][0] != mark:
+            self._shas[pid] = (mark, planlib.bundle_sha(self.plans_dir, pid))
+        return self._shas[pid][1]
+
+    def plancat_state(self, e, p):
+        """Что запись каталога e значит для плана библиотеки p с той же меткой (None — такого плана нет): (state, have).
+        state: new — плана у игрока нет («Поставить»); update — в каталоге версия новее («Обновить»); have — поставлен,
+        та же версия; older — в каталоге версия старее поставленной (не ставится); own — у игрока СВОЙ план с этой
+        меткой (его правит он сам — каталог его не меняет). have — версия у игрока (None — не известна). Полученный
+        план без записи каталога (пришёл файлом или с программой) — та же версия, если его файл плана байт в байт как
+        файл каталога."""
+        if p is None:
+            return 'new', None
+        if not p.get('received'):
+            return 'own', None
+        have = (p.get('catalog') or {}).get('version')
+        if have is None:
+            return ('have', e['version']) if self._bundle_sha(p['id']) == e['sha256'] else ('update', None)
+        return ('update' if e['version'] > have else 'have' if e['version'] == have else 'older'), have
+
+    @staticmethod
+    def plancat_record(e):
+        """Запись каталога для оглавления плана (planlib catalog): версия и автор — из подписанного каталога."""
+        rec = {'version': e['version'], 'author': dict(e['author']), 'at': planlib.stamp_text()}
+        if e.get('published'):
+            rec['published'] = e['published']
+        return rec
+
+    def plancat_sync(self):
+        """Полученный план, который каталог узнал (та же метка, файл плана байт в байт как файл каталога), запоминает
+        версию и автора из каталога (оглавление, planlib.set_catalog): автор виден в списке планов и без сети. Свои
+        планы не трогаются. True — что-то записано."""
+        if not self.plans_dir:
+            return False
+        with self.plancat.lock:
+            entries = list((self.plancat.data or {}).get('plans') or ())
+        done = False
+        for e in entries:
+            p = next((x for x in self.library() if x.get('uid') == e['uid']), None)
+            if p is None or not p.get('received') or p.get('catalog') or self.plancat_state(e, p)[0] != 'have':
+                continue
+            try:
+                planlib.set_catalog(self.plans_dir, p['id'], self.plancat_record(e))
+                done = True
+            except (OSError, ValueError) as x:
+                i18n.say('plan catalogue: %s not marked: %s' % (p['id'], x), flush=True)
+        return done
+
+    def net_allowed(self):
+        """Может ли программа сама спрашивать свой сайт — настройка «Проверять обновления»: у окна программы — как её
+        поставил игрок (update.Updater.on), у сервера из исходников — по файлу настроек (settings.json: updates); нет
+        его — да."""
+        if self.updater is not None:
+            return bool(self.updater.on)
+        return appsettings.load(self.settings_path).get(update.SETTING) is not False
+
+    def plancat_refresh(self, ask=False):
+        """«Каталог» редактора. Открыли список планов — каталог спрашивается, только если программе можно спрашивать
+        сайт самой (net_allowed), и не чаще plancat.FRESH; ask — игрок нажал «Спросить каталог»: спрашивается сразу и
+        при выключенной настройке. True — запрос был (или прошлый был только что)."""
+        if not ask and not self.net_allowed():
+            return False
+        self.plancat_check(5 if ask else plancat.FRESH)
+        return True
+
+    def plancat_check(self, fresh=None):
+        """Спросить каталог планов (сеть — без замка программы) и запомнить у планов библиотеки, что из него узнано
+        (plancat_sync). Зовут проверка обновлений по расписанию (update.Updater.also) и раздел «Каталог» редактора
+        (fresh — не чаще). True — сайт ответил."""
+        reached = self.plancat.check(fresh)
+        with self.cond:
+            if self.plancat_sync():
+                self._bump()
+        return reached
+
+    # что ответил последний запрос каталога — строкой раздела «Каталог»
+    PLANCAT_TEXTS = {
+        'ok': tr('каталог получен'),
+        'none': tr('в каталоге пока нет планов'),
+        'net': tr('нет связи с сайтом программы'),
+        'http': tr('сайт программы ответил ошибкой %s'),
+        'tls': tr('защищённое соединение с сайтом программы не установлено'),
+        'sig': tr('подпись не сошлась — файл не принят'),
+        'format': tr('каталог не того вида — не принят'),
+        'nokey': tr('в этой сборке нет ключа подписи — проверять нечем'),
+        'error': tr('ошибка программы — подробности в журнале программы'),
+    }
+    # почему план из каталога не ставится
+    PLANCAT_NO = {
+        'have': tr('этот план уже поставлен — та же версия'),
+        'older': tr('в каталоге версия старее поставленной — не ставится'),
+        'own': tr('в библиотеке ваш план с этой меткой — каталог его не меняет'),
+    }
+
+    def plancat_view(self, lang):
+        """Раздел «Каталог» редактора на языке lang: {can — в сборке есть ключ подписи (без него каталог не
+        спрашивается), auto — программа спрашивает каталог сама (настройка «Проверять обновления» не выключена; иначе —
+        только кнопкой «Спросить каталог»), library, busy — запрос идёт, game — версия игры программы, got — когда принят каталог, last —
+        что ответил последний запрос {at, code, text}, list — планы каталога}. Строка плана: uid, version, title,
+        author {name, url?}, cls / asc (названия из данных игры на языке страницы), game, other — для другой версии
+        игры, published, summary, changed, state (plancat_state), have, plan — id в библиотеке, job — качается. Порядок:
+        что обновить, что поставить, что уже стоит; внутри — новые раньше. Слова каталога не переводятся."""
+        cat = self.plancat
+        with cat.lock:
+            data, got, busy = cat.data, cat.got, cat.busy
+            last = dict(cat.last) if cat.last else None
+        made = appversion.stem((self.base_catalog or {}).get('version'))
+        names = ((((self.base_catalog or {}).get('lang') or {}).get(lang) or {}).get('heroClasses') or {})
+        raw = lambda t: i18n.Raw(t or '')       # noqa: E731 — слова автора каталога: не переводятся
+        lib = self.library()
+        rows = []
+        for e in (data or {}).get('plans') or ():
+            p = next((x for x in lib if x.get('uid') == e['uid']), None)
+            state, have = self.plancat_state(e, p) if self.plans_dir else ('new', None)
+            author = {'name': raw(e['author']['name'])}
+            if e['author'].get('url'):
+                author['url'] = e['author']['url']
+            rows.append({'uid': e['uid'], 'version': e['version'], 'title': raw(plancat.in_lang(e['title'], lang)),
+                         'author': author, 'cls': raw(names.get(e['cls'], e['cls'])), 'asc': raw(names.get(e['asc'], e['asc'])),
+                         'game': e['game'], 'other': bool(e['game'] and made and e['game'] != made),
+                         'published': e['published'], 'summary': raw(plancat.in_lang(e['summary'], lang)),
+                         'changed': raw(plancat.in_lang(e['changed'], lang)), 'state': state, 'have': have,
+                         'plan': p['id'] if p else None, 'job': e['uid'] in self._plancat_jobs})
+        rank = {'update': 0, 'new': 1}
+        rows.sort(key=lambda r: (rank.get(r['state'], 2), -int((r['published'] or '0').replace('-', '')), str(r['title']).lower()))
+        if last is not None:
+            code = 'none' if last['code'] == 'http' and str(last['detail']) == '404' else last['code']
+            text = self.PLANCAT_TEXTS.get(code, self.PLANCAT_TEXTS['error'])
+            last = {'at': last['at'], 'code': code, 'text': text % last['detail'] if code == 'http' else text}
+        return {'can': cat.point is not None, 'auto': self.net_allowed(), 'library': bool(self.plans_dir), 'busy': busy,
+                'game': made or '', 'got': got, 'last': last, 'list': rows}
+
+    def plancat_get(self, uid):
+        """«Поставить» / «Обновить»: файл плана из каталога (скачан и сверен с подписанным каталогом — plancat.load) —
+        в библиотеку обычным приёмом плана: новый план (planlib.add) или новая версия плана, который у игрока уже есть
+        (planlib.replace: папка, id и метка остаются — герой идёт дальше по новой версии, его отметки — в его файле).
+        Запоминаются версия и автор из каталога. Сеть — без замка программы. Ответ: {ok, plan, title, version, fresh}
+        или {ok: false, problems}."""
+        no = lambda text: {'ok': False, 'problems': [text]}        # noqa: E731
+        if not self.plans_dir:
+            return no(tr('библиотеки планов нет: программа запущена с одним планом'))
+        with self.cond:
+            e = self.plancat.entry(uid) if isinstance(uid, str) else None
+            if e is None:
+                return no(tr('этого плана нет в каталоге'))
+            state = self.plancat_state(e, next((x for x in self.library() if x.get('uid') == uid), None))[0]
+            if state not in ('new', 'update'):
+                return no(self.PLANCAT_NO[state])
+            if uid in self._plancat_jobs:
+                return no(tr('этот план уже качается'))
+            self._plancat_jobs[uid] = 'load'
+        try:
+            try:
+                data = self.plancat.load(e)
+            except plancat.Refused as x:
+                i18n.say('plan catalogue: %s refused (%s %s)' % (uid, x.code, x.detail), flush=True)
+                return no(tr('файл плана не сошёлся с каталогом — план не поставлен'))
+            except update.NetError as x:
+                i18n.say('plan catalogue: %s not loaded (%s %s)' % (uid, x.code, x.detail), flush=True)
+                return no(tr('файл плана не скачан: %s') % (self.PLANCAT_TEXTS['http'] % x.detail if x.code == 'http'
+                                                             else self.PLANCAT_TEXTS['tls'] if x.code == 'tls'
+                                                             else self.PLANCAT_TEXTS['net']))
+            with self.cond:
+                p = next((x for x in self.library() if x.get('uid') == uid), None)
+                state = self.plancat_state(e, p)[0]         # пока файл качался, библиотека могла измениться
+                if state not in ('new', 'update'):
+                    return no(self.PLANCAT_NO[state])
+                record, old = self.plancat_record(e), None
+                try:
+                    if p is None:
+                        pid = planlib.add(self.plans_dir, data, '', uid=uid, extra={'catalog': record})
+                    else:
+                        pid = p['id']
+                        rec = next(r for r in planlib.scan(self.plans_dir) if r['id'] == pid)
+                        old = (planlib.bundle(self.plans_dir, pid),
+                               {k: rec['manifest'][k] for k in ('received', 'catalog') if k in rec['manifest']})
+                        planlib.replace(self.plans_dir, pid, data, '', backup_dir=self.backup_dir / 'plans' / pid,
+                                        extra={'catalog': record})
+                except (OSError, ValueError, TypeError, StopIteration) as x:
+                    return no(tr('план не поставлен: %s') % x)
+                book = self.book_for(pid)
+                if book is None or book.error:
+                    why = book.error if book is not None else tr('план не читается')
+                    if old is None:
+                        shutil.rmtree(self.plans_dir / pid, ignore_errors=True)
+                        self.books.pop(pid, None)
+                    else:
+                        # новая версия не читается — прежняя на место, как была (та же запись каталога)
+                        planlib.replace(self.plans_dir, pid, old[0], '', backup_dir=self.backup_dir / 'plans' / pid,
+                                        extra=old[1])
+                        self.book_for(pid)
+                    return no(tr('план не поставлен: %s') % why)
+                if book is self.active:
+                    self.load_plan()
+                    if self.run.id in self.runs:
+                        self.save_run()           # снимок плана в файле героя — уже новой версии
+                self._bump()
+                return {'ok': True, 'plan': pid, 'title': i18n.Raw(book.plan.get('title') or pid), 'version': e['version'],
+                        'fresh': old is None}
+        finally:
+            with self.cond:
+                self._plancat_jobs.pop(uid, None)
+
+    def open_author(self, uid):
+        """Страница автора плана из каталога — в браузере системы (окно «Каталог» во встроенном браузере приложения
+        Claude). Адрес — только из подписанного каталога и только http(s); адрес от страницы не принимается."""
+        e = self.plancat.entry(uid) if isinstance(uid, str) else None
+        url = plancat.web_url((e or {}).get('author', {}).get('url'))
+        if not url:
+            return False
+        try:
+            return bool(self.opener(url))
+        except Exception as x:   # noqa: BLE001 — браузер системы не открылся: странице говорим «не удалось»
+            i18n.say('author page not opened: %s' % x, flush=True)
+            return False
 
     # --- правка дерева ----------------------------------------------------
 
@@ -2971,6 +3214,12 @@ def make_handler(app, port):
                     body = json.dumps(i18n.render({'plans': app.plans_view(rows), 'runs': rows}, lang, app.names(lang), plain=True),
                                       ensure_ascii=False)
                 return self._send(200, body, 'application/json; charset=utf-8')
+            if path == '/api/plancat':
+                # раздел «Каталог» редактора: что в каталоге одобренных планов и что из этого уже стоит (сеть — нет:
+                # спросить каталог заново — POST {refresh})
+                with app.cond:
+                    body = json.dumps(i18n.render(app.plancat_view(lang), lang, app.names(lang), plain=True), ensure_ascii=False)
+                return self._send(200, body, 'application/json; charset=utf-8')
             if path == '/api/plan-file':
                 # файл плана для обмена: его отдают другому игроку, тот добавляет его в свою библиотеку
                 with app.cond:
@@ -3083,13 +3332,14 @@ def make_handler(app, port):
             if not self._local_only():
                 return self._send(403, 'forbidden', 'text/plain; charset=utf-8')
             path, lang = self.path.split('?', 1)[0], self._lang()
-            if path not in ('/api/mark', '/api/build', '/api/check', '/api/open', '/api/plans', '/api/game', '/api/update'):
+            if path not in ('/api/mark', '/api/build', '/api/check', '/api/open', '/api/plans', '/api/game', '/api/update',
+                            '/api/plancat'):
                 return self._send(404, 'not found', 'text/plain; charset=utf-8')
             try:
                 n = int(self.headers.get('Content-Length') or 0)
                 # отметка — короткая; версии дерева — три списка по сотне узлов; разделы билда — этапы
                 # и цели с заметками (сотня записей); присланный файл плана — маршрут и билд целиком
-                if not 0 < n <= {'/api/mark': 4096, '/api/open': 256, '/api/game': 256, '/api/update': 256,
+                if not 0 < n <= {'/api/mark': 4096, '/api/open': 256, '/api/game': 256, '/api/update': 256, '/api/plancat': 256,
                                  '/api/plans': 2 * planlib.MAX_TEXT + 65536}.get(path, 262144):
                     raise ValueError('bad length')
                 req = json.loads(self.rfile.read(n).decode('utf-8'), parse_constant=no_constant)
@@ -3126,11 +3376,28 @@ def make_handler(app, port):
                 else:
                     ok = False
                 return self._send(200 if ok else 400, json.dumps({'ok': bool(ok)}), 'application/json')
+            if path == '/api/plancat':
+                # «Каталог» редактора: открыли список планов (refresh — каталог спрашивается, только пока включено
+                # «Проверять обновления», и не чаще plancat.FRESH), нажали «Спросить каталог» (ask — сразу) или поставить
+                # план из него (get — метка плана). Сеть — без замка программы: страницы живут, пока идёт запрос.
+                if req.get('refresh') is True or req.get('ask') is True:
+                    app.plancat_refresh(ask=req.get('ask') is True)
+                    with app.cond:
+                        res = dict(app.plancat_view(lang), ok=True)
+                elif isinstance(req.get('get'), str):
+                    res = app.plancat_get(req['get'])
+                else:
+                    res = {'ok': False, 'problems': [tr('непонятно, что сделать с планом')]}
+                with app.cond:
+                    body = json.dumps(i18n.render(res, lang, app.names(lang), plain=True), ensure_ascii=False)
+                return self._send(200 if res['ok'] else 400, body, 'application/json; charset=utf-8')
             if path == '/api/open':
-                # страница просит открыть в браузере системы страницу фильтра на сайте игры (App.open_filter) или
-                # официальный сайт программы (App.open_site): адрес собирает программа — адрес от страницы не принимается
+                # страница просит открыть в браузере системы страницу фильтра на сайте игры (App.open_filter), официальный
+                # сайт программы (App.open_site) или страницу автора плана из каталога (App.open_author): адрес собирает
+                # программа — адрес от страницы не принимается
                 ok = app.open_filter(req.get('id')) if req.get('page') == 'filter' else \
-                    app.open_site() if req.get('page') == 'site' else False
+                    app.open_site() if req.get('page') == 'site' else \
+                    app.open_author(req.get('uid')) if req.get('page') == 'author' else False
                 return self._send(200 if ok else 400, json.dumps({'ok': bool(ok)}), 'application/json')
             if path == '/api/check':
                 # проверка гайда: те же разделы, что при записи, но ничего не пишется — только замечания
@@ -3249,6 +3516,7 @@ def options(argv=None):
     ap.add_argument('--hotkey-file', help='для проверок: каждая смена этого файла — нажатие клавиши в игре '
                                           '(слово close в файле — «Закрыть», иначе — «Надеть»)')
     ap.add_argument('--lang', help='язык сообщений в этом окне: ru, en… (страницы выбирают язык сами)')
+    ap.add_argument('--offline', action='store_true', help='для проверок: в сеть не ходить (каталог планов не спрашивается)')
     return ap.parse_args(argv)
 
 
@@ -3294,6 +3562,8 @@ def prepare(argv=None):
               args.config or gamepaths.config_in(docs), catalog_dir=args.catalog, knowledge_dir=args.knowledge,
               plans_dir=plans_dir)
     app.game_dir, app.settings_path = game_dir, args.settings
+    if args.offline:
+        app.plancat.fetch = plancat.offline         # проверки страниц: наружу ничего не уходит
     if wins:
         app.follow = wins.running_game
         if game_dir:

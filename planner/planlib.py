@@ -10,14 +10,20 @@ planfiles). Имя папки — id плана: по нему герой при
 
 Оглавление сверх прежнего (route, build, groups) держит:
   uid       — постоянная метка плана: с ней план уходит в файл и по ней узнаётся, когда приходит снова;
-  received  — план прислан: {file — имя файла, at — когда добавлен}. Присланный сам не правится: правка
-              ложится в копию, а он остаётся, каким его прислали, — поверх потом ляжет новая версия от автора;
+  received  — план прислан: {file — имя файла, at — когда добавлен, by: 'program' — пришёл вместе с программой}.
+              Присланный сам не правится: правка ложится в копию, а он остаётся, каким его прислали, — поверх потом
+              ляжет новая версия от автора;
+  catalog   — план из каталога одобренных планов (plancat.py): {version — его версия в каталоге, author — {name, url?}
+              из подписанного каталога, published — день версии, at — когда поставлен}. Имя автора берётся только
+              из каталога: в файле плана его нет;
   from      — копия: {uid, title} плана, с которого её сделали.
 
 Файл плана для обмена — один JSON: {"format": FORMAT, "version": 1, "uid", "title", "groups",
 "route": текст файла маршрута, "build": текст файла билда}. Тексты идут как есть: у принятого плана файлы
-такие же, как у автора, и правки со страницы ложатся в них так же, как у него.
+такие же, как у автора, и правки со страницы ложатся в них так же, как у него. Байты файла (bundle_bytes) у одного
+и того же плана всегда одни: по ним каталог планов узнаёт свою версию в библиотеке (bundle_sha).
 """
+import hashlib
 import json
 import os
 import re
@@ -142,9 +148,30 @@ def stamp(root):
     return tuple(out)
 
 
+def catalog_record(raw):
+    """Запись каталога в оглавлении плана (catalog), какой её можно показать: {version, author {name, url?},
+    published?, at?}; нет её или она не такая — None."""
+    if not isinstance(raw, dict) or type(raw.get('version')) is not int or raw['version'] < 1:
+        return None
+    who = raw.get('author') if isinstance(raw.get('author'), dict) else {}
+    name = who.get('name') if isinstance(who.get('name'), str) else ''
+    name = planguard.RE_BAD.sub('', ' '.join(name.split()))[:80]
+    if not name:
+        return None
+    author = {'name': name}
+    url = who.get('url')
+    if isinstance(url, str) and re.fullmatch(r'https?://[!#-~]{1,2040}', url) and '@' not in url.split('/')[2]:
+        author['url'] = url
+    out = {'version': raw['version'], 'author': author}
+    for k in ('published', 'at'):
+        if isinstance(raw.get(k), str) and re.fullmatch(r'[0-9: -]{10,19}', raw[k]):
+            out[k] = raw[k]
+    return out
+
+
 def summary(rec):
     """Что о плане видно в списке: {id, title, cls — класс героя билда (имя из данных игры), uid,
-    received, from}. Название — из билда; нет его — id."""
+    received, from, catalog}. Название — из билда; нет его — id."""
     m = rec['manifest']
     title, cls = '', None
     try:
@@ -157,15 +184,18 @@ def summary(rec):
     out = {'id': rec['id'], 'title': title.strip() or rec['id'], 'cls': cls,
            'uid': m.get('uid') if isinstance(m.get('uid'), str) else None}
     if isinstance(m.get('received'), dict):
-        out['received'] = {k: m['received'][k] for k in ('file', 'at') if isinstance(m['received'].get(k), str)}
+        out['received'] = {k: m['received'][k] for k in ('file', 'at', 'by') if isinstance(m['received'].get(k), str)}
     if isinstance(m.get('from'), dict):
         out['from'] = {k: m['from'][k] for k in ('uid', 'title', 'take', 'template') if isinstance(m['from'].get(k), str)}
+    cat = catalog_record(m.get('catalog'))
+    if cat:
+        out['catalog'] = cat
     return out
 
 
 def write_manifest(path, manifest):
     """Оглавление плана — по ключу на строку, как его пишут руками."""
-    order = ['version', 'uid', 'route', 'build', 'groups', 'received', 'from']
+    order = ['version', 'uid', 'route', 'build', 'groups', 'received', 'catalog', 'from']
     keys = [k for k in order if k in manifest] + [k for k in manifest if k not in order]
     body = ',\n'.join('  %s: %s' % (json.dumps(k, ensure_ascii=False), json.dumps(manifest[k], ensure_ascii=False))
                       for k in keys)
@@ -271,6 +301,34 @@ def bundle(root, pid):
             'route': route_text, 'build': build_text}
 
 
+def bundle_bytes(data):
+    """Байты файла плана для обмена (словарь FORMAT): JSON с отступом в один знак, буквы как есть. Одни на один план:
+    так файл пишут программа («Скачать файл плана») и инструмент одобрения (release/plans.py)."""
+    return json.dumps(data, ensure_ascii=False, indent=1).encode('utf-8')
+
+
+def bundle_sha(root, pid):
+    """SHA-256 файла плана pid для обмена (bundle_bytes) — как у файла этой версии в каталоге планов; плана нет —
+    None."""
+    try:
+        return hashlib.sha256(bundle_bytes(bundle(root, pid))).hexdigest()
+    except (OSError, ValueError):
+        return None
+
+
+def set_catalog(root, pid, record):
+    """Записывает в оглавление плана pid его запись каталога (catalog_record): версию и автора из подписанного
+    каталога. План не в библиотеке — ValueError."""
+    path = manifest_path(root, pid)
+    rec = next((r for r in scan(root) if r['id'] == pid), None)
+    if path is None or rec is None or catalog_record(record) is None:
+        raise ValueError(tr('плана «%s» нет') % pid)
+    inside(root, path)
+    m = dict(rec['manifest'], catalog=record)
+    write_manifest(path, m)
+    return pid
+
+
 def parse_bundle(data):
     """Проверяет присланный файл плана: (текст маршрута, текст билда, сведения {uid, title, groups}).
     Не файл плана или в нём что-то не так — ValueError со словами для игрока. Файл с чужой машины: каждое поле
@@ -311,15 +369,17 @@ def _file_name(name):
     return planguard.RE_BAD.sub('', re.sub(r'[\x00-\x1f]', '', name))[:120]
 
 
-def add(root, data, file_name='', now=None, uid=None):
+def add(root, data, file_name='', now=None, uid=None, extra=None):
     """Присланный план — в библиотеку: новая папка с пометкой received. uid — своя метка вместо метки
-    файла (план добавляют отдельно от того, что у игрока уже есть). Возвращает id."""
+    файла (план добавляют отдельно от того, что у игрока уже есть). extra — что ещё записать в оглавление (catalog —
+    план из каталога; received с by — план, пришедший с программой). Возвращает id."""
     route_text, build_text, meta = parse_bundle(data)
     own = json.loads(build_text).get('title')
     title = meta['title'] or (own if isinstance(own, str) else '')
     manifest = {'uid': uid or meta['uid'] or new_uid(), 'received': {'file': _file_name(file_name), 'at': stamp_text(now)}}
     if meta['groups']:
         manifest['groups'] = meta['groups']
+    manifest.update(extra or {})
     return _make(root, free_id(root, title or 'plan'), route_text, build_text, manifest)
 
 
@@ -337,9 +397,10 @@ def same(root, data):
     return None
 
 
-def replace(root, pid, data, file_name='', now=None, backup_dir=None):
+def replace(root, pid, data, file_name='', now=None, backup_dir=None, extra=None):
     """Новая версия присланного плана pid из файла: части переписываются (прежние — в backup_dir),
-    папка, id и метка остаются — герои, которые по нему идут, идут дальше по новой версии."""
+    папка, id и метка остаются — герои, которые по нему идут, идут дальше по новой версии. extra — что ещё записать
+    в оглавление (catalog — версия из каталога)."""
     route_text, build_text, meta = parse_bundle(data)
     path = manifest_path(root, pid)
     rec = next((r for r in scan(root) if r['id'] == pid), None)
@@ -358,6 +419,8 @@ def replace(root, pid, data, file_name='', now=None, backup_dir=None):
     m['received'] = {'file': _file_name(file_name), 'at': stamp_text(now)}
     if meta['groups']:
         m['groups'] = meta['groups']
+    m.pop('catalog', None)                  # прежняя запись каталога — только если новая версия тоже оттуда (extra)
+    m.update(extra or {})
     write_manifest(path, m)
     return pid
 
