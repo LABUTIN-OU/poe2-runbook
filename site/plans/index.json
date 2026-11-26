@@ -1,0 +1,43 @@
+{
+ "format": "poe2-runbook-plans",
+ "v": 1,
+ "updated": "2026-11-26",
+ "plans": [
+  {
+   "uid": "e4f607962592",
+   "version": 1,
+   "title": {
+    "ru": "HC SSF · DoV",
+    "en": "HC SSF · DoV"
+   },
+   "author": {
+    "name": "Sergei Labutin",
+    "url": "https://poe2.labutin.gg"
+   },
+   "game": "0.5.5",
+   "class": "Sorceress",
+   "ascendancy": "Disciple of Varashta",
+   "tags": [
+    "hc",
+    "ssf"
+   ],
+   "langs": [
+    "ru"
+   ],
+   "summary": {
+    "ru": "Чародейка, Ученица Варашты, для HC SSF: от первой зоны до карт T15–16 — маршрут, умения, дерево и предметы по этапам.",
+    "en": "Sorceress, Disciple of Varashta, for HC SSF: from the first zone to T15–16 maps — route, skills, passive tree and items by stage."
+   },
+   "changed": {
+    "ru": "Первая версия в каталоге.",
+    "en": "First version in the catalogue."
+   },
+   "published": "2026-11-26",
+   "file": {
+    "url": "https://poe2.labutin.gg/plans/e4f607962592/1.plan",
+    "size": 102915,
+    "sha256": "186914fe0e5f06ceee32ffd775480e3488638b57afaff9d6fa2f246dd1d6ec3e"
+   }
+  }
+ ]
+}
